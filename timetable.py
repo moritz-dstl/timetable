@@ -1,5 +1,7 @@
 from ortools.sat.python import cp_model
 
+#test
+
 #Alle Flags 
 FRUESTUNDEN_BEVORZUGEN = 1
 BLOCKBILDUNG = 1
