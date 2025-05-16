@@ -1,1 +1,1 @@
-# Frontend for Timetable Generator
+# Timetable Generator
