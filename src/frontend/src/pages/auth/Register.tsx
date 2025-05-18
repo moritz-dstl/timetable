@@ -16,7 +16,7 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlert, Eye, EyeOff } from 'lucide-react';
+import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
 function Register() {
     const navigate = useNavigate();

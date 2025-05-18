@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { Button } from "../components/ui/button";
 
 // Icons
-import { LogOut } from 'lucide-react';
+import { LogOut } from "lucide-react";
 
 function Header() {
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ function Header() {
                             </>
                         ) : (
                             // Show logout button if user is logged in
-                            <Button size="sm" className="text-sm" onClick={handleLogout}>
+                            <Button variant="outline" size="sm" className="text-sm" onClick={handleLogout}>
                                 <LogOut className="pr-2" />Logout
                             </Button>
                         )

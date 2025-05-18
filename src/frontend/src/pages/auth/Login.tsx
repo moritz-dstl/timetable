@@ -17,7 +17,7 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlert, Eye, EyeOff } from 'lucide-react';
+import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
 function Login() {
     const navigate = useNavigate();
@@ -41,7 +41,7 @@ function Login() {
             // TODO: API
             await new Promise((resolve) => setTimeout(resolve, 1000));
             if (username === "admin" && password === "password") {
-                cookies.set("auth", "token123", { expires: new Date(new Date().getTime() + 30 * 1000) });
+                cookies.set("auth", "token123", { expires: new Date(new Date().getTime() + 3600000) });
                 navigate("/");
             } else {
                 setError("Invalid username or password");
