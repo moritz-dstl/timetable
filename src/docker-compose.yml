@@ -1,0 +1,39 @@
+services:
+  database:
+    image: mariadb:latest
+    container_name: mariadb-container
+    environment:
+      MYSQL_ROOT_PASSWORD: DB_PASSWORD
+      MYSQL_DATABASE: timetable-database  
+    ports:
+      - "3306:3306"  # expose the database on port 3306
+    networks:
+      - timetable-network
+    volumes:
+      - "datasave:/var/lib/mysql"  # volume for persistent data storage
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  api:
+    build:
+      context: ./backend #Path to the Dockerfile of the api-image
+      dockerfile: Dockerfile
+    container_name: api-container
+    ports:
+      - "8000:8000"  # expose the API on port 5000
+    networks:
+      - timetable-network
+    
+    depends_on:
+      database:
+        condition: service_healthy
+
+networks:
+  timetable-network:
+
+volumes:
+  datasave: 
