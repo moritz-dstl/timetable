@@ -1,1 +1,293 @@
 # Timetable Generator
+
+To run the API, navigate to the folder of the cloned Git repository in your terminal and execute:
+docker compose up -d --build
+This command will start all containers, including the database and the API container.
+
+Once everything is running, you can use the following API endpoints via localhost:8000:
+
+Register a new user:
+Use the endpoint POST /User/register with a JSON body like:
+{ "email": "jane.doe@example.com", "password": "hashed_password_string" }
+This creates a new user in the database. If the email already exists, the server will return status code 400.
+
+Log in:
+Use the endpoint POST /User/login with a JSON body like:
+{ "email": "jane.doe@example.com", "password": "hashed_password_string" }
+This checks if a user with the given email and password exists. If successful, a session token containing the user ID (Uid) is created and HTTP status 200 is returned. Otherwise, HTTP status 401 is returned.
+
+Log out:
+Use the endpoint POST /User/logout without any body. This clears the current session and returns HTTP status 200.
+
+
+Set Settings:
+The endpoint POST /Settings/set expects a JSON object containing the following keys:
+
+settings: general configuration for the timetable generator. Fields must include:
+
+prefer_early_hours: true or false           – whether earlier periods should be preferred
+allow_block_scheduling: true or false       – whether double lessons (blocks) are allowed
+max_hours_per_day: int                      - maximum number of hours a subject can appear per day
+max_consecutive_hours: int                  - maximum consecutive lessons allowed in a day
+break_window_start: int 
+break_window_end: int                       - define the time window in which a lunchbreak must occur
+weight_block_scheduling: int                - weighting factor for encouraging block scheduling
+weight_time_of_hours: int                   - weighting factor for the preference of early or late hours
+max_time_for_solving: int                   - maximum solving time in seconds for the timetable algorithm
+
+school: structure of the school with:
+
+classes: list of class names                - (e.g. ["C1", "C2", "C3"])
+subjects: list of subject names             - (e.g. ["Math", "English", "Physics"])
+hours_per_day: int                          - number of periods per day
+
+teachers: list of teachers. Each teacher object includes:
+
+name: string                                - full name of the teacher
+max_hours: int                              - maximum weekly teaching load
+subjects: list of subjects the teacher can teach
+
+class_allocations: list of subjects assigned to each class, each with:
+
+class_name: string
+subject: string                             - name of subject
+hours_per_week: int                         - amount of hours subject has to be teached per week
+
+subject_parallel_limits: optional list of subjects that cannot be taught in too many classes at once (e.g. due to room constraints). Each entry includes:
+
+subject_name: string
+max_parallel: int                           - max simultaneous occurrences
+
+prefer_block_subjects: optional list of subjects that strongly prefer to be scheduled in double periods, each with:
+
+subject_name: string
+weight: int                                 - Numeric weight (should be set higher than 10. A value above 50  
+                                              will almost always ensure the subject is scheduled as a block).
+
+Example working Json body:
+    {
+    "settings": {
+        "prefer_early_hours": true,
+        "allow_block_scheduling": true,
+        "max_hours_per_day": 2,
+        "max_consecutive_hours": 7,
+        "break_window_start": 4,
+        "break_window_end": 6,
+        "weight_block_scheduling": 10,
+        "weight_time_of_hours": 10,
+        "max_time_for_solving": 180
+    },
+
+    "school": {
+        "classes": ["C1", "C2", "C3"],
+        "subjects": ["Math", "German", "English", "PE",
+                    "Biology", "Chemistry", "Physics", "History"],
+        "hours_per_day": 8
+    },
+
+    "teachers": [
+        { "name": "Smith",    "max_hours": 20, "subjects": ["Math", "Physics"] },
+        { "name": "Johnson",  "max_hours": 20, "subjects": ["German", "History"] },
+        { "name": "Williams", "max_hours": 18, "subjects": ["English", "History"] },
+        { "name": "Brown",    "max_hours": 18, "subjects": ["PE", "Biology"] },
+        { "name": "Taylor",   "max_hours": 18, "subjects": ["Chemistry", "Biology"] }
+    ],
+
+    "class_allocations": [
+        { "class_name": "C1", "subject": "Math",     "hours_per_week": 4 },
+        { "class_name": "C1", "subject": "German",   "hours_per_week": 3 },
+        { "class_name": "C1", "subject": "English",  "hours_per_week": 3 },
+        { "class_name": "C1", "subject": "PE",       "hours_per_week": 2 },
+        { "class_name": "C1", "subject": "Biology",  "hours_per_week": 2 },
+        { "class_name": "C1", "subject": "Chemistry","hours_per_week": 2 },
+        { "class_name": "C1", "subject": "Physics",  "hours_per_week": 2 },
+        { "class_name": "C1", "subject": "History",  "hours_per_week": 2 },
+
+        { "class_name": "C2", "subject": "Math",     "hours_per_week": 4 },
+        { "class_name": "C2", "subject": "German",   "hours_per_week": 3 },
+        { "class_name": "C2", "subject": "English",  "hours_per_week": 3 },
+        { "class_name": "C2", "subject": "PE",       "hours_per_week": 2 },
+        { "class_name": "C2", "subject": "Biology",  "hours_per_week": 2 },
+        { "class_name": "C2", "subject": "Chemistry","hours_per_week": 2 },
+        { "class_name": "C2", "subject": "Physics",  "hours_per_week": 2 },
+        { "class_name": "C2", "subject": "History",  "hours_per_week": 2 },
+
+        { "class_name": "C3", "subject": "Math",     "hours_per_week": 4 },
+        { "class_name": "C3", "subject": "German",   "hours_per_week": 3 },
+        { "class_name": "C3", "subject": "English",  "hours_per_week": 3 },
+        { "class_name": "C3", "subject": "PE",       "hours_per_week": 2 },
+        { "class_name": "C3", "subject": "Biology",  "hours_per_week": 2 },
+        { "class_name": "C3", "subject": "Chemistry","hours_per_week": 2 },
+        { "class_name": "C3", "subject": "Physics",  "hours_per_week": 2 },
+        { "class_name": "C3", "subject": "History",  "hours_per_week": 2 }
+    ],
+
+    "subject_parallel_limits": [
+        { "subject_name": "PE",        "max_parallel": 2 },
+        { "subject_name": "Chemistry", "max_parallel": 2 },
+        { "subject_name": "Biology",   "max_parallel": 2 }
+    ],
+
+    "prefer_block_subjects": [
+        { "subject_name": "PE", "weight": 60 }
+    ]
+    }
+
+
+Get Settings:
+The endpoint GET /Settings/get returns a JSON object with the following structure:
+Example:
+    {
+        "classes": [
+            {
+                "class_name": "C1",
+                "hours_per_week": 4,
+                "subject": "Math"
+            },
+            {
+                "class_name": "C1",
+                "hours_per_week": 3,
+                "subject": "English"
+            },
+            {
+                "class_name": "C2",
+                "hours_per_week": 4,
+                "subject": "Math"
+            },
+            {
+                "class_name": "C2",
+                "hours_per_week": 3,
+                "subject": "PE"
+            },
+            {
+                "class_name": "C3",
+                "hours_per_week": 4,
+                "subject": "Math"
+            },
+            {
+                "class_name": "C3",
+                "hours_per_week": 3,
+                "subject": "German"
+            }
+        ],
+        "prefer_block_subjects": [
+            {
+                "subject_name": "PE",
+                "weight": 60
+            }
+        ],
+        "school": {
+            "Uid": 1,
+            "classes": "['C1', 'C2', 'C3']",
+            "hours_per_day": 8,
+            "subjects": "['Math', 'German', 'English', 'PE']"
+        },
+        "settings": {
+            "Uid": 1,
+            "allow_block_scheduling": 1,
+            "break_window_end": 6,
+            "break_window_start": 4,
+            "max_consecutive_hours": 7,
+            "max_hours_per_day": 2,
+            "max_time_for_solving": 180,
+            "prefer_early_hours": 1,
+            "weight_block_scheduling": 10,
+            "weight_time_of_hours": 10
+        },
+        "subject_parallel_limits": [
+            {
+                "max_parallel": 2,
+                "subject_name": "PE"
+            }
+        ],
+        "teacher_subjects": [
+            {
+                "Tid": 26,
+                "subject": "Math"
+            },
+            {
+                "Tid": 27,
+                "subject": "German"
+            },
+            {
+                "Tid": 28,
+                "subject": "English"
+            },
+            {
+                "Tid": 29,
+                "subject": "PE"
+            },
+        ],
+        "teachers": [
+            {
+                "Tid": 26,
+                "max_hours": 20,
+                "name": "Smith"
+            },
+            {
+                "Tid": 27,
+                "max_hours": 20,
+                "name": "Johnson"
+            },
+            {
+                "Tid": 28,
+                "max_hours": 18,
+                "name": "Williams"
+            },
+            {
+                "Tid": 29,
+                "max_hours": 18,
+                "name": "Brown"
+            }
+        ]
+    }
+
+
+Compute Timetable:
+The endpoint GET /start_computing starts the computing progress and instantly returns:
+
+
+Status of Computing:
+The endpoint GET /status/<job_id> (replace <job_id> with the ID returned from /start_computing) returns the current status of the timetable computation and, if available, the result.
+
+If the status is still running, the result will be null:
+
+{
+    "result": null,
+    "status": "running"
+}
+
+Once the computation is finished, the result will contain the full timetable in the following structure:
+
+{
+  "status": "finished",
+  "result": {
+    "status": "success",
+    "classes": {
+      "C1": {
+        "Mo": ["Subject (Teacher)", "Subject (Teacher)", "free", "..."],
+        "Tu": ["...", "..."],
+        ...
+      },
+      "C2": {
+        "Mo": ["...", "..."],
+        ...
+      },
+      "C3": {
+        "Mo": ["...", "..."],
+        ...
+      }
+    },
+    "teachers": {
+      "Smith": {
+        "Mo": ["Subject (C1)", "Subject (C2)", "free", "..."],
+        ...
+      },
+      "Johnson": {
+        "Tu": ["...", "..."],
+        ...
+      },
+      ...
+    }
+  }
+}

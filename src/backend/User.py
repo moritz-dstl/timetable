@@ -56,12 +56,9 @@ def login():
     cursor.execute("SELECT Uid, password FROM Users WHERE email = %s", (email,))
     user = cursor.fetchone()
 
-    cursor.execute("SELECT password FROM Users WHERE email = %s", (email,))
-    password_database = cursor.fetchone()[0]
-
-    # If user is found and password is correct
-    if user and password == password_database:
-        session["Uid"] = user[0]  # Store user ID in session
+    # Check if user exists and password matches
+    if user and password == user[1]:  # user[1] = password from DB
+        session["Uid"] = user[0]
         cursor.close()
         conn.close()
 

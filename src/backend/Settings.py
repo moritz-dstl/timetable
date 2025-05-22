@@ -5,7 +5,7 @@ Settings = Blueprint('Settings', __name__)
 
 @Settings.route('/Settings/set', methods=['POST'])
 def set_settings():
-    Uid = 1
+    Uid = session.get('Uid')
     if Uid is None:
         return jsonify({"error": "No UID found in session"}), 403
 

@@ -20,11 +20,6 @@ logging.basicConfig(
 #secret key for sessions >> encrypted cookies
 app.secret_key = 'sessionKeyTimetable'
 
-# Für lokale Tests: UID immer automatisch setzen
-@app.before_request
-def set_test_uid():
-    session['Uid'] = 1 
-
 logging.basicConfig(level=logging.DEBUG)
 
 # Registriere die Routen
