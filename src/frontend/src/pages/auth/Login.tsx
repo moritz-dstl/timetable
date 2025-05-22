@@ -54,8 +54,9 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
-            <div className="w-full max-w-md space-y-8">
+        <div className="min-h-[calc(100vh-130px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
+            <div className="w-full max-w-md space-y-4">
+
                 <div className="text-center">
                     <h1 className="text-3xl font-bold">Login</h1>
                     <p className="mt-2 text-gray-600">Sign in to access your account</p>
@@ -136,6 +137,7 @@ function Login() {
                         </Button>
                     </CardFooter>
                 </Card>
+                
             </div>
         </div>
     );

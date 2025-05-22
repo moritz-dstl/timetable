@@ -22,7 +22,7 @@ function Home() {
     }
 
     return (
-        <div className="min-h-screen flex bg-gray-50 flex-nowrap">
+        <div className="min-h-[calc(100vh-130px)] flex bg-gray-50 flex-nowrap">
 
             <Tabs defaultValue="overview" className="w-full p-4">
                 <div className="flex justify-between">
