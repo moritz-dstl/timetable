@@ -1,7 +1,6 @@
 from flask import Flask, session
 from flask_cors import CORS
 from User import User
-from Timetable_compute import Timetable_compute
 from AsyncCompute import AsyncCompute
 from Settings import Settings
 import logging
@@ -24,7 +23,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Registriere die Routen
 app.register_blueprint(User) 
-app.register_blueprint(Timetable_compute)
 app.register_blueprint(Settings)
 app.register_blueprint(AsyncCompute)
 

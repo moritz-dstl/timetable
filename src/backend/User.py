@@ -10,7 +10,8 @@ User = Blueprint('User', __name__)
 def register_user():
     # Get user data from the request
     new_email = request.json.get('email')
-    new_password = request.json.get('password')  # Hashed password received from the client
+    new_password = request.json.get('password')  # unhashed password
+    new_password = utils.hash_password(new_password)  # hash and salt the password
     
 
     # Check if all required fields are provided
@@ -53,11 +54,11 @@ def login():
     cursor = conn.cursor()
 
     # Search for user with this email
-    cursor.execute("SELECT Uid, password FROM Users WHERE email = %s", (email,))
+    cursor.execute("SELECT Uid FROM Users WHERE email = %s", (email,))
     user = cursor.fetchone()
 
     # Check if user exists and password matches
-    if user and password == user[1]:  # user[1] = password from DB
+    if user and utils.check_password(password, email):  # user[1] = password from DB
         session["Uid"] = user[0]
         cursor.close()
         conn.close()
