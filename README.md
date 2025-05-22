@@ -246,6 +246,10 @@ Example:
 Compute Timetable:
 The endpoint GET /start_computing starts the computing progress and instantly returns:
 
+{
+    "job_id": "24de5582-1b57-42dc-b5a3-bd2c4366806b",
+    "status": "started"
+}
 
 Status of Computing:
 The endpoint GET /status/<job_id> (replace <job_id> with the ID returned from /start_computing) returns the current status of the timetable computation and, if available, the result.
