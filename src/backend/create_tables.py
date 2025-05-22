@@ -5,7 +5,13 @@ import config
 # Define base class for ORM models
 Base = declarative_base()
 
-# User-specific settings (preferences for scheduling)
+class User(Base):
+    __tablename__ = 'Users'
+    Uid = Column(Integer, primary_key=True)
+    email = Column(String(128), nullable=False, unique=True)
+    password = Column(String(128), nullable=False)  # Hashed password
+
+# All setings related to the timetable generation
 class Settings(Base):
     __tablename__ = 'Settings'
     Uid = Column(Integer, primary_key=True)
@@ -30,8 +36,8 @@ class School(Base):
 # Teachers and their availability
 class Teachers(Base):
     __tablename__ = 'Teachers'
-    t_id = Column(Integer, primary_key=True)
-    s_id = Column(Integer, nullable=False)  # Uid from School
+    Tid = Column(Integer, primary_key=True)
+    Uid = Column(Integer, nullable=False)  # Uid is used as school id
     name = Column(String(128), nullable=False)
     max_hours = Column(Integer, nullable=False)
 
@@ -39,14 +45,14 @@ class Teachers(Base):
 class TeacherSubjects(Base):
     __tablename__ = 'TeacherSubjects'
     id = Column(Integer, primary_key=True)
-    t_id = Column(Integer, nullable=False)
+    Tid = Column(Integer, nullable=False)
     subject = Column(String(128), nullable=False)
 
 # Weekly subject allocation per class
 class Classes(Base):
     __tablename__ = 'Classes'
     id = Column(Integer, primary_key=True)
-    school_id = Column(Integer, nullable=False)  # Uid from School
+    Uid = Column(Integer, nullable=False)  # Uid is used as school ID
     class_name = Column(String(128), nullable=False)
     subject = Column(String(128), nullable=False)
     hours_per_week = Column(Integer, nullable=False)
@@ -58,6 +64,13 @@ class SubjectParallelLimits(Base):
     Uid = Column(Integer, nullable=False)
     subject_name = Column(String(128), nullable=False)
     max_parallel = Column(Integer, nullable=False)
+
+class PreferBlockSubjects(Base):
+    __tablename__ = 'PreferBlockSubjects'
+    id = Column(Integer, primary_key=True)
+    Uid = Column(Integer, nullable=False)
+    subject_name = Column(String(128), nullable=False)
+    weight = Column(Integer, nullable=False)
 
 # Create DB engine using URI from config.py
 engine = create_engine(config.SQLALCHEMY_DATABASE_URI)

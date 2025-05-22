@@ -2,12 +2,13 @@ from ortools.sat.python import cp_model
 from flask import request, jsonify, session, Blueprint
 import utils
 import ast
-
+import logging
 
 # Create a Blueprint for the timetable compute route
-timetable_compute = Blueprint('timetable_compute', __name__)
+Timetable_compute = Blueprint('Timetable_compute', __name__)
 
-@timetable_compute.route('/timetable_compute', methods=['GET'])
+
+@Timetable_compute.route('/timetable_compute', methods=['GET'])
 def timetable_compute_def():
     conn = utils.get_db_connection()
     cursor = conn.cursor()
@@ -79,7 +80,7 @@ def timetable_compute_def():
     subject_indices = {subject: i for i, subject in enumerate(subjects)}
 
     # Fetch all teachers that belong to the current school
-    cursor.execute("SELECT t_id, name, max_hours FROM Teachers WHERE s_id = %s", (school_id,))
+    cursor.execute("SELECT Tid, name, max_hours FROM Teachers WHERE Uid = %s", (school_id,))
     teachers_info = {
         row[0]: {"name": row[1], "max_hours": row[2], "subjects": []}
         for row in cursor.fetchall()
@@ -91,9 +92,9 @@ def timetable_compute_def():
     # Fetch and assign subjects to each teacher
     if teacher_ids:
         sql = f"""
-            SELECT t_id, subject 
+            SELECT Tid, subject 
             FROM TeacherSubjects 
-            WHERE t_id IN ({','.join(['%s'] * len(teacher_ids))})
+            WHERE Tid IN ({','.join(['%s'] * len(teacher_ids))})
         """
         cursor.execute(sql, teacher_ids)
         for t_id, subject in cursor.fetchall():
@@ -104,7 +105,7 @@ def timetable_compute_def():
     cursor.execute("""
         SELECT class_name, subject, hours_per_week
         FROM Classes
-        WHERE school_id = %s""", (school_id,))
+        WHERE Uid = %s""", (school_id,))
 
     # Build a nested dictionary: {class_name: {subject: hours_per_week}}
     class_subject_hours = {}
@@ -479,10 +480,11 @@ def timetable_compute_def():
 
     status = solver.Solve(model)
 
+
     if status in [cp_model.OPTIMAL, cp_model.FEASIBLE]:
         # Output the schedule per class with subject and teacher
         for c in classes:
-            print(f"\nSchedule for class {c}:")
+            logging.info(f"\nSchedule for class {c}:")
             for d_index, day in enumerate(days):
                 periods = []
                 for h in range(hours_per_day):
@@ -495,12 +497,12 @@ def timetable_compute_def():
                     else:
                         entry = "free"
                     periods.append(entry)
-                print(f"{day}: {', '.join(periods)}")
+                logging.info(f"{day}: {', '.join(periods)}")
 
         # Output the schedule per teacher with subject and class
         teacher_names = list(teachers_info.keys())
         for teacher_index, teacher in enumerate(teacher_names):
-            print(f"\nSchedule for teacher {teacher}:")
+            logging.info(f"\nSchedule for teacher {teacher}:")
             for d_index, day in enumerate(days):
                 periods = []
                 for h in range(hours_per_day):
@@ -512,6 +514,11 @@ def timetable_compute_def():
                             entry = f"{subject} ({c})"
                             break  # A teacher can only be in one class per slot
                     periods.append(entry)
-                print(f"{day}: {', '.join(periods)}")
+                logging.info(f"{day}: {', '.join(periods)}")
+
+        # Return AFTER all logging
+        return jsonify({'message': 'Successfully computed!'}), 200
+
     else:
-        print("No solution found.")
+        logging.warning("No solution found.")
+        return jsonify({'message': 'No solution found!'}), 422

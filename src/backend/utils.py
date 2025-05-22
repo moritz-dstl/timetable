@@ -1,5 +1,4 @@
 import mysql.connector
-from datetime import datetime
 import config
 import pytz
 

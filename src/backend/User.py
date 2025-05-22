@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, session, Blueprint
-from flask_cors import CORS
 import utils
 import requests
 
@@ -71,3 +70,10 @@ def login():
         cursor.close()
         conn.close()
         return jsonify({'message': 'Invalid login credentials!'}), 401
+    
+
+@User.route('/User/logout', methods=['POST'])
+# Clears the current user session
+def logout():
+    session.clear()
+    return jsonify({'message': 'Successfully logged out!'}), 200

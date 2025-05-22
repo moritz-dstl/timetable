@@ -24,7 +24,7 @@ services:
       dockerfile: Dockerfile
     container_name: api-container
     ports:
-      - "8000:8000"  # expose the API on port 5000
+      - "8000:8000"  # expose the API on port 8000
     networks:
       - timetable-network
     
