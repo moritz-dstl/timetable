@@ -18,11 +18,11 @@ function Header() {
     }
 
     return (
-        <header className="border-b p-4">
+        <header className="border-b p-4 bg-gray-50">
             <div className="flex items-center justify-between">
                 <span className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
                     <div className="h-8 w-8">
-                        <Boxes className="h-8 w-8" />
+                        <Boxes className="h-8 w-8" color="#FF9100" />
                     </div>
                     <h1 className="hidden sm:block text-2xl font-bold">Timetable Generator</h1>
                 </span>
