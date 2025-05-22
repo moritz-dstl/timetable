@@ -61,20 +61,13 @@ function Register() {
         <div className="min-h-screen flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
             <div className="w-full max-w-md space-y-8">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold">Timetable Generator</h1>
+                    <h1 className="text-3xl font-bold">Register</h1>
                     <p className="mt-2 text-gray-600">Create your account</p>
                 </div>
 
                 <Card className="bg-white">
-                    <CardHeader className="flex items-center">
-                        <CardTitle>Register</CardTitle>
-                        <CardDescription>
-                            Fill in your details to create an account
-                        </CardDescription>
-                    </CardHeader>
-
                     <CardContent>
-                        <form onSubmit={handleRegister} className="space-y-4">
+                        <form onSubmit={handleRegister} className="space-y-4 pt-6">
 
                             {/* Input: Username */}
                             <div className="space-y-2">
