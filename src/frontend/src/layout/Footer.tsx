@@ -3,7 +3,7 @@ import { Button } from "../components/ui/button";
 
 function Footer() {
     return (
-        <footer className="border-t p-4 bg-muted/30">
+        <footer className="border-t p-4 pt-3 md:pt-4 bg-gray-50">
             <div className="container">
                 <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-2">
                     <div className="text-sm text-muted-foreground">
