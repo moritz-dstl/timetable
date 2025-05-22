@@ -8,12 +8,12 @@ Once everything is running, you can use the following API endpoints via localhos
 
 Register a new user:
 Use the endpoint POST /User/register with a JSON body like:
-{ "email": "jane.doe@example.com", "password": "hashed_password_string" }
+{ "email": "jane.doe@example.com", "password": "password_string" }
 This creates a new user in the database. If the email already exists, the server will return status code 400.
 
 Log in:
 Use the endpoint POST /User/login with a JSON body like:
-{ "email": "jane.doe@example.com", "password": "hashed_password_string" }
+{ "email": "jane.doe@example.com", "password": "password_string" }
 This checks if a user with the given email and password exists. If successful, a session token containing the user ID (Uid) is created and HTTP status 200 is returned. Otherwise, HTTP status 401 is returned.
 
 Log out:
