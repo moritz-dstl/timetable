@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { Button } from "../components/ui/button";
 
 // Icons
-import { LogOut } from "lucide-react";
+import { Boxes, LogOut } from "lucide-react";
 
 function Header() {
     const navigate = useNavigate();
@@ -20,7 +20,12 @@ function Header() {
     return (
         <header className="border-b p-4">
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold cursor-pointer" onClick={() => navigate("/")}>Timetable Generator</h1>
+                <span className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
+                    <div className="h-8 w-8">
+                        <Boxes className="h-8 w-8" />
+                    </div>
+                    <h1 className="hidden sm:block text-2xl font-bold">Timetable Generator</h1>
+                </span>
                 <div id="header-buttons" className="flex items-center gap-4">
                     {
                         !cookies.get("auth") ? (
