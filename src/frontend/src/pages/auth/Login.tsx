@@ -23,7 +23,7 @@ function Login() {
     const navigate = useNavigate();
 
     // Stateful values and functions to update them
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
@@ -40,11 +40,11 @@ function Login() {
         try {
             // TODO: API
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            if (username === "admin" && password === "password") {
+            if (email === "admin@email.com" && password === "password") {
                 cookies.set("auth", "token123", { expires: new Date(new Date().getTime() + 3600000) });
                 navigate("/");
             } else {
-                setError("Invalid username or password");
+                setError("Invalid email or password");
             }
         } catch (err) {
             setError("An error occurred");
@@ -66,14 +66,14 @@ function Login() {
                     <CardContent>
                         <form onSubmit={handleLogin} className="space-y-4 pt-6">
 
-                            {/* Input: Username */}
+                            {/* Input: Email */}
                             <div className="space-y-2">
-                                <Label>Username</Label>
+                                <Label>Email</Label>
                                 <Input
-                                    id="username"
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
                             </div>
