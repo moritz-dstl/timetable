@@ -27,7 +27,7 @@ function Home() {
             <Tabs defaultValue="overview" className="w-full p-4">
                 <div className="flex justify-between">
                     <div></div>
-                    <TabsList className="mb-6">
+                    <TabsList className="m-4">
                         <TabsTrigger value="overview">Overview</TabsTrigger>
                         <TabsTrigger value="settings">Settings</TabsTrigger>
                         <TabsTrigger value="timetables">Timetables</TabsTrigger>
