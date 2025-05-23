@@ -44,7 +44,7 @@ import {
     Trash2
 } from "lucide-react";
 
-function Classes({ classes, setClasses, subjects }) {
+function Classes({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -53,7 +53,7 @@ function Classes({ classes, setClasses, subjects }) {
     const [selectedClass, setSelectedClass] = useState<any>({});
 
     // Filter classes for search
-    const filteredClasses = classes.filter((classItem) => classItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredClasses = data.classes.filter((classItem) => classItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     // Handle add class
     const handleOpenAddDialog = () => {
@@ -66,7 +66,10 @@ function Classes({ classes, setClasses, subjects }) {
     }
 
     const handleAddSave = () => {
-        setClasses(classes => [...classes, selectedClass]);
+        setData({
+            ...data, 
+            classes: [...data.classes, selectedClass]
+        });
         setIsAddDialogOpen(false);
     }
 
@@ -77,7 +80,11 @@ function Classes({ classes, setClasses, subjects }) {
     }
 
     const handleEditSave = () => {
-        setClasses(classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem)));
+        const updatedClasses = data.classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem));
+        setData({
+            ...data,
+            classes: updatedClasses
+        });
         setIsEditDialogOpen(false);
     }
 
@@ -88,7 +95,11 @@ function Classes({ classes, setClasses, subjects }) {
     }
 
     const handleDelete = () => {
-        setClasses(classes.filter((classItem) => classItem.id !== selectedClass.id));
+        const updatedClasses = data.classes.filter((classItem) => classItem.id !== selectedClass.id);
+        setData({
+            ...data,
+            classes: updatedClasses
+        });
         setIsDeleteDialogOpen(false);
     }
 
@@ -233,7 +244,7 @@ function Classes({ classes, setClasses, subjects }) {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {subjects.map((subject) => (
+                                                            {data.subjects.map((subject) => (
                                                                 <SelectItem key={subject} value={subject}>
                                                                     {subject}
                                                                 </SelectItem>
@@ -285,7 +296,7 @@ function Classes({ classes, setClasses, subjects }) {
                                         onClick={() => {
                                             const updatedSubjects = [
                                                 ...selectedClass.subjects,
-                                                { name: subjects[0], hoursPerWeek: 1 },
+                                                { name: data.subjects[0], hoursPerWeek: 1 },
                                             ];
                                             setSelectedClass({
                                                 ...selectedClass,
@@ -353,7 +364,7 @@ function Classes({ classes, setClasses, subjects }) {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {subjects.map((subject) => (
+                                                            {data.subjects.map((subject) => (
                                                                 <SelectItem key={subject} value={subject}>
                                                                     {subject}
                                                                 </SelectItem>
@@ -405,7 +416,7 @@ function Classes({ classes, setClasses, subjects }) {
                                         onClick={() => {
                                             const updatedSubjects = [
                                                 ...selectedClass.subjects,
-                                                { name: subjects[0], hoursPerWeek: 1 },
+                                                { name: data.subjects[0], hoursPerWeek: 1 },
                                             ];
                                             setSelectedClass({
                                                 ...selectedClass,

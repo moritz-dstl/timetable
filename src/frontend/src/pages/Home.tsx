@@ -23,10 +23,7 @@ function Home() {
     }
 
     const [isLoading, setIsLoading] = useState(true);
-
-    const [classes, setClasses] = useState({});
-    const [teachers, setTeachers] = useState({});
-    const [subjects, setSubjects] = useState<string[]>([]);
+    const [data, setData] = useState({});
 
     // Load data once on page load
     useEffect(() => {
@@ -59,7 +56,6 @@ function Home() {
                 ],
             },
         ];
-        setClasses(userClasses);
 
         const userTeachers = [
             {
@@ -75,10 +71,14 @@ function Home() {
                 maxHoursPerWeek: 20
             }
         ];
-        setTeachers(userTeachers);
 
         const userSubjects = ["Math", "English", "Science", "Physics", "Chemistry", "History"];
-        setSubjects(userSubjects);
+
+        setData({
+            classes: userClasses,
+            teachers: userTeachers,
+            subjects: userSubjects
+        });
 
         setIsLoading(false);
     }, []);
@@ -102,7 +102,7 @@ function Home() {
                 </TabsContent>
 
                 <TabsContent value="settings" className="space-y-6">
-                    <Settings isLoading={isLoading} classes={classes} setClasses={setClasses} teachers={teachers} setTeachers={setTeachers} subjects={subjects} />
+                    <Settings isLoading={isLoading} data={data} setData={setData} />
                 </TabsContent>
 
                 <TabsContent value="timetables" className="space-y-6">

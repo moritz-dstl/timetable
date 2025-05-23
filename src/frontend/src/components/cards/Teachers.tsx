@@ -44,7 +44,7 @@ import {
     Trash2
 } from "lucide-react";
 
-function Teachers({ teachers, setTeachers, subjects }) {
+function Teachers({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -53,7 +53,7 @@ function Teachers({ teachers, setTeachers, subjects }) {
     const [selectedTeacher, setSelectedTeacher] = useState<any>({});
 
     // Filter classes for search
-    const filteredTeachers = teachers.filter((teacherItem) => teacherItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredTeachers = data.teachers.filter((teacherItem) => teacherItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     // Handle add teacher
     const handleOpenAddDialog = () => {
@@ -67,7 +67,10 @@ function Teachers({ teachers, setTeachers, subjects }) {
     }
 
     const handleAddSave = () => {
-        setTeachers(teachers => [...teachers, selectedTeacher]);
+        setData({
+            ...data, 
+            teachers: [...data.teachers, selectedTeacher]
+        });
         setIsAddDialogOpen(false);
     }
 
@@ -78,7 +81,11 @@ function Teachers({ teachers, setTeachers, subjects }) {
     }
 
     const handleEditSave = () => {
-        setTeachers(teachers.map((teacherItem) => (teacherItem.id === selectedTeacher.id ? selectedTeacher : teacherItem)));
+        const updatedTeachers = data.teachers.map((teacherItem) => (teacherItem.id === selectedTeacher.id ? selectedTeacher : teacherItem));
+        setData({
+            ...data,
+            teachers: updatedTeachers
+        });
         setIsEditDialogOpen(false);
     }
 
@@ -89,7 +96,11 @@ function Teachers({ teachers, setTeachers, subjects }) {
     }
 
     const handleDelete = () => {
-        setTeachers(teachers.filter((teacherItem) => teacherItem.id !== selectedTeacher.id));
+        const updatedTeachers = data.teachers.filter((teacherItem) => teacherItem.id !== selectedTeacher.id);
+        setData({
+            ...data,
+            teachers: updatedTeachers
+        });
         setIsDeleteDialogOpen(false);
     }
 
@@ -253,7 +264,7 @@ function Teachers({ teachers, setTeachers, subjects }) {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {subjects.map((subject) => (
+                                                            {data.subjects.map((subject) => (
                                                                 <SelectItem key={subject} value={subject}>
                                                                     {subject}
                                                                 </SelectItem>
@@ -286,7 +297,7 @@ function Teachers({ teachers, setTeachers, subjects }) {
                                         onClick={() => {
                                             const updatedSubjects = [
                                                 ...selectedTeacher.subjects,
-                                                { name: subjects[0], hoursPerWeek: 1 },
+                                                data.subjects[0],
                                             ];
                                             setSelectedTeacher({
                                                 ...selectedTeacher,
@@ -367,7 +378,7 @@ function Teachers({ teachers, setTeachers, subjects }) {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {subjects.map((subject) => (
+                                                            {data.subjects.map((subject) => (
                                                                 <SelectItem key={subject} value={subject}>
                                                                     {subject}
                                                                 </SelectItem>
@@ -400,7 +411,7 @@ function Teachers({ teachers, setTeachers, subjects }) {
                                         onClick={() => {
                                             const updatedSubjects = [
                                                 ...selectedTeacher.subjects,
-                                                { name: subjects[0], hoursPerWeek: 1 },
+                                                data.subjects[0],
                                             ];
                                             setSelectedTeacher({
                                                 ...selectedTeacher,

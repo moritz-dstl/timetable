@@ -2,12 +2,12 @@
 import Classes from "../components/cards/Classes"
 import Teachers from "../components/cards/Teachers"
 
-function Settings({ isLoading, classes, setClasses, teachers, setTeachers, subjects }) {
+function Settings({ isLoading, data, setData }) {
     if (!isLoading) {
         return (
             <>
-                <Classes classes={classes} setClasses={setClasses} subjects={subjects} />
-                <Teachers teachers={teachers} setTeachers={setTeachers} subjects={subjects} />
+                <Classes data={data} setData={setData} />
+                <Teachers data={data} setData={setData} />
             </>
         );
     }
