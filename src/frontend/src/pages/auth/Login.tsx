@@ -6,8 +6,6 @@ import Cookies from "universal-cookie";
 // Components
 import {
     Card,
-    CardHeader,
-    CardTitle,
     CardContent,
     CardFooter,
 } from "../../components/ui/card";

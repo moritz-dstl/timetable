@@ -4,9 +4,6 @@ import { useNavigate } from "react-router-dom";
 // Components
 import {
     Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
     CardContent,
     CardFooter,
 } from "../../components/ui/card";
