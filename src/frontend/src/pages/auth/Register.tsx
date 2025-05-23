@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Cookies from "universal-cookie";
+
 // Components
 import {
     Card,
@@ -17,6 +19,12 @@ import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
 function Register() {
     const navigate = useNavigate();
+    const cookies = new Cookies();
+
+    // User logged in -> redirect home
+    if (cookies.get("auth")) {
+        window.location.href = "/";
+    }
 
     // Stateful values and functions to update them
     const [schoolname, setSchoolName] = useState("");

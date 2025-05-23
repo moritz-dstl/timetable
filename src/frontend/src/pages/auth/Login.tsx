@@ -19,6 +19,12 @@ import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
 function Login() {
     const navigate = useNavigate();
+    const cookies = new Cookies();
+
+    // User logged in -> redirect home
+    if (cookies.get("auth")) {
+        window.location.href = "/";
+    }
 
     // Stateful values and functions to update them
     const [email, setEmail] = useState("");
@@ -26,8 +32,6 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
-    const cookies = new Cookies();
 
     // Handle log in user
     const handleLogin = async (e: React.FormEvent) => {
