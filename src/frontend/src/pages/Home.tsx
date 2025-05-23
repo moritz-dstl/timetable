@@ -25,6 +25,7 @@ function Home() {
     const [isLoading, setIsLoading] = useState(true);
 
     const [classes, setClasses] = useState({});
+    const [teachers, setTeachers] = useState({});
     const [subjects, setSubjects] = useState<string[]>([]);
 
     // Load data once on page load
@@ -60,6 +61,22 @@ function Home() {
         ];
         setClasses(userClasses);
 
+        const userTeachers = [
+            {
+                id: 1,
+                name: "Mr. Smith",
+                subjects: ["Math", "English", "History"],
+                maxHoursPerWeek: 18
+            },
+            {
+                id: 2,
+                name: "Mrs. Smith",
+                subjects: ["Physics", "Chemistry", "Science"],
+                maxHoursPerWeek: 20
+            }
+        ];
+        setTeachers(userTeachers);
+
         const userSubjects = ["Math", "English", "Science", "Physics", "Chemistry", "History"];
         setSubjects(userSubjects);
 
@@ -85,7 +102,7 @@ function Home() {
                 </TabsContent>
 
                 <TabsContent value="settings" className="space-y-6">
-                    <Settings isLoading={isLoading} classes={classes} setClasses={setClasses} subjects={subjects} />
+                    <Settings isLoading={isLoading} classes={classes} setClasses={setClasses} teachers={teachers} setTeachers={setTeachers} subjects={subjects} />
                 </TabsContent>
 
                 <TabsContent value="timetables" className="space-y-6">
