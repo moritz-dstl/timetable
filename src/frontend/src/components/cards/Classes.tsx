@@ -294,7 +294,7 @@ function Classes({ classes, setClasses, subjects }) {
                                         }}
                                     >
                                         <PlusCircle className="mr-2 h-4 w-4" />
-                                        Add Subject
+                                        Add subject
                                     </Button>
                                 </div>
                             </div>
@@ -414,7 +414,7 @@ function Classes({ classes, setClasses, subjects }) {
                                         }}
                                     >
                                         <PlusCircle className="mr-2 h-4 w-4" />
-                                        Add Subject
+                                        Add subject
                                     </Button>
                                 </div>
                             </div>
