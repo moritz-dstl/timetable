@@ -4,6 +4,7 @@ from User import User
 from AsyncCompute import AsyncCompute
 from Settings import Settings
 import logging
+import config
 
 app = Flask(__name__)
 
@@ -16,8 +17,8 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
-#secret key for sessions >> encrypted cookies
-app.secret_key = 'sessionKeyTimetable'
+#secret key for sessions >> encrypts cookies
+app.secret_key = config.SECRET_KEY
 
 logging.basicConfig(level=logging.DEBUG)
 

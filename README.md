@@ -1,12 +1,17 @@
-# Timetable Generator
+# FOTTG - free online timetable generator
 
+## How to get started
 To run the API, navigate to the folder of the cloned Git repository in your terminal and execute:
+```
 docker compose up -d --build
+```
 This command will start all containers, including the database and the API container.
 
 Once everything is running, you can use the following API endpoints via localhost:8000:
 
-Register a new user:
+
+## How to use all the API endpoints
+### Register a new user:
 Use the endpoint POST /User/register with a JSON body like:
 { "email": "jane.doe@example.com", "password": "password_string" }
 This creates a new user in the database. If the email already exists, the server will return status code 400.
