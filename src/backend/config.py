@@ -1,4 +1,3 @@
-# config.py
 DB_USER = "root"
 DB_PASSWORD = "DB_PASSWORD" # in a real-world scenario, this should be stored securely
 DB_HOST = "mariadb-container"
