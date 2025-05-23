@@ -22,7 +22,7 @@ function Register() {
     const navigate = useNavigate();
 
     // Stateful values and functions to update them
-    const [username, setUsername] = useState("");
+    const [schoolname, setSchoolName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -70,14 +70,14 @@ function Register() {
                     <CardContent>
                         <form onSubmit={handleRegister} className="space-y-4 pt-6">
 
-                            {/* Input: Username */}
+                            {/* Input: School name */}
                             <div className="space-y-2">
-                                <Label htmlFor="username">Username</Label>
+                                <Label htmlFor="schoolname">School name</Label>
                                 <Input
-                                    id="username"
+                                    id="schoolname"
                                     type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    value={schoolname}
+                                    onChange={(e) => setSchoolName(e.target.value)}
                                     required
                                     />
                             </div>
