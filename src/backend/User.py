@@ -12,10 +12,11 @@ def register_user():
     new_email = request.json.get('email')
     new_password = request.json.get('password')  # unhashed password
     new_password = utils.hash_password(new_password)  # hash and salt the password
+    new_school_name = request.json.get('school_name') 
     
 
     # Check if all required fields are provided
-    if all([new_email, new_password]):
+    if all([new_email, new_password, new_school_name]):
         conn = utils.get_db_connection()
         cursor = conn.cursor(buffered=True)  # Use buffered cursor to fetch all results immediately
 
@@ -25,8 +26,8 @@ def register_user():
         if not email_already_used:
             # Insert new user into the database
             cursor.execute(
-                "INSERT INTO Users (email, password) VALUES (%s, %s)",
-                (new_email, new_password)
+                "INSERT INTO Users (email, password, school_name) VALUES (%s, %s,%s)",
+                (new_email, new_password, new_school_name)
             )
             conn.commit()
             cursor.close()
@@ -69,6 +70,27 @@ def login():
         conn.close()
         return jsonify({'message': 'Invalid login credentials!'}), 401
     
+
+@User.route('/User/get_school', methods=['GET'])
+def get_school():
+    Uid = session.get('Uid')
+    if Uid is None:
+        return jsonify({"error": "No UID found in session"}), 403
+
+    conn = utils.get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the school name for the current user
+    cursor.execute("SELECT school_name FROM Users WHERE Uid = %s", (Uid,))
+    school_name = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if school_name:
+        return jsonify({"school_name": school_name[0]}), 200
+    else:
+        return jsonify({"error": "School not found"}), 404
 
 @User.route('/User/logout', methods=['POST'])
 # Clears the current user session

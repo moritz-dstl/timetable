@@ -10,6 +10,7 @@ class User(Base):
     Uid = Column(Integer, primary_key=True)
     email = Column(String(128), nullable=False, unique=True)
     password = Column(String(128), nullable=False)  # Hashed password
+    school_name = Column(String(128), nullable=False)
 
 # All setings related to the timetable generation
 class Settings(Base):
