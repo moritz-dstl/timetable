@@ -1,10 +1,14 @@
+// Cards
+import Classes from "../components/cards/Classes"
 
-function Settings() {
-    return (
-        <>
-            <h1 className="text-2xl font-bold">Settings</h1>
-        </>
-    );
+function Settings({ isLoading, classes, setClasses, subjects }) {
+    if (!isLoading) {
+        return (
+            <>
+                <Classes classes={classes} setClasses={setClasses} subjects={subjects} />
+            </>
+        );
+    }
 }
 
 export default Settings;
