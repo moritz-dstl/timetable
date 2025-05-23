@@ -5,71 +5,74 @@ To run the API, navigate to the folder of the cloned Git repository in your term
 ```
 docker compose up -d --build
 ```
-This command will start all containers, including the database and the API container.
+This command will build all images and start all containers, including the database and the API container.
 
-Once everything is running, you can use the following API endpoints via localhost:8000:
+Once everything is running, you can use the following API endpoints via `localhost:8000`:
 
 
 ## How to use all the API endpoints
 ### Register a new user:
-Use the endpoint POST /User/register with a JSON body like:
+Use the endpoint `POST /User/register` with a JSON body like:
+```
 { "email": "jane.doe@example.com", "password": "password_string" }
+```
 This creates a new user in the database. If the email already exists, the server will return status code 400.
 
-Log in:
-Use the endpoint POST /User/login with a JSON body like:
+### Log in:
+Use the endpoint `POST /User/login` with a JSON body like:
+```
 { "email": "jane.doe@example.com", "password": "password_string" }
+```
 This checks if a user with the given email and password exists. If successful, a session token containing the user ID (Uid) is created and HTTP status 200 is returned. Otherwise, HTTP status 401 is returned.
 
-Log out:
-Use the endpoint POST /User/logout without any body. This clears the current session and returns HTTP status 200.
+### Log out:
+Use the endpoint `POST /User/logout` without any body. This clears the current session and returns HTTP status 200.
 
 
-Set Settings:
-The endpoint POST /Settings/set expects a JSON object containing the following keys:
+### Set Settings:
+The endpoint `POST /Settings/set` expects a JSON object containing the following keys:
 
-settings: general configuration for the timetable generator. Fields must include:
+**`settings`: general configuration for the timetable generator. Fields must include**:
 
-prefer_early_hours: true or false           – whether earlier periods should be preferred
-allow_block_scheduling: true or false       – whether double lessons (blocks) are allowed
-max_hours_per_day: int                      - maximum number of hours a subject can appear per day
-max_consecutive_hours: int                  - maximum consecutive lessons allowed in a day
-break_window_start: int 
-break_window_end: int                       - define the time window in which a lunchbreak must occur
-weight_block_scheduling: int                - weighting factor for encouraging block scheduling
-weight_time_of_hours: int                   - weighting factor for the preference of early or late hours
-max_time_for_solving: int                   - maximum solving time in seconds for the timetable algorithm
+`prefer_early_hours`: `true or false`           – whether earlier periods should be preferred
+`allow_block_scheduling`: `true or false`       – whether double lessons (blocks) are allowed
+`max_hours_per_day`: `int`                      - maximum number of hours a subject can appear per day
+`max_consecutive_hours`: `int`                  - maximum consecutive lessons allowed in a day
+`break_window_start`: `int` 
+`break_window_end`: `int`                       - define the time window in which a lunchbreak must occur
+`weight_block_scheduling`: `int`                - weighting factor for encouraging block scheduling
+`weight_time_of_hours`: `int`                   - weighting factor for the preference of early or late hours
+`max_time_for_solving`: `int`                   - maximum solving time in seconds for the timetable algorithm
 
-school: structure of the school with:
+**``school``: structure of the school with:**
 
-classes: list of class names                - (e.g. ["C1", "C2", "C3"])
-subjects: list of subject names             - (e.g. ["Math", "English", "Physics"])
-hours_per_day: int                          - number of periods per day
+`classes`:`list of class names`                - (e.g. ["C1", "C2", "C3"])subjects: list of subject names     (e.g. ["Math", "English", "Physics"])
+`hours_per_day`: `int`                          - number of periods per day
 
-teachers: list of teachers. Each teacher object includes:
+**`teachers`: list of teachers. Each teacher object includes:**
 
-name: string                                - full name of the teacher
-max_hours: int                              - maximum weekly teaching load
-subjects: list of subjects the teacher can teach
+`name`: `string`                                - full name of the teacher
+`max_hours`: `int`                              - maximum weekly teaching load
+`subjects`: `list of subjects the teacher can teach`
 
-class_allocations: list of subjects assigned to each class, each with:
+**`class_allocations`: list of subjects assigned to each class, each with:**
 
-class_name: string
-subject: string                             - name of subject
-hours_per_week: int                         - amount of hours subject has to be teached per week
+`class_name`: `string`
+`subject`: `string`                             - name of subject
+`hours_per_week`: `int`                         - amount of hours subject has to be teached per week
 
-subject_parallel_limits: optional list of subjects that cannot be taught in too many classes at once (e.g. due to room constraints). Each entry includes:
+**`subject_parallel_limits`: optional list of subjects that cannot be taught in too many classes at once (e.g. due to room constraints). Each entry includes:**
 
-subject_name: string
-max_parallel: int                           - max simultaneous occurrences
+`subject_name`: `string`
+`max_parallel`: `int`                           - max simultaneous occurrences
 
-prefer_block_subjects: optional list of subjects that strongly prefer to be scheduled in double periods, each with:
+**`prefer_block_subjects`: optional list of subjects that strongly prefer to be scheduled in double periods, each with:**
 
-subject_name: string
-weight: int                                 - Numeric weight (should be set higher than 10. A value above 50  
-                                              will almost always ensure the subject is scheduled as a block).
+`subject_name`: `string`
+`weight`: `int`                                 - Numeric weight (should be set **higher than 10**. A value above 50 will almost always ensure the subject is scheduled as a block).
 
-Example working Json body:
+#### Example working Json body:
+```
     {
     "settings": {
         "prefer_early_hours": true,
@@ -137,11 +140,12 @@ Example working Json body:
         { "subject_name": "PE", "weight": 60 }
     ]
     }
+```
 
-
-Get Settings:
-The endpoint GET /Settings/get returns a JSON object with the following structure:
-Example:
+### Get Settings:
+The endpoint `GET /Settings/get` returns a JSON object with the following structure:
+**Example:**
+```
     {
         "classes": [
             {
@@ -246,28 +250,30 @@ Example:
             }
         ]
     }
+```
 
-
-Compute Timetable:
-The endpoint GET /start_computing starts the computing progress and instantly returns:
-
+### Compute Timetable:
+The endpoint `GET /start_computing` starts the computing progress and instantly returns:
+```
 {
     "job_id": "24de5582-1b57-42dc-b5a3-bd2c4366806b",
     "status": "started"
 }
+````
 
-Status of Computing:
-The endpoint GET /status/<job_id> (replace <job_id> with the ID returned from /start_computing) returns the current status of the timetable computation and, if available, the result.
+### Status of Computing:
+The endpoint `GET /status/<job_id>` (replace <job_id> with the ID returned from /start_computing) returns the current status of the timetable computation and, if available, the result.
 
-If the status is still running, the result will be null:
-
+If the status is `still running`, the result will be null:
+```
 {
     "result": null,
     "status": "running"
 }
+````
 
-Once the computation is finished, the result will contain the full timetable in the following structure:
-
+Once the computation is `finished`, the result will contain the full timetable in the following structure:
+```
 {
   "status": "finished",
   "result": {
@@ -300,3 +306,4 @@ Once the computation is finished, the result will contain the full timetable in 
     }
   }
 }
+```
