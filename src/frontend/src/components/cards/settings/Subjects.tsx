@@ -61,7 +61,7 @@ function SettingsSubjects({ data, setData }) {
         setSelectedSubject({
             id: new Date().getTime(),
             name: "",
-            maxParallel: -1,
+            maxParallel: 0,
             forceDoubleLesson: false,
         });
     }
@@ -123,10 +123,10 @@ function SettingsSubjects({ data, setData }) {
                     <Label>Max. in Parallel</Label>
                     <Input
                         type="number"
-                        min={-1}
+                        min={0}
                         className="w-full mt-2"
-                        value={selectedSubject.maxParallel < 0 ? "" : selectedSubject.maxParallel}
-                        onChange={(e) => setSelectedSubject({ ...selectedSubject, maxParallel: isNaN(parseInt(e.target.value)) ? -1 : parseInt(e.target.value) })}
+                        value={selectedSubject.maxParallel == 0 ? "" : selectedSubject.maxParallel}
+                        onChange={(e) => setSelectedSubject({ ...selectedSubject, maxParallel: isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 0 ? 0 : parseInt(e.target.value) })}
                     />
                 </div>
                 {/* Switch: Force double lesson */}
@@ -197,7 +197,7 @@ function SettingsSubjects({ data, setData }) {
 
                                         {/* Max. in parallel */}
                                         <TableCell className="font-medium">
-                                            {subjectItem.maxParallel >= 0 ? subjectItem.maxParallel + 'x' : "-"}
+                                            {subjectItem.maxParallel > 0 ? subjectItem.maxParallel + 'x' : "-"}
                                         </TableCell>
 
                                         {/* Force double lesson */}

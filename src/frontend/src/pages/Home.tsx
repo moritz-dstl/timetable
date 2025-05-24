@@ -93,13 +93,13 @@ function Home() {
             {
                 id: 1,
                 name: "Math",
-                maxParallel: -1,
+                maxParallel: 0,
                 forceDoubleLesson: true
             },
             {
                 id: 2,
                 name: "English",
-                maxParallel: -1,
+                maxParallel: 0,
                 forceDoubleLesson: false
             },
             {
@@ -123,7 +123,7 @@ function Home() {
             {
                 id: 6,
                 name: "History",
-                maxParallel: -1,
+                maxParallel: 0,
                 forceDoubleLesson: false
             },
         ]
