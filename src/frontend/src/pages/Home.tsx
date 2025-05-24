@@ -133,7 +133,8 @@ function Home() {
             settings: settings,
             classes: classes,
             teachers: teachers,
-            subjects: subjects
+            subjects: subjects,
+            newChangesMade: false
         });
 
         setIsLoading(false);

@@ -1,4 +1,5 @@
 // Cards
+import SettingsDiscardSave from "../components/cards/settings/DiscardSave"
 import SettingsGeneral from "../components/cards/settings/General"
 import SettingsClasses from "../components/cards/settings/Classes"
 import SettingsTeachers from "../components/cards/settings/Teachers"
@@ -8,6 +9,7 @@ function Settings({ isLoading, data, setData }) {
     if (!isLoading) {
         return (
             <>
+                <SettingsDiscardSave data={data} setData={setData} />
                 <SettingsGeneral data={data} setData={setData} />
                 <SettingsClasses data={data} setData={setData} />
                 <SettingsTeachers data={data} setData={setData} />

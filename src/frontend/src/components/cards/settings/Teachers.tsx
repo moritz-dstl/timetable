@@ -66,9 +66,10 @@ function SettingsTeachers({ data, setData }) {
         });
     }
 
-    const handleAddSave = () => {
+    const handleAddConfirm = () => {
         setData({
             ...data,
+            newChangesMade: true,
             teachers: [...data.teachers, selectedTeacher]
         });
         setIsAddDialogOpen(false);
@@ -80,10 +81,11 @@ function SettingsTeachers({ data, setData }) {
         setSelectedTeacher(teacherItem);
     }
 
-    const handleEditSave = () => {
+    const handleEditConfirm = () => {
         const updatedTeachers = data.teachers.map((teacherItem) => (teacherItem.id === selectedTeacher.id ? selectedTeacher : teacherItem));
         setData({
             ...data,
+            newChangesMade: true,
             teachers: updatedTeachers
         });
         setIsEditDialogOpen(false);
@@ -99,6 +101,7 @@ function SettingsTeachers({ data, setData }) {
         const updatedTeachers = data.teachers.filter((teacherItem) => teacherItem.id !== selectedTeacher.id);
         setData({
             ...data,
+            newChangesMade: true,
             teachers: updatedTeachers
         });
         setIsDeleteDialogOpen(false);
@@ -326,10 +329,10 @@ function SettingsTeachers({ data, setData }) {
                         </Button>
                         <Button
                             className="col-span-2"
-                            onClick={handleAddSave}
+                            onClick={handleAddConfirm}
                             disabled={selectedTeacher && isAddDialogOpen && !selectedTeacher.name.trim()}
                         >
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -355,10 +358,10 @@ function SettingsTeachers({ data, setData }) {
                         </Button>
                         <Button
                             className="col-span-2"
-                            onClick={handleEditSave}
+                            onClick={handleEditConfirm}
                             disabled={selectedTeacher && isEditDialogOpen && !selectedTeacher.name.trim()}
                         >
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                 </DialogContent>

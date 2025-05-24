@@ -65,9 +65,10 @@ function SettingsClasses({ data, setData }) {
         });
     }
 
-    const handleAddSave = () => {
+    const handleAddConfirm = () => {
         setData({
             ...data,
+            newChangesMade: true,
             classes: [...data.classes, selectedClass]
         });
         setIsAddDialogOpen(false);
@@ -79,10 +80,11 @@ function SettingsClasses({ data, setData }) {
         setSelectedClass(classItem);
     }
 
-    const handleEditSave = () => {
+    const handleEditConfirm = () => {
         const updatedClasses = data.classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem));
         setData({
             ...data,
+            newChangesMade: true,
             classes: updatedClasses
         });
         setIsEditDialogOpen(false);
@@ -98,6 +100,7 @@ function SettingsClasses({ data, setData }) {
         const updatedClasses = data.classes.filter((classItem) => classItem.id !== selectedClass.id);
         setData({
             ...data,
+            newChangesMade: true,
             classes: updatedClasses
         });
         setIsDeleteDialogOpen(false);
@@ -325,10 +328,10 @@ function SettingsClasses({ data, setData }) {
                         </Button>
                         <Button
                             className="col-span-2"
-                            onClick={handleAddSave}
+                            onClick={handleAddConfirm}
                             disabled={selectedClass && isAddDialogOpen && !selectedClass.name.trim()}
                         >
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -354,10 +357,10 @@ function SettingsClasses({ data, setData }) {
                         </Button>
                         <Button
                             className="col-span-2"
-                            onClick={handleEditSave}
+                            onClick={handleEditConfirm}
                             disabled={selectedClass && isEditDialogOpen && !selectedClass.name.trim()}
                         >
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                 </DialogContent>

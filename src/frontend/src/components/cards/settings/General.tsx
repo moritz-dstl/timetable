@@ -30,7 +30,11 @@ function SettingsGeneral({ data, setData }) {
                     <div className="flex flex-row gap-3 items-center">
                         <Switch
                             checked={data.settings.preferEarlyPeriods}
-                            onCheckedChange={(checked) => setData({ ...data, settings: { ...data.settings, preferEarlyPeriods: checked } })}
+                            onCheckedChange={(checked) => setData({
+                                ...data, 
+                                newChangesMade: true,
+                                settings: { ...data.settings, preferEarlyPeriods: checked } 
+                            })}
                         />
                         <Label>Prefer Early Periods</Label>
                     </div>
@@ -38,7 +42,11 @@ function SettingsGeneral({ data, setData }) {
                     <div className="flex flex-row gap-3 items-center">
                         <Switch
                             checked={data.settings.allowDoubleLessons}
-                            onCheckedChange={(checked) => setData({ ...data, settings: { ...data.settings, allowDoubleLessons: checked } })}
+                            onCheckedChange={(checked) => setData({
+                                ...data, 
+                                newChangesMade: true,
+                                settings: { ...data.settings, allowDoubleLessons: checked } 
+                            })}
                         />
                         <Label>Allow Double Lessons</Label>
                     </div>
@@ -56,7 +64,11 @@ function SettingsGeneral({ data, setData }) {
                                 type="number"
                                 min={1}
                                 value={data.settings.numPeriodsPerDay}
-                                onChange={(e) => setData({ ...data, settings: { ...data.settings, numPeriodsPerDay: isNaN(parseInt(e.target.value)) ? 8 : parseInt(e.target.value) } })}
+                                onChange={(e) => setData({ 
+                                    ...data, 
+                                    newChangesMade: true,
+                                    settings: { ...data.settings, numPeriodsPerDay: isNaN(parseInt(e.target.value)) ? 8 : parseInt(e.target.value) } 
+                                })}
                             />
                         </div>
                         {/* Input: Break window */}
@@ -70,6 +82,7 @@ function SettingsGeneral({ data, setData }) {
                                     value={data.settings.breakWindow.start}
                                     onChange={(e) => setData({
                                         ...data,
+                                        newChangesMade: true,
                                         settings: {
                                             ...data.settings,
                                             breakWindow: {
@@ -87,6 +100,7 @@ function SettingsGeneral({ data, setData }) {
                                     value={data.settings.breakWindow.end}
                                     onChange={(e) => setData({
                                         ...data,
+                                        newChangesMade: true,
                                         settings: {
                                             ...data.settings,
                                             breakWindow: {
@@ -108,7 +122,11 @@ function SettingsGeneral({ data, setData }) {
                                 min={1}
                                 max={data.settings.numPeriodsPerDay}
                                 value={data.settings.maxConsecutivePeriods}
-                                onChange={(e) => setData({ ...data, settings: { ...data.settings, maxConsecutivePeriods: isNaN(parseInt(e.target.value)) ? 6 : parseInt(e.target.value) } })}
+                                onChange={(e) => setData({ 
+                                    ...data, 
+                                    newChangesMade: true,
+                                    settings: { ...data.settings, maxConsecutivePeriods: isNaN(parseInt(e.target.value)) ? 6 : parseInt(e.target.value) } 
+                                })}
                             />
                         </div>
                         {/* Input: Max repetitions of subject */}
@@ -119,7 +137,11 @@ function SettingsGeneral({ data, setData }) {
                                 min={1}
                                 max={data.settings.numPeriodsPerDay}
                                 value={data.settings.maxRepetitionsSubjectPerDay}
-                                onChange={(e) => setData({ ...data, settings: { ...data.settings, maxRepetitionsSubjectPerDay: isNaN(parseInt(e.target.value)) ? 2 : parseInt(e.target.value) } })}
+                                onChange={(e) => setData({ 
+                                    ...data, 
+                                    newChangesMade: true,
+                                    settings: { ...data.settings, maxRepetitionsSubjectPerDay: isNaN(parseInt(e.target.value)) ? 2 : parseInt(e.target.value) } 
+                                })}
                             />
                         </div>
 

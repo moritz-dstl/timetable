@@ -66,9 +66,10 @@ function SettingsSubjects({ data, setData }) {
         });
     }
 
-    const handleAddSave = () => {
+    const handleAddConfirm = () => {
         setData({
             ...data,
+            newChangesMade: true,
             subjects: [...data.subjects, selectedSubject]
         });
         setIsAddDialogOpen(false);
@@ -80,11 +81,12 @@ function SettingsSubjects({ data, setData }) {
         setSelectedSubject(subjectItem);
     }
 
-    const handleEditSave = () => {
+    const handleEditConfirm = () => {
         console.log(selectedSubject);
         const updatedSubjects = data.subjects.map((subjectItem) => (subjectItem.id === selectedSubject.id ? selectedSubject : subjectItem));
         setData({
             ...data,
+            newChangesMade: true,
             subjects: updatedSubjects
         });
         setIsEditDialogOpen(false);
@@ -100,6 +102,7 @@ function SettingsSubjects({ data, setData }) {
         const updatedSubjects = data.subjects.filter((subjectItem) => subjectItem.id !== selectedSubject.id);
         setData({
             ...data,
+            newChangesMade: true,
             subjects: updatedSubjects
         });
         setIsDeleteDialogOpen(false);
@@ -257,10 +260,10 @@ function SettingsSubjects({ data, setData }) {
                         </Button>
                         <Button
                             className="col-span-2"
-                            onClick={handleAddSave}
+                            onClick={handleAddConfirm}
                             disabled={selectedSubject && isAddDialogOpen && !selectedSubject.name.trim()}
                         >
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -286,10 +289,10 @@ function SettingsSubjects({ data, setData }) {
                         </Button>
                         <Button
                             className="col-span-2"
-                            onClick={handleEditSave}
+                            onClick={handleEditConfirm}
                             disabled={selectedSubject && isEditDialogOpen && !selectedSubject.name.trim()}
                         >
-                            Save
+                            Confirm
                         </Button>
                     </DialogFooter>
                 </DialogContent>
