@@ -7,18 +7,18 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "../ui/card";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Badge } from "../ui/badge";
+} from "../../ui/card";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Badge } from "../../ui/badge";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 import {
     Table,
     TableBody,
@@ -26,7 +26,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../ui/table";
+} from "../../ui/table";
 import {
     Dialog,
     DialogContent,
@@ -34,7 +34,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "../ui/dialog";
+} from "../../ui/dialog";
 
 // Icons
 import {

@@ -7,11 +7,11 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "../ui/card";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Switch } from "../ui/switch";
+} from "../../ui/card";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Switch } from "../../ui/switch";
 import {
     Table,
     TableBody,
@@ -19,7 +19,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../ui/table";
+} from "../../ui/table";
 import {
     Dialog,
     DialogContent,
@@ -27,7 +27,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "../ui/dialog";
+} from "../../ui/dialog";
 
 // Icons
 import {

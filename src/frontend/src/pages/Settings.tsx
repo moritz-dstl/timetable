@@ -1,7 +1,7 @@
 // Cards
-import Classes from "../components/cards/Classes"
-import Teachers from "../components/cards/Teachers"
-import Subjects from "../components/cards/Subjects"
+import Classes from "../components/cards/settings/Classes"
+import Teachers from "../components/cards/settings/Teachers"
+import Subjects from "../components/cards/settings/Subjects"
 
 function Settings({ isLoading, data, setData }) {
     if (!isLoading) {
