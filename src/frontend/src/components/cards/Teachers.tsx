@@ -52,7 +52,7 @@ function Teachers({ data, setData }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedTeacher, setSelectedTeacher] = useState<any>({});
 
-    // Filter classes for search
+    // Filter teachers for search
     const filteredTeachers = data.teachers.filter((teacherItem) => teacherItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     // Handle add teacher
@@ -68,7 +68,7 @@ function Teachers({ data, setData }) {
 
     const handleAddSave = () => {
         setData({
-            ...data, 
+            ...data,
             teachers: [...data.teachers, selectedTeacher]
         });
         setIsAddDialogOpen(false);
@@ -103,6 +103,104 @@ function Teachers({ data, setData }) {
         });
         setIsDeleteDialogOpen(false);
     }
+
+    // The content of the dialog for add and edit is the same
+    const add_edit_dialog_content = (
+        <div className="flex flex-col gap-4">
+
+            <div className="grid grid-cols-6 gap-4 mt-1">
+                {/* Input: Name */}
+                <div className="col-span-4">
+                    <Label>Name</Label>
+                    <Input
+                        className="mt-2"
+                        value={selectedTeacher.name}
+                        onChange={(e) => setSelectedTeacher({ ...selectedTeacher, name: e.target.value })}
+                    />
+                </div>
+                {/* Input: Hours per week */}
+                <div className="col-span-2">
+                    <Label>Max. h/week</Label>
+                    <Input
+                        type="number"
+                        min={1}
+                        className="w-full mt-2"
+                        value={selectedTeacher.maxHoursPerWeek}
+                        onChange={(e) => setSelectedTeacher({ ...selectedTeacher, maxHoursPerWeek: parseInt(e.target.value) })}
+                    />
+                </div>
+            </div>
+
+            {/* Subjects */}
+            <div className="flex flex-col gap-2 max-h-64 overflow-scroll">
+                <Label className="pt-2">Subjects</Label>
+                <div className="flex flex-col gap-2">
+                    {selectedTeacher.subjects && selectedTeacher.subjects.map(
+                        (subject, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                {/* Select: Subject */}
+                                <Select
+                                    value={subject}
+                                    onValueChange={(value) => {
+                                        const updatedSubjects = [...selectedTeacher.subjects];
+                                        updatedSubjects[index] = value;
+                                        setSelectedTeacher({
+                                            ...selectedTeacher,
+                                            subjects: updatedSubjects,
+                                        });
+                                    }}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {data.subjects.map((subject) => (
+                                            <SelectItem key={subject.id} value={subject.name}>
+                                                {subject.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {/* Button: Delete subject */}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => {
+                                        const updatedSubjects = selectedTeacher.subjects.filter((element, idx) => idx !== index);
+                                        setSelectedTeacher({
+                                            ...selectedTeacher,
+                                            subjects: updatedSubjects,
+                                        });
+                                    }}
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        ),
+                    )}
+                </div>
+                {/* Button: Add subject */}
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="min-h-8"
+                    onClick={() => {
+                        const updatedSubjects = [
+                            ...selectedTeacher.subjects,
+                            data.subjects[0].name,
+                        ];
+                        setSelectedTeacher({
+                            ...selectedTeacher,
+                            subjects: updatedSubjects,
+                        });
+                    }}
+                >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add subject
+                </Button>
+            </div>
+        </div>
+    );
 
     return (
         <>
@@ -214,104 +312,7 @@ function Teachers({ data, setData }) {
                             Enter the details for the new teacher
                         </DialogDescription>
                     </DialogHeader>
-                    {
-                        selectedTeacher && isAddDialogOpen && (
-                            <div className="flex flex-col gap-4">
-
-                                <div className="grid grid-cols-6 gap-4 mt-1">
-                                    {/* Input: Name */}
-                                    <div className="col-span-4">
-                                        <Label>Name</Label>
-                                        <Input
-                                            className="mt-2"
-                                            value={selectedTeacher.name}
-                                            onChange={(e) => setSelectedTeacher({ ...selectedTeacher, name: e.target.value })}
-                                        />
-                                    </div>
-                                    {/* Input: Hours per week */}
-                                    <div className="col-span-2">
-                                        <Label>Max. h/week</Label>
-                                        <Input
-                                            type="number"
-                                            min={1}
-                                            className="w-full mt-2"
-                                            value={selectedTeacher.maxHoursPerWeek}
-                                            onChange={(e) => setSelectedTeacher({ ...selectedTeacher, maxHoursPerWeek: parseInt(e.target.value) })}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Subjects */}
-                                <div className="flex flex-col gap-2 max-h-64 overflow-scroll">
-                                    <Label className="pt-2">Subjects</Label>
-                                    <div className="flex flex-col gap-2">
-                                        {selectedTeacher.subjects.map(
-                                            (subject, index) => (
-                                                <div key={index} className="flex items-center gap-2">
-                                                    {/* Select: Subject */}
-                                                    <Select
-                                                        value={subject}
-                                                        onValueChange={(value) => {
-                                                            const updatedSubjects = [...selectedTeacher.subjects];
-                                                            updatedSubjects[index] = value;
-                                                            setSelectedTeacher({
-                                                                ...selectedTeacher,
-                                                                subjects: updatedSubjects,
-                                                            });
-                                                        }}
-                                                    >
-                                                        <SelectTrigger>
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {data.subjects.map((subject) => (
-                                                                <SelectItem key={subject} value={subject}>
-                                                                    {subject}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    {/* Button: Delete subject */}
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={() => {
-                                                            const updatedSubjects = selectedTeacher.subjects.filter((element, idx) => idx !== index);
-                                                            setSelectedTeacher({
-                                                                ...selectedTeacher,
-                                                                subjects: updatedSubjects,
-                                                            });
-                                                        }}
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            ),
-                                        )}
-                                    </div>
-                                    {/* Button: Add subject */}
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="min-h-8"
-                                        onClick={() => {
-                                            const updatedSubjects = [
-                                                ...selectedTeacher.subjects,
-                                                data.subjects[0],
-                                            ];
-                                            setSelectedTeacher({
-                                                ...selectedTeacher,
-                                                subjects: updatedSubjects,
-                                            });
-                                        }}
-                                    >
-                                        <PlusCircle className="mr-2 h-4 w-4" />
-                                        Add subject
-                                    </Button>
-                                </div>
-                            </div>
-                        )
-                    }
+                    {selectedTeacher && isAddDialogOpen && add_edit_dialog_content}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
                         <Button className="col-span-2" variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
                         <Button className="col-span-2" onClick={handleAddSave}>Save</Button>
@@ -328,104 +329,7 @@ function Teachers({ data, setData }) {
                             Edit the details of the teacher
                         </DialogDescription>
                     </DialogHeader>
-                    {
-                        selectedTeacher && isEditDialogOpen && (
-                            <div className="flex flex-col gap-4">
-
-                                <div className="grid grid-cols-6 gap-4 mt-1">
-                                    {/* Input: Name */}
-                                    <div className="col-span-4">
-                                        <Label>Name</Label>
-                                        <Input
-                                            className="mt-2"
-                                            value={selectedTeacher.name}
-                                            onChange={(e) => setSelectedTeacher({ ...selectedTeacher, name: e.target.value })}
-                                        />
-                                    </div>
-                                    {/* Input: Hours per week */}
-                                    <div className="col-span-2">
-                                        <Label>Max. h/week</Label>
-                                        <Input
-                                            type="number"
-                                            min={1}
-                                            className="w-full mt-2"
-                                            value={selectedTeacher.maxHoursPerWeek}
-                                            onChange={(e) => setSelectedTeacher({ ...selectedTeacher, maxHoursPerWeek: parseInt(e.target.value) })}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Subjects */}
-                                <div className="flex flex-col gap-2 max-h-64 overflow-scroll">
-                                    <Label className="pt-2">Subjects</Label>
-                                    <div className="flex flex-col gap-2">
-                                        {selectedTeacher.subjects.map(
-                                            (subject, index) => (
-                                                <div key={index} className="flex items-center gap-2">
-                                                    {/* Select: Subject */}
-                                                    <Select
-                                                        value={subject}
-                                                        onValueChange={(value) => {
-                                                            const updatedSubjects = [...selectedTeacher.subjects];
-                                                            updatedSubjects[index] = value;
-                                                            setSelectedTeacher({
-                                                                ...selectedTeacher,
-                                                                subjects: updatedSubjects,
-                                                            });
-                                                        }}
-                                                    >
-                                                        <SelectTrigger>
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {data.subjects.map((subject) => (
-                                                                <SelectItem key={subject} value={subject}>
-                                                                    {subject}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    {/* Button: Delete subject */}
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={() => {
-                                                            const updatedSubjects = selectedTeacher.subjects.filter((element, idx) => idx !== index);
-                                                            setSelectedTeacher({
-                                                                ...selectedTeacher,
-                                                                subjects: updatedSubjects,
-                                                            });
-                                                        }}
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            ),
-                                        )}
-                                    </div>
-                                    {/* Button: Add subject */}
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="min-h-8"
-                                        onClick={() => {
-                                            const updatedSubjects = [
-                                                ...selectedTeacher.subjects,
-                                                data.subjects[0],
-                                            ];
-                                            setSelectedTeacher({
-                                                ...selectedTeacher,
-                                                subjects: updatedSubjects,
-                                            });
-                                        }}
-                                    >
-                                        <PlusCircle className="mr-2 h-4 w-4" />
-                                        Add subject
-                                    </Button>
-                                </div>
-                            </div>
-                        )
-                    }
+                    {selectedTeacher && isEditDialogOpen && add_edit_dialog_content}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
                         <Button className="col-span-2" variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
                         <Button className="col-span-2" onClick={handleEditSave}>Save</Button>
