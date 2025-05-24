@@ -7,7 +7,7 @@ function Footer() {
             <div className="container">
                 <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-2">
                     <div className="text-sm text-muted-foreground">
-                        Copyright &copy; {new Date().getFullYear()} FOTTG
+                        Copyright &copy; {new Date().getFullYear()} Fottg
                     </div>
 
                     {/* TODO: Navigate to pages and create pages */}

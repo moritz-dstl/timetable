@@ -25,7 +25,7 @@ function Header() {
                         <Boxes className="h-8 w-8" color="#FF9100" />
                     </div>
                     <span className="flex gap-1">
-                        <h1 className="block sm:hidden text-2xl font-bold">FOTTG</h1>
+                        <h1 className="block sm:hidden text-2xl font-bold">Fottg</h1>
                         <h1 className="hidden sm:block text-2xl font-bold">Free Online Timetable Generator</h1>
                     </span>
                 </span>
