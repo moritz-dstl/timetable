@@ -72,7 +72,44 @@ function Home() {
             }
         ];
 
-        const userSubjects = ["Math", "English", "Science", "Physics", "Chemistry", "History"];
+        const userSubjects = [
+            {
+                id: 1,
+                name: "Math",
+                maxParallel: -1,
+                block: true
+            },
+            {
+                id: 2,
+                name: "English",
+                maxParallel: -1,
+                block: false
+            },
+            {
+                id: 3,
+                name: "Science",
+                maxParallel: 2,
+                block: false
+            },
+            {
+                id: 4,
+                name: "Physics",
+                maxParallel: 2,
+                block: false
+            },
+            {
+                id: 5,
+                name: "Chemistry",
+                maxParallel: 2,
+                block: true
+            },
+            {
+                id: 6,
+                name: "History",
+                maxParallel: -1,
+                block: false
+            },
+        ]
 
         setData({
             classes: userClasses,

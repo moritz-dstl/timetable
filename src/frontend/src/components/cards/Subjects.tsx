@@ -1,0 +1,316 @@
+import { useState } from "react";
+
+// Components
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "../ui/card";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Switch } from "../ui/switch";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "../ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "../ui/dialog";
+
+// Icons
+import {
+    PlusCircle,
+    Search,
+    Edit,
+    Trash2
+} from "lucide-react";
+
+function Subjects({ data, setData }) {
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedSubject, setSelectedSubject] = useState<any>({});
+
+    // List of all used subjects
+    // Unused subjects can be deleted
+    const usedSubjectsClasses = data.classes.map((classItem) => (classItem.subjects.map((subject) => (subject.name)))).flat();
+    const usedSubjectsTeachers = data.teachers.map((teacherItem) => teacherItem.subjects).flat();
+    // Concat and remove duplicates
+    const usedSubjects = [...new Set(usedSubjectsClasses.concat(usedSubjectsTeachers))];
+
+    // Filter subjects for search
+    const filteredSubjects = data.subjects.filter((subjectItem) => subjectItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    // Handle add subject
+    const handleOpenAddDialog = () => {
+        setIsAddDialogOpen(true);
+        setSelectedSubject({
+            id: new Date().getTime(),
+            name: "",
+            maxParallel: -1,
+            block: false,
+        });
+    }
+
+    const handleAddSave = () => {
+        setData({
+            ...data,
+            subjects: [...data.subjects, selectedSubject]
+        });
+        setIsAddDialogOpen(false);
+    }
+
+    // Handle edit subject
+    const handleOpenEditDialog = (subjectItem) => {
+        setIsEditDialogOpen(true);
+        setSelectedSubject(subjectItem);
+    }
+
+    const handleEditSave = () => {
+        console.log(selectedSubject);
+        const updatedSubjects = data.subjects.map((subjectItem) => (subjectItem.id === selectedSubject.id ? selectedSubject : subjectItem));
+        setData({
+            ...data,
+            subjects: updatedSubjects
+        });
+        setIsEditDialogOpen(false);
+    }
+
+    // Handle delete subject
+    const handleOpenDeleteDialog = (subjectItem) => {
+        setIsDeleteDialogOpen(true);
+        setSelectedSubject(subjectItem);
+    }
+
+    const handleDelete = () => {
+        const updatedSubjects = data.subjects.filter((subjectItem) => subjectItem.id !== selectedSubject.id);
+        setData({
+            ...data,
+            subjects: updatedSubjects
+        });
+        setIsDeleteDialogOpen(false);
+    }
+
+    // The content of the dialog for add and edit is the same
+    const add_edit_dialog_content = (
+        <div className="grid grid-cols-7 gap-4">
+            {/* Input: Name */}
+            <div className="col-span-4">
+                <Label>Name</Label>
+                <Input
+                    className="mt-2"
+                    value={selectedSubject.name}
+                    onChange={(e) => setSelectedSubject({ ...selectedSubject, name: e.target.value.trimStart() })}
+                />
+            </div>
+            {/* Input: Max parallel */}
+            <div className="col-span-2">
+                <Label>Max. parallel</Label>
+                <Input
+                    type="number"
+                    min={-1}
+                    className="w-full mt-2"
+                    value={selectedSubject.maxParallel < 0 ? "" : selectedSubject.maxParallel}
+                    onChange={(e) => setSelectedSubject({ ...selectedSubject, maxParallel: isNaN(parseInt(e.target.value)) ? -1 : parseInt(e.target.value) })}
+                />
+            </div>
+            <div className="col-span-1">
+                <Label>Block</Label>
+                <div className="min-h-[36px] mt-2 pt-[8px] pb-[8px]">
+                    <Switch
+                        checked={selectedSubject.block}
+                        onCheckedChange={(checked) => setSelectedSubject({ ...selectedSubject, block: checked })}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+
+    return (
+        <>
+            <Card>
+                <CardHeader className="flex flex-col sm:flex-row items-center justify-between">
+                    <div className="text-center pb-4 sm:text-left sm:pb-0">
+                        <CardTitle>Subjects</CardTitle>
+                        <CardDescription>
+                            Manage all subjects
+                        </CardDescription>
+                    </div>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+
+                        {/* Search bar */}
+                        <div className="relative">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                type="search"
+                                placeholder="Search"
+                                className="pl-8 w-[250px]"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Add button */}
+                        <Button onClick={handleOpenAddDialog}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Add
+                        </Button>
+
+                    </div>
+                </CardHeader>
+
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Max. parallel</TableHead>
+                                <TableHead>Block</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                            {
+                                filteredSubjects.map((subjectItem) => (
+                                    <TableRow key={subjectItem.id}>
+
+                                        {/* Subject name */}
+                                        <TableCell className="font-medium">
+                                            {subjectItem.name}
+                                        </TableCell>
+
+                                        {/* Max. parallel */}
+                                        <TableCell className="font-medium">
+                                            {subjectItem.maxParallel >= 0 ? subjectItem.maxParallel + 'x' : "-"}
+                                        </TableCell>
+
+                                        {/* Block */}
+                                        <TableCell className="font-medium">
+                                            {subjectItem.block ? "Yes" : "No"}
+                                        </TableCell>
+
+                                        {/* Action buttons */}
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-2">
+                                                {/* Edit button */}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleOpenEditDialog(subjectItem)}
+                                                >
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                                {/* Delete button */}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleOpenDeleteDialog(subjectItem)}
+                                                    disabled={usedSubjects.includes(subjectItem.name)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+
+                    </Table>
+                </CardContent>
+            </Card>
+
+            {/* Add dialog */}
+            <Dialog open={isAddDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Add subject</DialogTitle>
+                        <DialogDescription>
+                            Enter the details for the new subject
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedSubject && isAddDialogOpen && add_edit_dialog_content}
+                    <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => setIsAddDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleAddSave}
+                            disabled={selectedSubject && isAddDialogOpen && !selectedSubject.name.trim()}
+                        >
+                            Save
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Edit dialog */}
+            <Dialog open={isEditDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Edit subject</DialogTitle>
+                        <DialogDescription>
+                            Edit the details of the subject
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedSubject && isEditDialogOpen && add_edit_dialog_content}
+                    <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => setIsEditDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleEditSave}
+                            disabled={selectedSubject && isEditDialogOpen && !selectedSubject.name.trim()}
+                        >
+                            Save
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete dialog */}
+            <Dialog open={isDeleteDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete subject</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete subject: {selectedSubject.name}?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
+                        <Button className="col-span-2" variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
+                        <Button className="col-span-2" onClick={handleDelete}>Delete</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+}
+
+export default Subjects;
