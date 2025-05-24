@@ -128,6 +128,7 @@ function Subjects({ data, setData }) {
                     onChange={(e) => setSelectedSubject({ ...selectedSubject, maxParallel: isNaN(parseInt(e.target.value)) ? -1 : parseInt(e.target.value) })}
                 />
             </div>
+            {/* Switch: Block */}
             <div className="col-span-1">
                 <Label>Block</Label>
                 <div className="min-h-[36px] mt-2 pt-[8px] pb-[8px]">
