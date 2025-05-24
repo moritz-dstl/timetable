@@ -43,7 +43,7 @@ function DisplaySubjects({ data }) {
             <CardContent className="flex flex-wrap gap-2">
                 {
                     filteredSubjects.map((subjectItem) => (
-                        <Badge key={subjectItem.index} variant="outline">
+                        <Badge key={subjectItem.id} variant="outline">
                             {subjectItem.name}
                         </Badge>
                     ))
