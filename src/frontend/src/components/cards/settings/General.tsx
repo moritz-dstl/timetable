@@ -9,6 +9,7 @@ import {
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { Switch } from "../../ui/switch";
+import { Separator } from "../../ui/separator";
 
 function General({ data, setData }) {
     return (
@@ -42,6 +43,8 @@ function General({ data, setData }) {
                         <Label>Allow Double Lessons</Label>
                     </div>
                 </div>
+
+                <Separator />
 
                 {/* <div className="grid grid-rows-1 gap-4 md:grid-cols-2 md:gap-8"> */}
                 <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-8">
