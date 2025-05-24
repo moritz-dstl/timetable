@@ -7,4 +7,5 @@ SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{D
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
+# Secret key for sessions
 SECRET_KEY = "extremly_secret_key"

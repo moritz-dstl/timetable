@@ -17,7 +17,7 @@ job_results = {}
 # route to start the computation
 @AsyncCompute.route('/start_computing', methods=['GET'])
 def start_computing():
-    job_id = str(uuid.uuid4())  # Eindeutige ID
+    job_id = str(uuid.uuid4())  # unique ID
     job_status[job_id] = 'running'
     job_results[job_id] = None
 
@@ -521,6 +521,10 @@ def start_computing():
     Uid = session.get('Uid')
     if not Uid:
         job_results[job_id] = {"error": "No user ID found in session."}
+        
+    # Create a new thread that will run the function 'background_computing' with the argument 'Uid'.
+    # This allows the function to execute in the background, independently from the main thread.
+    # 'thread.start()' launches the new thread and begins executing the target function.
     thread = threading.Thread(target=background_computing, args=(Uid,))
     thread.start()
 
