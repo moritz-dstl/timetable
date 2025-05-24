@@ -115,7 +115,7 @@ function Teachers({ data, setData }) {
                     <Input
                         className="mt-2"
                         value={selectedTeacher.name}
-                        onChange={(e) => setSelectedTeacher({ ...selectedTeacher, name: e.target.value })}
+                        onChange={(e) => setSelectedTeacher({ ...selectedTeacher, name: e.target.value.trimStart() })}
                     />
                 </div>
                 {/* Input: Hours per week */}
@@ -126,7 +126,10 @@ function Teachers({ data, setData }) {
                         min={1}
                         className="w-full mt-2"
                         value={selectedTeacher.maxHoursPerWeek}
-                        onChange={(e) => setSelectedTeacher({ ...selectedTeacher, maxHoursPerWeek: parseInt(e.target.value) })}
+                        onChange={(e) => setSelectedTeacher({
+                            ...selectedTeacher,
+                            maxHoursPerWeek: isNaN(parseInt(e.target.value)) ? 1 : parseInt(e.target.value)
+                        })}
                     />
                 </div>
             </div>
@@ -314,8 +317,20 @@ function Teachers({ data, setData }) {
                     </DialogHeader>
                     {selectedTeacher && isAddDialogOpen && add_edit_dialog_content}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
-                        <Button className="col-span-2" variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                        <Button className="col-span-2" onClick={handleAddSave}>Save</Button>
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => setIsAddDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleAddSave}
+                            disabled={selectedTeacher && isAddDialogOpen && !selectedTeacher.name.trim()}
+                        >
+                            Save
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -331,8 +346,20 @@ function Teachers({ data, setData }) {
                     </DialogHeader>
                     {selectedTeacher && isEditDialogOpen && add_edit_dialog_content}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
-                        <Button className="col-span-2" variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                        <Button className="col-span-2" onClick={handleEditSave}>Save</Button>
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => setIsEditDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleEditSave}
+                            disabled={selectedTeacher && isEditDialogOpen && !selectedTeacher.name.trim()}
+                        >
+                            Save
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

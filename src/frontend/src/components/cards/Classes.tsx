@@ -111,7 +111,7 @@ function Classes({ data, setData }) {
                 <Label>Name</Label>
                 <Input
                     value={selectedClass.name}
-                    onChange={(e) => setSelectedClass({ ...selectedClass, name: e.target.value })}
+                    onChange={(e) => setSelectedClass({ ...selectedClass, name: e.target.value.trimStart() })}
                 />
             </div>
             {/* Subjects */}
@@ -157,7 +157,7 @@ function Classes({ data, setData }) {
                                         const updatedSubjects = [...selectedClass.subjects];
                                         updatedSubjects[index] = {
                                             ...updatedSubjects[index],
-                                            hoursPerWeek: parseInt(e.target.value),
+                                            hoursPerWeek: isNaN(parseInt(e.target.value)) ? 1 : parseInt(e.target.value),
                                         };
                                         setSelectedClass({
                                             ...selectedClass,
@@ -313,8 +313,20 @@ function Classes({ data, setData }) {
                     </DialogHeader>
                     {selectedClass && isAddDialogOpen && add_edit_dialog_content}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
-                        <Button className="col-span-2" variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                        <Button className="col-span-2" onClick={handleAddSave}>Save</Button>
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => setIsAddDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleAddSave}
+                            disabled={selectedClass && isAddDialogOpen && !selectedClass.name.trim()}
+                        >
+                            Save
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -330,8 +342,20 @@ function Classes({ data, setData }) {
                     </DialogHeader>
                     {selectedClass && isEditDialogOpen && add_edit_dialog_content}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
-                        <Button className="col-span-2" variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                        <Button className="col-span-2" onClick={handleEditSave}>Save</Button>
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => setIsEditDialogOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleEditSave}
+                            disabled={selectedClass && isEditDialogOpen && !selectedClass.name.trim()}
+                        >
+                            Save
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
