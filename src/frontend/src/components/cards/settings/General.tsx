@@ -28,16 +28,16 @@ function General({ data, setData }) {
                     {/* Switch: Prefer early periods */}
                     <div className="flex flex-row gap-3 items-center">
                         <Switch
-                            checked={data.general.preferEarlyPeriods}
-                            onCheckedChange={(checked) => setData({ ...data, general: { ...data.general, preferEarlyPeriods: checked } })}
+                            checked={data.settings.preferEarlyPeriods}
+                            onCheckedChange={(checked) => setData({ ...data, settings: { ...data.settings, preferEarlyPeriods: checked } })}
                         />
                         <Label>Prefer early periods</Label>
                     </div>
                     {/* Switch: Allow consecutive periods */}
                     <div className="flex flex-row gap-3 items-center">
                         <Switch
-                            checked={data.general.allowDoubleLessons}
-                            onCheckedChange={(checked) => setData({ ...data, general: { ...data.general, allowDoubleLessons: checked } })}
+                            checked={data.settings.allowDoubleLessons}
+                            onCheckedChange={(checked) => setData({ ...data, settings: { ...data.settings, allowDoubleLessons: checked } })}
                         />
                         <Label>Allow double lessons</Label>
                     </div>
@@ -52,8 +52,8 @@ function General({ data, setData }) {
                             <Input
                                 type="number"
                                 min={1}
-                                value={data.general.numPeriodsPerDay}
-                                onChange={(e) => setData({ ...data, general: { ...data.general, numPeriodsPerDay: isNaN(parseInt(e.target.value)) ? 8 : parseInt(e.target.value) } })}
+                                value={data.settings.numPeriodsPerDay}
+                                onChange={(e) => setData({ ...data, settings: { ...data.settings, numPeriodsPerDay: isNaN(parseInt(e.target.value)) ? 8 : parseInt(e.target.value) } })}
                             />
                         </div>
                         {/* Input: Break window */}
@@ -63,15 +63,15 @@ function General({ data, setData }) {
                                 <Input
                                     type="number"
                                     min={1}
-                                    max={data.general.breakWindow.end - 1}
-                                    value={data.general.breakWindow.start}
+                                    max={data.settings.breakWindow.end - 1}
+                                    value={data.settings.breakWindow.start}
                                     onChange={(e) => setData({
                                         ...data,
-                                        general: {
-                                            ...data.general,
+                                        settings: {
+                                            ...data.settings,
                                             breakWindow: {
-                                                ...data.general.breakWindow,
-                                                start: isNaN(parseInt(e.target.value)) ? data.general.breakWindow.end - 1 : parseInt(e.target.value)
+                                                ...data.settings.breakWindow,
+                                                start: isNaN(parseInt(e.target.value)) ? data.settings.breakWindow.end - 1 : parseInt(e.target.value)
                                             }
                                         }
                                     })}
@@ -79,16 +79,16 @@ function General({ data, setData }) {
                                 <Label>-</Label>
                                 <Input
                                     type="number"
-                                    min={data.general.breakWindow.start + 1}
-                                    max={data.general.numPeriodsPerDay}
-                                    value={data.general.breakWindow.end}
+                                    min={data.settings.breakWindow.start + 1}
+                                    max={data.settings.numPeriodsPerDay}
+                                    value={data.settings.breakWindow.end}
                                     onChange={(e) => setData({
                                         ...data,
-                                        general: {
-                                            ...data.general,
+                                        settings: {
+                                            ...data.settings,
                                             breakWindow: {
-                                                ...data.general.breakWindow,
-                                                end: isNaN(parseInt(e.target.value)) ? data.general.breakWindow.start + 1 : parseInt(e.target.value)
+                                                ...data.settings.breakWindow,
+                                                end: isNaN(parseInt(e.target.value)) ? data.settings.breakWindow.start + 1 : parseInt(e.target.value)
                                             }
                                         }
                                     })} />
@@ -103,9 +103,9 @@ function General({ data, setData }) {
                             <Input
                                 type="number"
                                 min={1}
-                                max={data.general.numPeriodsPerDay}
-                                value={data.general.maxConsecutivePeriods}
-                                onChange={(e) => setData({ ...data, general: { ...data.general, maxConsecutivePeriods: isNaN(parseInt(e.target.value)) ? 6 : parseInt(e.target.value) } })}
+                                max={data.settings.numPeriodsPerDay}
+                                value={data.settings.maxConsecutivePeriods}
+                                onChange={(e) => setData({ ...data, settings: { ...data.settings, maxConsecutivePeriods: isNaN(parseInt(e.target.value)) ? 6 : parseInt(e.target.value) } })}
                             />
                         </div>
                         {/* Input: Max repetitions of subject */}
@@ -114,9 +114,9 @@ function General({ data, setData }) {
                             <Input
                                 type="number"
                                 min={1}
-                                max={data.general.numPeriodsPerDay}
-                                value={data.general.maxRepetitionsSubjectPerDay}
-                                onChange={(e) => setData({ ...data, general: { ...data.general, maxRepetitionsSubjectPerDay: isNaN(parseInt(e.target.value)) ? 2 : parseInt(e.target.value) } })}
+                                max={data.settings.numPeriodsPerDay}
+                                value={data.settings.maxRepetitionsSubjectPerDay}
+                                onChange={(e) => setData({ ...data, settings: { ...data.settings, maxRepetitionsSubjectPerDay: isNaN(parseInt(e.target.value)) ? 2 : parseInt(e.target.value) } })}
                             />
                         </div>
 

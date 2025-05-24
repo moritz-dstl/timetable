@@ -27,7 +27,7 @@ function Home() {
 
     // Load data once on page load
     useEffect(() => {
-        const userGeneral = {
+        const settings = {
             preferEarlyPeriods: true,
             allowDoubleLessons: true,
             numPeriodsPerDay: 8,
@@ -39,7 +39,7 @@ function Home() {
             },
         };
 
-        const userClasses = [
+        const classes = [
             {
                 id: 1,
                 name: "1A",
@@ -69,7 +69,7 @@ function Home() {
             },
         ];
 
-        const userTeachers = [
+        const teachers = [
             {
                 id: 1,
                 name: "Mr. Smith",
@@ -84,7 +84,7 @@ function Home() {
             }
         ];
 
-        const userSubjects = [
+        const subjects = [
             {
                 id: 1,
                 name: "Math",
@@ -124,10 +124,10 @@ function Home() {
         ]
 
         setData({
-            general: userGeneral,
-            classes: userClasses,
-            teachers: userTeachers,
-            subjects: userSubjects
+            settings: settings,
+            classes: classes,
+            teachers: teachers,
+            subjects: subjects
         });
 
         setIsLoading(false);
