@@ -31,7 +31,7 @@ function General({ data, setData }) {
                             checked={data.settings.preferEarlyPeriods}
                             onCheckedChange={(checked) => setData({ ...data, settings: { ...data.settings, preferEarlyPeriods: checked } })}
                         />
-                        <Label>Prefer early periods</Label>
+                        <Label>Prefer Early Periods</Label>
                     </div>
                     {/* Switch: Allow consecutive periods */}
                     <div className="flex flex-row gap-3 items-center">
@@ -39,7 +39,7 @@ function General({ data, setData }) {
                             checked={data.settings.allowDoubleLessons}
                             onCheckedChange={(checked) => setData({ ...data, settings: { ...data.settings, allowDoubleLessons: checked } })}
                         />
-                        <Label>Allow double lessons</Label>
+                        <Label>Allow Double Lessons</Label>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@ function General({ data, setData }) {
                     <div className="flex flex-col gap-4">
                         {/* Input: Num of periods per day */}
                         <div className="flex flex-col gap-2">
-                            <Label>Number of periods per day:</Label>
+                            <Label>Number of Periods per Day</Label>
                             <Input
                                 type="number"
                                 min={1}
@@ -58,7 +58,7 @@ function General({ data, setData }) {
                         </div>
                         {/* Input: Break window */}
                         <div className="flex flex-col gap-2">
-                            <Label>Break window in periods:</Label>
+                            <Label>Break Window in Periods</Label>
                             <div className="flex flex-row items-center gap-2">
                                 <Input
                                     type="number"
@@ -99,7 +99,7 @@ function General({ data, setData }) {
                     <div className="flex flex-col gap-4">
                         {/* Input: Max consecutive periods */}
                         <div className="flex flex-col gap-2">
-                            <Label>Max. number of consecutive periods:</Label>
+                            <Label>Max. Number of Consecutive Periods</Label>
                             <Input
                                 type="number"
                                 min={1}
@@ -110,7 +110,7 @@ function General({ data, setData }) {
                         </div>
                         {/* Input: Max repetitions of subject */}
                         <div className="flex flex-col gap-2">
-                            <Label className="md:text-nowrap md:overflow-scroll">Max. number of period repetitions for subject per day:</Label>
+                            <Label className="md:text-nowrap md:overflow-scroll">Max. Number of Period Repetitions for Subject per Day</Label>
                             <Input
                                 type="number"
                                 min={1}

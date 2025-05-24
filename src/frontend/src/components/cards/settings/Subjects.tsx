@@ -120,7 +120,7 @@ function Subjects({ data, setData }) {
                 </div>
                 {/* Input: Max parallel */}
                 <div className="col-span-2">
-                    <Label>Max. in parallel</Label>
+                    <Label>Max. in Parallel</Label>
                     <Input
                         type="number"
                         min={-1}
@@ -136,7 +136,7 @@ function Subjects({ data, setData }) {
                     checked={selectedSubject.forceDoubleLesson}
                     onCheckedChange={(checked) => setSelectedSubject({ ...selectedSubject, forceDoubleLesson: checked })}
                 />
-                <Label>Force double lesson</Label>
+                <Label>Force Double Lesson</Label>
             </div>
         </>
     );
@@ -179,8 +179,8 @@ function Subjects({ data, setData }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Max. in parallel</TableHead>
-                                <TableHead>Force double lesson</TableHead>
+                                <TableHead>Max. in Parallel</TableHead>
+                                <TableHead>Force Double Lesson</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -241,7 +241,7 @@ function Subjects({ data, setData }) {
             <Dialog open={isAddDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add subject</DialogTitle>
+                        <DialogTitle>Add Subject</DialogTitle>
                         <DialogDescription>
                             Enter the details for the new subject
                         </DialogDescription>
@@ -270,7 +270,7 @@ function Subjects({ data, setData }) {
             <Dialog open={isEditDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit subject</DialogTitle>
+                        <DialogTitle>Edit Subject</DialogTitle>
                         <DialogDescription>
                             Edit the details of the subject
                         </DialogDescription>
@@ -299,9 +299,9 @@ function Subjects({ data, setData }) {
             <Dialog open={isDeleteDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete subject</DialogTitle>
+                        <DialogTitle>Delete Subject</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete subject: {selectedSubject.name}?
+                            Are you sure you want to delete the subject: {selectedSubject.name}?
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">

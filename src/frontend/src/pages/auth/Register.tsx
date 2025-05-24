@@ -77,7 +77,7 @@ function Register() {
 
                             {/* Input: School name */}
                             <div className="space-y-2">
-                                <Label htmlFor="schoolname">School name</Label>
+                                <Label htmlFor="schoolname">School Name</Label>
                                 <Input
                                     id="schoolname"
                                     type="text"
@@ -177,7 +177,7 @@ function Register() {
                     <CardFooter className="flex justify-center text-sm text-gray-500">
                         <p className="text-sm pr-1 text-gray-600">Already have an account?</p>
                         <Button variant="link" type="button" className="text-sm p-0" onClick={() => navigate("/login")}>
-                            Sign in
+                            Sign In
                         </Button>
                     </CardFooter>
                 </Card>

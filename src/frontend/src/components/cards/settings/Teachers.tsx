@@ -199,7 +199,7 @@ function Teachers({ data, setData }) {
                     }}
                 >
                     <PlusCircle className="mr-2 h-4 w-4" />
-                    Add subject
+                    Add Subject
                 </Button>
             </div>
         </div>
@@ -244,7 +244,7 @@ function Teachers({ data, setData }) {
                             <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Subjects</TableHead>
-                                <TableHead>Max. hours per week</TableHead>
+                                <TableHead>Max. Hours per Week</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -310,7 +310,7 @@ function Teachers({ data, setData }) {
             <Dialog open={isAddDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add teacher</DialogTitle>
+                        <DialogTitle>Add Teacher</DialogTitle>
                         <DialogDescription>
                             Enter the details for the new teacher
                         </DialogDescription>
@@ -339,7 +339,7 @@ function Teachers({ data, setData }) {
             <Dialog open={isEditDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit teacher</DialogTitle>
+                        <DialogTitle>Edit Teacher</DialogTitle>
                         <DialogDescription>
                             Edit the details of the teacher
                         </DialogDescription>
@@ -368,9 +368,9 @@ function Teachers({ data, setData }) {
             <Dialog open={isDeleteDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete teacher</DialogTitle>
+                        <DialogTitle>Delete Teacher</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete teacher: {selectedTeacher.name}?
+                            Are you sure you want to delete the teacher: {selectedTeacher.name}?
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">

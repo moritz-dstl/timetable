@@ -201,7 +201,7 @@ function Classes({ data, setData }) {
                     }}
                 >
                     <PlusCircle className="mr-2 h-4 w-4" />
-                    Add subject
+                    Add Subject
                 </Button>
             </div>
         </div>
@@ -306,7 +306,7 @@ function Classes({ data, setData }) {
             <Dialog open={isAddDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add class</DialogTitle>
+                        <DialogTitle>Add Class</DialogTitle>
                         <DialogDescription>
                             Enter the details for the new class
                         </DialogDescription>
@@ -335,7 +335,7 @@ function Classes({ data, setData }) {
             <Dialog open={isEditDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit class</DialogTitle>
+                        <DialogTitle>Edit Class</DialogTitle>
                         <DialogDescription>
                             Edit the details of the class
                         </DialogDescription>
@@ -364,9 +364,9 @@ function Classes({ data, setData }) {
             <Dialog open={isDeleteDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete class</DialogTitle>
+                        <DialogTitle>Delete Class</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete class: {selectedClass.name}?
+                            Are you sure you want to delete the class: {selectedClass.name}?
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
