@@ -37,7 +37,7 @@ import {
     Trash2
 } from "lucide-react";
 
-function Subjects({ data, setData }) {
+function SettingsSubjects({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -314,4 +314,4 @@ function Subjects({ data, setData }) {
     );
 }
 
-export default Subjects;
+export default SettingsSubjects;

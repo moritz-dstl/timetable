@@ -44,7 +44,7 @@ import {
     Trash2
 } from "lucide-react";
 
-function Teachers({ data, setData }) {
+function SettingsTeachers({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -383,4 +383,4 @@ function Teachers({ data, setData }) {
     );
 }
 
-export default Teachers;
+export default SettingsTeachers;

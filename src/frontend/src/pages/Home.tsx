@@ -27,6 +27,11 @@ function Home() {
 
     // Load data once on page load
     useEffect(() => {
+        const user = {
+            schoolName: "DHBW-Stuttgart",
+            email: "admin@example.com"
+        }
+
         const settings = {
             preferEarlyPeriods: true,
             allowDoubleLessons: true,
@@ -124,6 +129,7 @@ function Home() {
         ]
 
         setData({
+            user: user,
             settings: settings,
             classes: classes,
             teachers: teachers,
@@ -148,7 +154,7 @@ function Home() {
                 </div>
 
                 <TabsContent value="overview" className="space-y-6">
-                    <Overview />
+                    <Overview isLoading={isLoading} data={data} />
                 </TabsContent>
 
                 <TabsContent value="settings" className="space-y-6">

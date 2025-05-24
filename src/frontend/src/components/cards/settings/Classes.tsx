@@ -44,7 +44,7 @@ import {
     Trash2
 } from "lucide-react";
 
-function Classes({ data, setData }) {
+function SettingsClasses({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -265,7 +265,10 @@ function Classes({ data, setData }) {
                                             <div className="flex flex-wrap gap-1">
                                                 {classItem.subjects.map((subject, index) => (
                                                     <Badge key={index} variant="outline">
-                                                        {subject.name} ({subject.hoursPerWeek}h/week)
+                                                        <span className="flex flex-nowrap gap-1">
+                                                            {subject.name}
+                                                            <p className="font-normal">{subject.hoursPerWeek}h/week</p>
+                                                        </span>
                                                     </Badge>
                                                 ))}
                                             </div>
@@ -379,4 +382,4 @@ function Classes({ data, setData }) {
     );
 }
 
-export default Classes;
+export default SettingsClasses;

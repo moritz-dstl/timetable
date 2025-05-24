@@ -11,7 +11,7 @@ import { Input } from "../../ui/input";
 import { Switch } from "../../ui/switch";
 import { Separator } from "../../ui/separator";
 
-function General({ data, setData }) {
+function SettingsGeneral({ data, setData }) {
     return (
         <Card>
             <CardHeader className="flex flex-col sm:flex-row items-center justify-between">
@@ -130,4 +130,4 @@ function General({ data, setData }) {
     );
 }
 
-export default General;
+export default SettingsGeneral;
