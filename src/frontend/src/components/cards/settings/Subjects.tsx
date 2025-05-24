@@ -62,7 +62,7 @@ function Subjects({ data, setData }) {
             id: new Date().getTime(),
             name: "",
             maxParallel: -1,
-            block: false,
+            forceDoubleLesson: false,
         });
     }
 
@@ -107,38 +107,38 @@ function Subjects({ data, setData }) {
 
     // The content of the dialog for add and edit is the same
     const add_edit_dialog_content = (
-        <div className="grid grid-cols-7 gap-4">
-            {/* Input: Name */}
-            <div className="col-span-4">
-                <Label>Name</Label>
-                <Input
-                    className="mt-2"
-                    value={selectedSubject.name}
-                    onChange={(e) => setSelectedSubject({ ...selectedSubject, name: e.target.value.trimStart() })}
-                />
-            </div>
-            {/* Input: Max parallel */}
-            <div className="col-span-2">
-                <Label>Max. parallel</Label>
-                <Input
-                    type="number"
-                    min={-1}
-                    className="w-full mt-2"
-                    value={selectedSubject.maxParallel < 0 ? "" : selectedSubject.maxParallel}
-                    onChange={(e) => setSelectedSubject({ ...selectedSubject, maxParallel: isNaN(parseInt(e.target.value)) ? -1 : parseInt(e.target.value) })}
-                />
-            </div>
-            {/* Switch: Block */}
-            <div className="col-span-1">
-                <Label>Block</Label>
-                <div className="min-h-[36px] mt-2 pt-[8px] pb-[8px]">
-                    <Switch
-                        checked={selectedSubject.block}
-                        onCheckedChange={(checked) => setSelectedSubject({ ...selectedSubject, block: checked })}
+        <>
+            <div className="grid grid-cols-6 gap-4">
+                {/* Input: Name */}
+                <div className="col-span-4">
+                    <Label>Name</Label>
+                    <Input
+                        className="mt-2"
+                        value={selectedSubject.name}
+                        onChange={(e) => setSelectedSubject({ ...selectedSubject, name: e.target.value.trimStart() })}
                     />
                 </div>
+                {/* Input: Max parallel */}
+                <div className="col-span-2">
+                    <Label>Max. in parallel</Label>
+                    <Input
+                        type="number"
+                        min={-1}
+                        className="w-full mt-2"
+                        value={selectedSubject.maxParallel < 0 ? "" : selectedSubject.maxParallel}
+                        onChange={(e) => setSelectedSubject({ ...selectedSubject, maxParallel: isNaN(parseInt(e.target.value)) ? -1 : parseInt(e.target.value) })}
+                    />
+                </div>
+                {/* Switch: Force double lesson */}
             </div>
-        </div>
+            <div className="flex flex-row items-center gap-3">
+                <Switch
+                    checked={selectedSubject.forceDoubleLesson}
+                    onCheckedChange={(checked) => setSelectedSubject({ ...selectedSubject, forceDoubleLesson: checked })}
+                />
+                <Label>Force double lesson</Label>
+            </div>
+        </>
     );
 
     return (
@@ -179,8 +179,8 @@ function Subjects({ data, setData }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Max. parallel</TableHead>
-                                <TableHead>Block</TableHead>
+                                <TableHead>Max. in parallel</TableHead>
+                                <TableHead>Force double lesson</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -195,14 +195,14 @@ function Subjects({ data, setData }) {
                                             {subjectItem.name}
                                         </TableCell>
 
-                                        {/* Max. parallel */}
+                                        {/* Max. in parallel */}
                                         <TableCell className="font-medium">
                                             {subjectItem.maxParallel >= 0 ? subjectItem.maxParallel + 'x' : "-"}
                                         </TableCell>
 
-                                        {/* Block */}
+                                        {/* Force double lesson */}
                                         <TableCell className="font-medium">
-                                            {subjectItem.block ? "Yes" : "No"}
+                                            {subjectItem.forceDoubleLesson ? "Yes" : "No"}
                                         </TableCell>
 
                                         {/* Action buttons */}

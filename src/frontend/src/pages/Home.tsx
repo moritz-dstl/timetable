@@ -27,6 +27,18 @@ function Home() {
 
     // Load data once on page load
     useEffect(() => {
+        const userGeneral = {
+            preferEarlyPeriods: true,
+            allowDoubleLessons: true,
+            numPeriodsPerDay: 8,
+            maxConsecutivePeriods: 6,
+            maxRepetitionsSubjectPerDay: 2,
+            breakWindow: {
+                start: 4,
+                end: 6,
+            },
+        };
+
         const userClasses = [
             {
                 id: 1,
@@ -77,41 +89,42 @@ function Home() {
                 id: 1,
                 name: "Math",
                 maxParallel: -1,
-                block: true
+                forceDoubleLesson: true
             },
             {
                 id: 2,
                 name: "English",
                 maxParallel: -1,
-                block: false
+                forceDoubleLesson: false
             },
             {
                 id: 3,
                 name: "Science",
                 maxParallel: 2,
-                block: false
+                forceDoubleLesson: false
             },
             {
                 id: 4,
                 name: "Physics",
                 maxParallel: 2,
-                block: false
+                forceDoubleLesson: false
             },
             {
                 id: 5,
                 name: "Chemistry",
                 maxParallel: 2,
-                block: true
+                forceDoubleLesson: true
             },
             {
                 id: 6,
                 name: "History",
                 maxParallel: -1,
-                block: false
+                forceDoubleLesson: false
             },
         ]
 
         setData({
+            general: userGeneral,
             classes: userClasses,
             teachers: userTeachers,
             subjects: userSubjects
