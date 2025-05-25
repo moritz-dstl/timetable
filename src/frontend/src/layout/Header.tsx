@@ -14,6 +14,7 @@ function Header() {
     // Handle log user out
     const handleLogout = () => {
         cookies.remove("auth");
+        localStorage.removeItem("data");
         window.location.reload();
     }
 
