@@ -12,7 +12,7 @@ import {
 import Welcome from "./Welcome";
 import Overview from "./Overview";
 import Settings from "./Settings";
-import Timetables from "./Timetables";
+import Timetable from "./Timetable";
 
 function Home() {
     const cookies = new Cookies();
@@ -135,12 +135,99 @@ function Home() {
             },
         ]
 
+        const timetable = {
+            numOfPeriods: 8,
+            lessons: [
+                {
+                    id: 1,
+                    day: "Monday",
+                    period: 1,
+                    class: "1A",
+                    subject: "Math",
+                    teacher: "Mr. Smith",
+                },
+                {
+                    id: 2,
+                    day: "Monday",
+                    period: 2,
+                    class: "1A",
+                    subject: "English",
+                    teacher: "Mr. Smith",
+                },
+                {
+                    id: 3,
+                    day: "Monday",
+                    period: 3,
+                    class: "1A",
+                    subject: "Physics",
+                    teacher: "Mrs. Smith",
+                },
+                {
+                    id: 4,
+                    day: "Monday",
+                    period: 1,
+                    class: "2B",
+                    subject: "Chemistry",
+                    teacher: "Mrs. Smith",
+                },
+                {
+                    id: 5,
+                    day: "Tuesday",
+                    period: 2,
+                    class: "2B",
+                    subject: "Science",
+                    teacher: "Mrs. Smith",
+                },
+                {
+                    id: 6,
+                    day: "Wednesday",
+                    period: 4,
+                    class: "3C",
+                    subject: "History",
+                    teacher: "Mr. Smith",
+                },
+                {
+                    id: 7,
+                    day: "Wednesday",
+                    period: 5,
+                    class: "3C",
+                    subject: "English",
+                    teacher: "Mr. Smith",
+                },
+                {
+                    id: 8,
+                    day: "Thursday",
+                    period: 6,
+                    class: "2B",
+                    subject: "Math",
+                    teacher: "Mr. Smith",
+                },
+                {
+                    id: 9,
+                    day: "Friday",
+                    period: 7,
+                    class: "1A",
+                    subject: "Physics",
+                    teacher: "Mrs. Smith",
+                },
+                {
+                    id: 10,
+                    day: "Friday",
+                    period: 8,
+                    class: "2B",
+                    subject: "Chemistry",
+                    teacher: "Mrs. Smith",
+                },
+            ]
+        };
+
         const allData = {
             user: user,
             settings: settings,
             classes: classes,
             teachers: teachers,
             subjects: subjects,
+            timetable: timetable,
             newChangesMade: false
         };
 
@@ -159,7 +246,7 @@ function Home() {
                     <TabsList className="m-4">
                         <TabsTrigger value="overview">Overview</TabsTrigger>
                         <TabsTrigger value="settings">Settings</TabsTrigger>
-                        <TabsTrigger value="timetables">Timetables</TabsTrigger>
+                        <TabsTrigger value="timetable">Timetable</TabsTrigger>
                     </TabsList>
                     <div></div>
                 </div>
@@ -172,8 +259,8 @@ function Home() {
                     <Settings isLoading={isLoading} data={data} setData={setData} />
                 </TabsContent>
 
-                <TabsContent value="timetables" className="space-y-6">
-                    <Timetables />
+                <TabsContent value="timetable" className="space-y-6">
+                    <Timetable isLoading={isLoading} data={data} />
                 </TabsContent>
 
             </Tabs>
