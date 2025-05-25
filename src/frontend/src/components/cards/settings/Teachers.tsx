@@ -123,7 +123,7 @@ function SettingsTeachers({ data, setData }) {
                 </div>
                 {/* Input: Hours per week */}
                 <div className="col-span-2">
-                    <Label>Max. h/week</Label>
+                    <Label>Max. hours/week</Label>
                     <Input
                         type="number"
                         min={1}

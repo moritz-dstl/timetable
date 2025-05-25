@@ -123,7 +123,7 @@ function SettingsSubjects({ data, setData }) {
                 </div>
                 {/* Input: Max parallel */}
                 <div className="col-span-2">
-                    <Label>Max. in Parallel</Label>
+                    <Label>Max. in parallel</Label>
                     <Input
                         type="number"
                         min={0}
@@ -139,7 +139,7 @@ function SettingsSubjects({ data, setData }) {
                     checked={selectedSubject.forceDoubleLesson}
                     onCheckedChange={(checked) => setSelectedSubject({ ...selectedSubject, forceDoubleLesson: checked })}
                 />
-                <Label>Force Double Lesson</Label>
+                <Label>Force double lesson</Label>
             </div>
         </>
     );
@@ -182,7 +182,7 @@ function SettingsSubjects({ data, setData }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Max. in Parallel</TableHead>
+                                <TableHead>Max. in parallel</TableHead>
                                 <TableHead>Force Double Lesson</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>

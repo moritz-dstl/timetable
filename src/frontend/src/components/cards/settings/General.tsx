@@ -36,7 +36,7 @@ function SettingsGeneral({ data, setData }) {
                                 settings: { ...data.settings, preferEarlyPeriods: checked } 
                             })}
                         />
-                        <Label>Prefer Early Periods</Label>
+                        <Label>Prefer early periods</Label>
                     </div>
                     {/* Switch: Allow consecutive periods */}
                     <div className="flex flex-row gap-3 items-center">
@@ -48,7 +48,7 @@ function SettingsGeneral({ data, setData }) {
                                 settings: { ...data.settings, allowDoubleLessons: checked } 
                             })}
                         />
-                        <Label>Allow Double Lessons</Label>
+                        <Label>Allow double lessons</Label>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@ function SettingsGeneral({ data, setData }) {
                     <div className="flex flex-col gap-4">
                         {/* Input: Num of periods per day */}
                         <div className="flex flex-col gap-2">
-                            <Label>Number of Periods per Day</Label>
+                            <Label>Number of periods per day</Label>
                             <Input
                                 type="number"
                                 min={1}
@@ -73,7 +73,7 @@ function SettingsGeneral({ data, setData }) {
                         </div>
                         {/* Input: Break window */}
                         <div className="flex flex-col gap-2">
-                            <Label>Break Window in Periods</Label>
+                            <Label>Break window in periods</Label>
                             <div className="flex flex-row items-center gap-2">
                                 <Input
                                     type="number"
@@ -116,7 +116,7 @@ function SettingsGeneral({ data, setData }) {
                     <div className="flex flex-col gap-4">
                         {/* Input: Max consecutive periods */}
                         <div className="flex flex-col gap-2">
-                            <Label>Max. Number of Consecutive Periods</Label>
+                            <Label>Max. number of consecutive periods</Label>
                             <Input
                                 type="number"
                                 min={1}
@@ -131,7 +131,7 @@ function SettingsGeneral({ data, setData }) {
                         </div>
                         {/* Input: Max repetitions of subject */}
                         <div className="flex flex-col gap-2">
-                            <Label className="md:text-nowrap md:overflow-scroll">Max. Number of Period Repetitions for Subject per Day</Label>
+                            <Label className="md:text-nowrap md:overflow-scroll">Max. number of period repetitions for subject per day</Label>
                             <Input
                                 type="number"
                                 min={1}
