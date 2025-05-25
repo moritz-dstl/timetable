@@ -127,7 +127,7 @@ function Login() {
                             
                             {/* Button: Log in */}
                             <Button type="submit" className="w-full" disabled={isLoading}>
-                                {isLoading ? "Signing In..." : "Sign In"}
+                                {isLoading ? "Signing in..." : "Sign in"}
                             </Button>
                         </form>
                     </CardContent>
@@ -135,7 +135,7 @@ function Login() {
                     <CardFooter className="flex justify-center text-sm text-gray-500">
                         <p className="text-sm pr-1 text-gray-600">Don't have an account?</p>
                         <Button variant="link" type="button" className="text-sm p-0" onClick={() => navigate("/register")}>
-                            Sign Up
+                            Sign up
                         </Button>
                     </CardFooter>
                 </Card>

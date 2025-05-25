@@ -36,10 +36,10 @@ function Header() {
                             // Show sign in and sign out buttons if user is not logged in
                             <>
                                 <Button variant="outline" size="sm" className="text-sm" onClick={() => navigate("/login")}>
-                                    Sign In
+                                    Sign in
                                 </Button>
                                 <Button size="sm" className="text-sm" onClick={() => navigate("/register")}>
-                                    Sign Up
+                                    Sign up
                                 </Button>
                             </>
                         ) : (

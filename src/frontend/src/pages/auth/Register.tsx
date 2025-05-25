@@ -177,7 +177,7 @@ function Register() {
                     <CardFooter className="flex justify-center text-sm text-gray-500">
                         <p className="text-sm pr-1 text-gray-600">Already have an account?</p>
                         <Button variant="link" type="button" className="text-sm p-0" onClick={() => navigate("/login")}>
-                            Sign In
+                            Sign in
                         </Button>
                     </CardFooter>
                 </Card>
