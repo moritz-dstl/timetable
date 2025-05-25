@@ -18,20 +18,17 @@ function SettingsDiscardSave({ data, setData }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isDiscardDialogOpen, setIsDiscardDialogOpen] = useState(false);
 
-    // Handle add subject
-    const handleOpenDiscardDialog = () => {
-        setIsDiscardDialogOpen(true);
-    }
-
     const handleDiscard = () => {
-        setData({...data, newChangesMade: false});
-        window.location.reload();
+        const storedData = localStorage.getItem("data");
+        if (storedData) setData({ ...JSON.parse(storedData), newChangesMade: false });
+        setIsDiscardDialogOpen(false);
     }
 
     const handleSave = async () => {
         setIsSaving(true);
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        setData({...data, newChangesMade: false});
+        setData({ ...data, newChangesMade: false });
+        localStorage.setItem("data", JSON.stringify({ ...data, newChangesMade: false }));
         setIsSaving(false);
     }
 
@@ -40,7 +37,7 @@ function SettingsDiscardSave({ data, setData }) {
             <>
                 <div className="flex flex-row gap-4 justify-end">
                     {/* Discard button */}
-                    <Button variant="outline" onClick={handleOpenDiscardDialog}>
+                    <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)}>
                         <Eraser className="mr-2 h-4 w-4" />
                         Discard
                     </Button>

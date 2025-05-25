@@ -27,6 +27,13 @@ function Home() {
 
     // Load data once on page load
     useEffect(() => {
+        const storedData = localStorage.getItem("data");
+        if (storedData) {
+            setData(JSON.parse(storedData));
+            setIsLoading(false);
+            return;
+        }
+
         const user = {
             schoolName: "DHBW-Stuttgart",
             email: "admin@example.com"
@@ -128,14 +135,17 @@ function Home() {
             },
         ]
 
-        setData({
+        const allData = {
             user: user,
             settings: settings,
             classes: classes,
             teachers: teachers,
             subjects: subjects,
             newChangesMade: false
-        });
+        };
+
+        setData(allData);
+        localStorage.setItem("data", JSON.stringify(allData));
 
         setIsLoading(false);
     }, []);
