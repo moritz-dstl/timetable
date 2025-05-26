@@ -90,7 +90,7 @@ function DisplayTimetable({ data }) {
                         </Select>
                     </div>
                     {/* Export button */}
-                    <Button variant="outline" onClick={undefined}>
+                    <Button onClick={undefined}>
                         <Download className="mr-0 sm:mr-2 h-4 w-4" />
                         <p className="hidden sm:block">Export</p>
                     </Button>
