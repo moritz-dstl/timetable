@@ -61,7 +61,7 @@ def start_computing():
             # Set scheduling parameters
             MAX_HOURS_PER_DAY = settings[2]
             MAX_CONSECUTIVE_HOURS = settings[3]
-            BREAK_WINDOW = range(settings[4], settings[5] + 1)
+            BREAK_WINDOW = range(settings[4], settings[5])
 
             # Set weights for the soft restrictions
             WEIGHT_BLOCK_SCHEDULING = settings[6]
@@ -391,6 +391,38 @@ def start_computing():
                         model.Add(sum(occurrences) <= MAX_HOURS_PER_DAY)
 
 
+            # a subject may appear in at most one block per day
+            # This means that if a subject is scheduled in a class on a specific day,
+            # it should not be taught as two separated blocks.
+            # This is enforced by the following constraints:
+            for c in classes:
+                for subject, _ in class_subject_hours[c].items():           # only subjects actually taught in this class
+                    subj_idx = subject_indices[subject]
+                    for d in range(len(days)):
+                        # 1. Helper variables: is the subject scheduled in period h?
+                        is_subj = []
+                        for h in range(hours_per_day):
+                            b = model.NewBoolVar(f'{c}_{subject}_{d}_{h}_is')
+                            model.Add(schedule[(c, d, h)] == subj_idx).OnlyEnforceIf(b)
+                            model.Add(schedule[(c, d, h)] != subj_idx).OnlyEnforceIf(b.Not())
+                            is_subj.append(b)
+
+                        # 2. “Start” variables: is period h the beginning of a new block?
+                        starts = []
+                        for h in range(hours_per_day):
+                            if h == 0:
+                                # The first slot of the day is a block start if it contains the subject
+                                starts.append(is_subj[0])
+                            else:
+                                s = model.NewBoolVar(f'{c}_{subject}_{d}_{h}_start')
+                                # Start ⇔ (subject now) ∧ (subject was NOT in the previous slot)
+                                model.AddBoolAnd([is_subj[h], is_subj[h-1].Not()]).OnlyEnforceIf(s)
+                                model.AddBoolOr([is_subj[h].Not(), is_subj[h-1]]).OnlyEnforceIf(s.Not())
+                                starts.append(s)
+
+                        # 3. At most ONE start → at most ONE contiguous block of this subject today
+                        model.Add(sum(starts) <= 1)
+
 
 
             # All soft contraints follow here:
@@ -434,6 +466,38 @@ def start_computing():
                                 model.AddBoolOr([b1.Not(), b2.Not()]).OnlyEnforceIf(both.Not())
 
                                 objective_terms.append(both * weight)
+
+
+            #punish "inner gaps" in the schedule
+            # An "inner gap" is defined as a free period that is followed by more lessons in the same class.
+            for c in classes:
+                for d in range(len(days)):
+                    for h in range(hours_per_day - 1):  # No need to check the last period
+                        current = is_occupied[(c, d, h)]
+
+                        # Check if any upcoming period (after 'h') is still occupied
+                        future_occupied = []
+                        for h2 in range(h + 1, hours_per_day):
+                            future_occupied.append(is_occupied[(c, d, h2)])
+
+                        # Boolean: Is the current period a free period?
+                        is_free_now = model.NewBoolVar(f'{c}_{d}_{h}_free_now')
+                        model.Add(current == 0).OnlyEnforceIf(is_free_now)
+                        model.Add(current == 1).OnlyEnforceIf(is_free_now.Not())
+
+                        # Boolean: Is there any scheduled lesson after the current period?
+                        still_something_later = model.NewBoolVar(f'{c}_{d}_{h}_after')
+                        model.AddMaxEquality(still_something_later, future_occupied)
+
+                        # A free period that is followed by more lessons is considered an "inner gap"
+                        is_inner_gap = model.NewBoolVar(f'{c}_{d}_{h}_inner_gap')
+                        model.AddBoolAnd([is_free_now, still_something_later]).OnlyEnforceIf(is_inner_gap)
+                        model.AddBoolOr([is_free_now.Not(), still_something_later.Not()]).OnlyEnforceIf(is_inner_gap.Not())
+
+                        # Penalize such gaps in the objective function to reduce non-terminal free periods
+                        penalty_weight = 10000  # Tune this to influence the importance of avoiding gaps
+                        objective_terms.append(is_inner_gap * -penalty_weight)
+
 
 
 
