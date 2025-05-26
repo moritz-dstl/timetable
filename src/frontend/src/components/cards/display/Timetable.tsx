@@ -14,13 +14,14 @@ import {
     SelectValue,
 } from "../../ui/select";
 import { Button } from "../../ui/button";
+import { Switch } from "../../ui/switch";
 
 // Icons
 import { Download } from "lucide-react";
 
-// Function to choose color from any string value
-function stringToColor(string) {
-    const colors = ["red", "orange", "green", "sky", "blue", "purple", "fuchsia"];
+// Function to choose background color color from any string value
+function stringToBackgroundColor(string) {
+    const colors = ["bg-red-100", "bg-orange-100", "bg-green-100", "bg-sky-100", "bg-blue-100", "bg-purple-100", "bg-fuchsia-100"];
 
     var charSum = 0;
     for (var i = 0; i < string.length; i++)
@@ -33,6 +34,8 @@ function DisplayTimetable({ data }) {
     const [selectedViewClassTeacher, setSelectedViewClassTeacher] = useState("class");
     const [allClassesTeachers, setAllClassesTeacheres] = useState(data.timetable.classes);
     const [selectedClassTeacher, setSelectedClassTeacher] = useState(allClassesTeachers[0]);
+
+    const [useColors, setUseColors] = useState(false);
 
     // Reload once a new timetable was generated
     useEffect(() => {
@@ -110,9 +113,11 @@ function DisplayTimetable({ data }) {
                                 {/* Head: Days of the week */}
                                 <thead>
                                     <tr className="bg-gray-50">
-                                        <th className="p-3 border text-sm text-center min-w-[4px]"></th>
+                                        <th className="p-3 pt-4 align-center">
+                                            <Switch checked={useColors} onCheckedChange={setUseColors} />
+                                        </th>
                                         {daysOfWeek.map((day) => (
-                                            <th key={day} className="p-3 border text-sm text-cente w-[19%]">
+                                            <th key={day} className="p-3 border text-sm w-[19%]">
                                                 {day}
                                             </th>
                                         ))}
@@ -131,13 +136,12 @@ function DisplayTimetable({ data }) {
                                                     daysOfWeek.map((day, index) => {
                                                         // Get lesson that matches day and period
                                                         const lesson = filteredLessons.filter((lessonItem) => lessonItem.day === day && lessonItem.period === period)[0];
-                                                        const bgColor = lesson && `bg-${stringToColor(lesson.subject)}-100`;
 
                                                         return (
                                                             // Display lesson for day and period if it exists
                                                             <td key={index} className="p-1 border">
                                                                 {lesson ? (
-                                                                    <div className={`min-h-20 p-2 rounded text-center ${bgColor}`}>
+                                                                    <div className={`min-h-20 p-2 rounded text-center ${useColors && stringToBackgroundColor(lesson.subject)}`}>
                                                                         <div className="text-sm font-medium">
                                                                             {lesson.subject}
                                                                         </div>
