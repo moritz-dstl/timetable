@@ -137,6 +137,8 @@ function Home() {
 
         const timetable = {
             numOfPeriods: 8,
+            classes: ["1A", "2B", "3C"],
+            teachers: ["Mr. Smith", "Mrs. Smith"],
             lessons: [
                 {
                     id: 1,

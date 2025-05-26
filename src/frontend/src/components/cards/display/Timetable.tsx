@@ -18,15 +18,7 @@ import { Button } from "../../ui/button";
 // Icons
 import { Download } from "lucide-react";
 
-// Functions
-function getAllClasses(data) {
-    return data.classes.map((classItem) => classItem.name);
-}
-
-function getAllTeachers(data) {
-    return data.teachers.map((teacherItem) => teacherItem.name);
-}
-
+// Function to choose color from any string value
 function stringToColor(string) {
     const colors = ["red", "orange", "green", "sky", "blue", "purple", "fuchsia"];
     
@@ -41,7 +33,7 @@ function stringToColor(string) {
 
 function DisplayTimetable({ data }) {
     const [selectedViewClassTeacher, setSelectedViewClassTeacher] = useState("class");
-    const [allClassesTeachers, setAllClassesTeacheres] = useState(getAllClasses(data));
+    const [allClassesTeachers, setAllClassesTeacheres] = useState(data.timetable.classes);
     const [selectedClassTeacher, setSelectedClassTeacher] = useState(allClassesTeachers[0]);
 
     // Filter classes for search
@@ -61,7 +53,7 @@ function DisplayTimetable({ data }) {
                         <Select value={selectedViewClassTeacher} onValueChange={(value) => {
                             setSelectedViewClassTeacher(value);
 
-                            const listAllClassesteachers = value === "class" ? getAllClasses(data) : getAllTeachers(data);
+                            const listAllClassesteachers = value === "class" ? data.timetable.classes : data.timetable.teachers;
                             setAllClassesTeacheres(listAllClassesteachers);
                             setSelectedClassTeacher(listAllClassesteachers[0]);
                         }}>
