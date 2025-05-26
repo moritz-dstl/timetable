@@ -49,6 +49,7 @@ function Home() {
                 start: 4,
                 end: 6,
             },
+            durationToSolveSeconds: 15
         };
 
         const classes = [

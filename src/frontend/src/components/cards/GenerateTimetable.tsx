@@ -4,6 +4,26 @@ import { Button } from "../ui/button";
 // Icons
 import { RefreshCw } from "lucide-react";
 
+// Function animates a progress bar, updating its width every second to visually 
+// represent the passage of a given duration in seconds.
+function runProgressBar(timeRemainingSeconds, totalDurationSeconds) {
+    const element = document.querySelector("#progressBar");
+
+    const deltaPercentage = Math.floor((1 / totalDurationSeconds) * 100);
+    const percentage = Math.floor((1 - timeRemainingSeconds / totalDurationSeconds) * 100);
+    
+    element?.animate(
+        { width: [`${percentage}%`, `${percentage+deltaPercentage}%`] },
+        { duration: 1000, easing: 'linear' }
+    );
+
+    if (timeRemainingSeconds > 0) {
+        setTimeout(() => {
+            runProgressBar(timeRemainingSeconds - 1, totalDurationSeconds);
+        }, 1000);
+    }
+};
+
 function GenerateTimetable({ data, setData }) {
     const handleGenerate = () => {
         setData({ ...data, timetable: { ...data.timetable, isGenerating: true } });
@@ -108,13 +128,25 @@ function GenerateTimetable({ data, setData }) {
                 localStorage.setItem("data", JSON.stringify(newData));
                 return newData;
             });
-            
-        }, 15 * 1000);
+
+        }, data.settings.durationToSolveSeconds * 1000);
+
+        runProgressBar(data.settings.durationToSolveSeconds, data.settings.durationToSolveSeconds);
     }
 
     return (
         <>
+            {/* Message when unsaved changes */}
             {data.newChangesMade && !data.timetable.isGenerating && <p className="text-center text-gray-500">Please save or discard the changes made in settings in order to generate a timetable.</p>}
+            {/* Progress bar */}
+            {
+                data.timetable.isGenerating && (
+                    <div className="h-2 w-full bg-orange-200 opacity-50 rounded-full">
+                        <div id="progressBar" className="h-2 w-0 bg-primary rounded-full"></div>
+                    </div>
+                )
+            }
+            {/* Button */}
             <Button
                 className="w-full"
                 onClick={handleGenerate}
