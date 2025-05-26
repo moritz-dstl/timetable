@@ -22,13 +22,11 @@ import { Download } from "lucide-react";
 function stringToColor(string) {
     const colors = ["red", "orange", "green", "sky", "blue", "purple", "fuchsia"];
     
-    var hash = 0;
-    for (var i = 0; i < string.length; i++) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-        hash = hash & hash;
-    }
+    var charSum = 0;
+    for (var i = 0; i < string.length; i++)
+        charSum += string.charCodeAt(i);
 
-    return colors[Math.abs(hash % colors.length)];
+    return colors[Math.abs(charSum % colors.length)];
 }
 
 function DisplayTimetable({ data }) {
