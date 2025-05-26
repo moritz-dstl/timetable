@@ -57,42 +57,42 @@ The endpoint `POST /Settings/set` expects a JSON object containing the following
 
 **`settings`: general configuration for the timetable generator. Fields must include**:
 
-`prefer_early_hours`: `true or false`           – whether earlier periods should be preferred
-`allow_block_scheduling`: `true or false`       – whether double lessons (blocks) are allowed
-`max_hours_per_day`: `int`                      - maximum number of hours a subject can appear per day
-`max_consecutive_hours`: `int`                  - maximum consecutive lessons allowed in a day
-`break_window_start`: `int`                     - inklusive
-`break_window_end`: `int`                       - inklusive; define the time window in which a lunchbreak must occur
-`weight_block_scheduling`: `int`                - weighting factor for encouraging block scheduling
-`weight_time_of_hours`: `int`                   - weighting factor for the preference of early or late hours
-`max_time_for_solving`: `int`                   - maximum solving time in seconds for the timetable algorithm
+`prefer_early_hours`: `true or false` &nbsp;&nbsp;&nbsp; – whether earlier periods should be preferred <br>
+`allow_block_scheduling`: `true or false`      &nbsp;&nbsp;&nbsp; – whether double lessons (blocks) are allowed<br>
+`max_hours_per_day`: `int`                    &nbsp;&nbsp;&nbsp;  - maximum number of hours a subject can appear per day<br>
+`max_consecutive_hours`: `int`                &nbsp;&nbsp;&nbsp;  - maximum consecutive lessons allowed in a day<br>
+`break_window_start`: `int`                    &nbsp;&nbsp;&nbsp; - inklusive<br>
+`break_window_end`: `int`                     &nbsp;&nbsp;&nbsp;  - inklusive; define the time window in which a lunchbreak must occur<br>
+`weight_block_scheduling`: `int`              &nbsp;&nbsp;&nbsp;  - weighting factor for encouraging block scheduling<br>
+`weight_time_of_hours`: `int`                 &nbsp;&nbsp;&nbsp;  - weighting factor for the preference of early or late hours<br>
+`max_time_for_solving`: `int`                 &nbsp;&nbsp;&nbsp;  - maximum solving time in seconds for the timetable algorithm<br>
 
 **``school``: structure of the school with:**
 
-`classes`:`list of class names`                - (e.g. ["C1", "C2", "C3"])subjects: list of subject names     (e.g. ["Math", "English", "Physics"])
-`hours_per_day`: `int`                          - number of periods per day
+`classes`:`list of class names`              &nbsp;&nbsp;&nbsp;  - (e.g. ["C1", "C2", "C3"])subjects: list of subject names     (e.g. ["Math", "English", "Physics"])<br>
+`hours_per_day`: `int`                        &nbsp;&nbsp;&nbsp;  - number of periods per day<br>
 
 **`teachers`: list of teachers. Each teacher object includes:**
 
-`name`: `string`                                - full name of the teacher
-`max_hours`: `int`                              - maximum weekly teaching load
+`name`: `string`                              &nbsp;&nbsp;&nbsp;  - full name of the teacher<br>
+`max_hours`: `int`                            &nbsp;&nbsp;&nbsp;  - maximum weekly teaching load<br>
 `subjects`: `list of subjects the teacher can teach`
 
 **`class_allocations`: list of subjects assigned to each class, each with:**
 
 `class_name`: `string`
-`subject`: `string`                             - name of subject
-`hours_per_week`: `int`                         - amount of hours subject has to be teached per week
+`subject`: `string`                           &nbsp;&nbsp;&nbsp;  - name of subject<br>
+`hours_per_week`: `int`                       &nbsp;&nbsp;&nbsp;  - amount of hours subject has to be teached per week<br>
 
 **`subject_parallel_limits`: optional list of subjects that cannot be taught in too many classes at once (e.g. due to room constraints). Each entry includes:**
 
 `subject_name`: `string`
-`max_parallel`: `int`                           - max simultaneous occurrences
+`max_parallel`: `int`                        &nbsp;&nbsp;&nbsp;   - max simultaneous occurrences<br>
 
 **`prefer_block_subjects`: optional list of subjects that strongly prefer to be scheduled in double periods, each with:**
 
 `subject_name`: `string`
-`weight`: `int`                                 - Numeric weight (should be set **higher than 10**. A value above 50 will almost always ensure the subject is scheduled as a block).
+`weight`: `int`                              &nbsp;&nbsp;&nbsp;   - Numeric weight (should be set **higher than 10**. A value above 50 will almost always ensure the subject is scheduled as a block).<br>
 
 #### Example working Json body:
 ```
