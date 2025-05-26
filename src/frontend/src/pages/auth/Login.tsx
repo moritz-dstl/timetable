@@ -43,7 +43,7 @@ function Login() {
             // TODO: API
             await new Promise((resolve) => setTimeout(resolve, 1000));
             if (email === "admin@email.com" && password === "password") {
-                cookies.set("auth", "token123", { expires: new Date(new Date().getTime() + 3600000) });
+                cookies.set("auth", "token123");
                 navigate("/");
             } else {
                 setError("Invalid email or password");
