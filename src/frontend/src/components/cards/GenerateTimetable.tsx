@@ -27,7 +27,6 @@ function runProgressBar(timeRemainingSeconds, totalDurationSeconds) {
 function GenerateTimetable({ data, setData }) {
     const handleGenerate = () => {
         setData({ ...data, timetable: { ...data.timetable, isGenerating: true } });
-        localStorage.setItem("data", JSON.stringify({ ...data, timetable: { ...data.timetable, isGenerating: true } }));
 
         setTimeout(() => {
             const timetable = {
