@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Cookies from "universal-cookie";
+
 // Components
 import {
     Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
     CardContent,
     CardFooter,
 } from "../../components/ui/card";
@@ -16,13 +15,19 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlert, Eye, EyeOff } from 'lucide-react';
+import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
 function Register() {
     const navigate = useNavigate();
+    const cookies = new Cookies();
+
+    // User logged in -> redirect home
+    if (cookies.get("auth")) {
+        window.location.href = "/";
+    }
 
     // Stateful values and functions to update them
-    const [username, setUsername] = useState("");
+    const [schoolname, setSchoolName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -58,32 +63,26 @@ function Register() {
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
-            <div className="w-full max-w-md space-y-8">
+        <div className="min-h-[calc(100vh-130px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
+            <div className="w-full max-w-md space-y-4">
+
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold">Timetable Generator</h1>
+                    <h1 className="text-2xl font-bold">Register</h1>
                     <p className="mt-2 text-gray-600">Create your account</p>
                 </div>
 
                 <Card className="bg-white">
-                    <CardHeader className="flex items-center">
-                        <CardTitle>Register</CardTitle>
-                        <CardDescription>
-                            Fill in your details to create an account
-                        </CardDescription>
-                    </CardHeader>
-
                     <CardContent>
-                        <form onSubmit={handleRegister} className="space-y-4">
+                        <form onSubmit={handleRegister} className="space-y-4 pt-6">
 
-                            {/* Input: Username */}
+                            {/* Input: School name */}
                             <div className="space-y-2">
-                                <Label htmlFor="username">Username</Label>
+                                <Label htmlFor="schoolname">School Name</Label>
                                 <Input
-                                    id="username"
+                                    id="schoolname"
                                     type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    value={schoolname}
+                                    onChange={(e) => setSchoolName(e.target.value)}
                                     required
                                     />
                             </div>
@@ -182,6 +181,7 @@ function Register() {
                         </Button>
                     </CardFooter>
                 </Card>
+                
             </div>
         </div>
     );

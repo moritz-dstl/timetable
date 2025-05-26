@@ -3,11 +3,11 @@ import { Button } from "../components/ui/button";
 
 function Footer() {
     return (
-        <footer className="border-t p-4 bg-muted/30">
-            <div className="container mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <footer className="border-t p-4 pt-3 md:pt-4 bg-gray-50">
+            <div className="container">
+                <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-2">
                     <div className="text-sm text-muted-foreground">
-                        &copy; {new Date().getFullYear()} Timetable Generator. All rights reserved.
+                        Copyright &copy; {new Date().getFullYear()} Fottg
                     </div>
 
                     {/* TODO: Navigate to pages and create pages */}
@@ -15,21 +15,21 @@ function Footer() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="flex items-center gap-1"
+                            // className="flex items-center gap-1"
                         >
                             Imprint
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="flex items-center gap-1"
+                            // className="flex items-center gap-1"
                         >
                             Privacy Policy
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="flex items-center gap-1"
+                            // className="flex items-center gap-1"
                         >
                             Terms of Service
                         </Button>

@@ -6,8 +6,6 @@ import Cookies from "universal-cookie";
 // Components
 import {
     Card,
-    CardHeader,
-    CardTitle,
     CardContent,
     CardFooter,
 } from "../../components/ui/card";
@@ -17,19 +15,23 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlert, Eye, EyeOff } from 'lucide-react';
+import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
 function Login() {
     const navigate = useNavigate();
+    const cookies = new Cookies();
+
+    // User logged in -> redirect home
+    if (cookies.get("auth")) {
+        window.location.href = "/";
+    }
 
     // Stateful values and functions to update them
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
-    const cookies = new Cookies();
 
     // Handle log in user
     const handleLogin = async (e: React.FormEvent) => {
@@ -40,11 +42,11 @@ function Login() {
         try {
             // TODO: API
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            if (username === "admin" && password === "password") {
-                cookies.set("auth", "token123", { expires: new Date(new Date().getTime() + 30 * 1000) });
+            if (email === "admin@email.com" && password === "password") {
+                cookies.set("auth", "token123");
                 navigate("/");
             } else {
-                setError("Invalid username or password");
+                setError("Invalid email or password");
             }
         } catch (err) {
             setError("An error occurred");
@@ -54,29 +56,26 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
-            <div className="w-full max-w-md space-y-8">
+        <div className="min-h-[calc(100vh-130px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
+            <div className="w-full max-w-md space-y-4">
+
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold">Timetable Generator</h1>
+                    <h1 className="text-2xl font-bold">Login</h1>
                     <p className="mt-2 text-gray-600">Sign in to access your account</p>
                 </div>
 
                 <Card className="bg-white">
-                    <CardHeader className="flex items-center">
-                        <CardTitle>Login</CardTitle>
-                    </CardHeader>
-
                     <CardContent>
-                        <form onSubmit={handleLogin} className="space-y-4">
+                        <form onSubmit={handleLogin} className="space-y-4 pt-6">
 
-                            {/* Input: Username */}
+                            {/* Input: Email */}
                             <div className="space-y-2">
-                                <Label>Username</Label>
+                                <Label>Email</Label>
                                 <Input
-                                    id="username"
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
                             </div>
@@ -140,6 +139,7 @@ function Login() {
                         </Button>
                     </CardFooter>
                 </Card>
+                
             </div>
         </div>
     );

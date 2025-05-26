@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { Button } from "../components/ui/button";
 
 // Icons
-import { LogOut } from 'lucide-react';
+import { Boxes, LogOut } from "lucide-react";
 
 function Header() {
     const navigate = useNavigate();
@@ -14,28 +14,37 @@ function Header() {
     // Handle log user out
     const handleLogout = () => {
         cookies.remove("auth");
-        navigate("/");
+        localStorage.removeItem("data");
+        window.location.reload();
     }
 
     return (
-        <header className="border-b p-4">
+        <header className="border-b p-4 bg-gray-50">
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold cursor-pointer" onClick={() => navigate("/")}>Timetable Generator</h1>
+                <span className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
+                    <div className="h-8 w-8">
+                        <Boxes className="h-8 w-8" color="#FF9100" />
+                    </div>
+                    <span className="flex gap-1">
+                        <h1 className="block sm:hidden text-2xl font-bold">Fottg</h1>
+                        <h1 className="hidden sm:block text-2xl font-bold">Free Online Timetable Generator</h1>
+                    </span>
+                </span>
                 <div id="header-buttons" className="flex items-center gap-4">
                     {
                         !cookies.get("auth") ? (
                             // Show sign in and sign out buttons if user is not logged in
                             <>
                                 <Button variant="outline" size="sm" className="text-sm" onClick={() => navigate("/login")}>
-                                    Sign In
+                                    Sign in
                                 </Button>
                                 <Button size="sm" className="text-sm" onClick={() => navigate("/register")}>
-                                    Sign Up
+                                    Sign up
                                 </Button>
                             </>
                         ) : (
                             // Show logout button if user is logged in
-                            <Button size="sm" className="text-sm" onClick={handleLogout}>
+                            <Button variant="outline" size="sm" className="text-sm" onClick={handleLogout}>
                                 <LogOut className="pr-2" />Logout
                             </Button>
                         )
