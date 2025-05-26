@@ -27,6 +27,18 @@ function getAllTeachers(data) {
     return data.teachers.map((teacherItem) => teacherItem.name);
 }
 
+function stringToColor(string) {
+    const colors = ["red", "orange", "yellow", "green", "sky", "blue", "purple", "fuchsia"];
+    
+    var hash = 0;
+    for (var i = 0; i < string.length; i++) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+    }
+
+    return colors[Math.abs(hash % colors.length)];
+}
+
 function DisplayTimetable({ data }) {
     const [selectedViewClassTeacher, setSelectedViewClassTeacher] = useState("class");
     const [allClassesTeachers, setAllClassesTeacheres] = useState(getAllClasses(data));
@@ -36,7 +48,7 @@ function DisplayTimetable({ data }) {
     const filteredLessonsByClass = data.timetable.lessons.filter((lessonItem) => lessonItem.class === selectedClassTeacher);
     const filteredLessonsByTeacher = data.timetable.lessons.filter((lessonItem) => lessonItem.teacher === selectedClassTeacher);
     const filteredLessons = selectedViewClassTeacher === "class" ? filteredLessonsByClass : filteredLessonsByTeacher;
-    
+
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const rangePeriods = Array.from({ length: data.timetable.numOfPeriods }, (_, i) => i + 1);
 
@@ -107,18 +119,20 @@ function DisplayTimetable({ data }) {
                                         rangePeriods.map((period) => (
                                             <tr key={period}>
                                                 {/* First column */}
-                                                <td className="p-2 border text-sm font-bold text-center">
+                                                <td className="p-2 border text-sm font-bold text-center bg-gray-50">
                                                     {period}
                                                 </td>
                                                 {
                                                     daysOfWeek.map((day, index) => {
                                                         // Get lesson that matches day and period
                                                         const lesson = filteredLessons.filter((lessonItem) => lessonItem.day === day && lessonItem.period === period)[0];
+                                                        const bgColor = lesson && `bg-${stringToColor(lesson.subject)}-100`;
+
                                                         return (
                                                             // Display lesson for day and period if it exists
                                                             <td key={index} className="p-1 border">
                                                                 {lesson ? (
-                                                                    <div className="min-h-20 p-2 rounded border bg-orange-100 border-orange-200 text-center">
+                                                                    <div className={`min-h-20 p-2 rounded text-center ${bgColor}`}>
                                                                         <div className="text-sm font-medium">
                                                                             {lesson.subject}
                                                                         </div>
