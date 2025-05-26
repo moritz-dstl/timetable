@@ -28,7 +28,7 @@ function getAllTeachers(data) {
 }
 
 function stringToColor(string) {
-    const colors = ["red", "orange", "yellow", "green", "sky", "blue", "purple", "fuchsia"];
+    const colors = ["red", "orange", "green", "sky", "blue", "purple", "fuchsia"];
     
     var hash = 0;
     for (var i = 0; i < string.length; i++) {
