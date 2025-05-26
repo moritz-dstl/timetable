@@ -4,12 +4,12 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "../ui/card";
+} from "../../ui/card";
 
 // Icons
 import { Mail } from "lucide-react";
 
-function User({ data }) {
+function DisplayUser({ data }) {
     return (
         <Card className="flex flex-col items-center justify-between">
             <CardHeader className="pb-2">
@@ -27,4 +27,4 @@ function User({ data }) {
     );
 }
 
-export default User;
+export default DisplayUser;
