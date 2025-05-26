@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Components
 import {
@@ -21,7 +21,7 @@ import { Download } from "lucide-react";
 // Function to choose color from any string value
 function stringToColor(string) {
     const colors = ["red", "orange", "green", "sky", "blue", "purple", "fuchsia"];
-    
+
     var charSum = 0;
     for (var i = 0; i < string.length; i++)
         charSum += string.charCodeAt(i);
@@ -33,6 +33,13 @@ function DisplayTimetable({ data }) {
     const [selectedViewClassTeacher, setSelectedViewClassTeacher] = useState("class");
     const [allClassesTeachers, setAllClassesTeacheres] = useState(data.timetable.classes);
     const [selectedClassTeacher, setSelectedClassTeacher] = useState(allClassesTeachers[0]);
+
+    // Reload once a new timetable was generated
+    useEffect(() => {
+        setSelectedViewClassTeacher("class");
+        setAllClassesTeacheres(data.timetable.classes);
+        setSelectedClassTeacher(data.timetable.classes[0]);
+    }, [data.timetable.isGenerating]);
 
     // Filter classes for search
     const filteredLessonsByClass = data.timetable.lessons.filter((lessonItem) => lessonItem.class === selectedClassTeacher);
@@ -48,13 +55,17 @@ function DisplayTimetable({ data }) {
                 <div className="flex flex-row gap-2 sm:gap-4 items-center justify-between">
                     <div className="flex flex-row gap-2 sm:gap-4 w-full">
                         {/* Select view class or teacher */}
-                        <Select value={selectedViewClassTeacher} onValueChange={(value) => {
-                            setSelectedViewClassTeacher(value);
+                        <Select
+                            value={selectedViewClassTeacher}
+                            onValueChange={(value) => {
+                                setSelectedViewClassTeacher(value);
 
-                            const listAllClassesteachers = value === "class" ? data.timetable.classes : data.timetable.teachers;
-                            setAllClassesTeacheres(listAllClassesteachers);
-                            setSelectedClassTeacher(listAllClassesteachers[0]);
-                        }}>
+                                const listAllClassesteachers = value === "class" ? data.timetable.classes : data.timetable.teachers;
+                                setAllClassesTeacheres(listAllClassesteachers);
+                                setSelectedClassTeacher(listAllClassesteachers[0]);
+                            }}
+                            disabled={true ? !data.timetable.exists || data.timetable.isGenerating : false}
+                        >
                             <SelectTrigger className="w-[50%] sm:w-[180px]">
                                 <SelectValue />
                             </SelectTrigger>
@@ -64,7 +75,11 @@ function DisplayTimetable({ data }) {
                             </SelectContent>
                         </Select>
                         {/* Select class or teacher */}
-                        <Select value={selectedClassTeacher} onValueChange={setSelectedClassTeacher}>
+                        <Select
+                            value={selectedClassTeacher}
+                            onValueChange={setSelectedClassTeacher}
+                            disabled={true ? !data.timetable.exists || data.timetable.isGenerating : false}
+                        >
                             <SelectTrigger className="w-[50%] sm:w-[180px]">
                                 <SelectValue />
                             </SelectTrigger>
@@ -80,7 +95,7 @@ function DisplayTimetable({ data }) {
                         </Select>
                     </div>
                     {/* Export button */}
-                    <Button onClick={undefined}>
+                    <Button onClick={undefined} disabled={true ? !data.timetable.exists || data.timetable.isGenerating : false}>
                         <Download className="mr-0 sm:mr-2 h-4 w-4" />
                         <p className="hidden sm:block">Export</p>
                     </Button>
