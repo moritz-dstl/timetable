@@ -5,6 +5,7 @@
 
 ## Prerequisites
 
+- Node.js (v23 or higher recommended)
 - npm (v10 or higher recommended)
 
 ## Installation
