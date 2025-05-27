@@ -128,9 +128,9 @@ function GenerateTimetable({ data, setData }) {
                 return newData;
             });
 
-        }, data.settings.durationToSolveSeconds * 1000);
+        }, data.settings.durationToGenerateSeconds * 1000);
 
-        runProgressBar(data.settings.durationToSolveSeconds, data.settings.durationToSolveSeconds);
+        runProgressBar(data.settings.durationToGenerateSeconds, data.settings.durationToGenerateSeconds);
     }
 
     return (
