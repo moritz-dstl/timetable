@@ -67,11 +67,15 @@ function SettingsTeachers({ data, setData }) {
     }
 
     const handleAddConfirm = () => {
+        selectedTeacher.subjects.sort();
+
         setData({
             ...data,
             newChangesMade: true,
-            teachers: [...data.teachers, selectedTeacher]
+            // Sort by name
+            teachers: [...data.teachers, selectedTeacher].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+        
         setIsAddDialogOpen(false);
     }
 
@@ -82,12 +86,16 @@ function SettingsTeachers({ data, setData }) {
     }
 
     const handleEditConfirm = () => {
+        selectedTeacher.subjects.sort();
         const updatedTeachers = data.teachers.map((teacherItem) => (teacherItem.id === selectedTeacher.id ? selectedTeacher : teacherItem));
+        
         setData({
             ...data,
             newChangesMade: true,
-            teachers: updatedTeachers
+            // Sort by name
+            teachers: updatedTeachers.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+        
         setIsEditDialogOpen(false);
     }
 

@@ -66,11 +66,16 @@ function SettingsClasses({ data, setData }) {
     }
 
     const handleAddConfirm = () => {
+        // Sort by name
+        selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
+
         setData({
             ...data,
             newChangesMade: true,
-            classes: [...data.classes, selectedClass]
+            // Sort by name
+            classes: [...data.classes, selectedClass].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+
         setIsAddDialogOpen(false);
     }
 
@@ -81,12 +86,17 @@ function SettingsClasses({ data, setData }) {
     }
 
     const handleEditConfirm = () => {
+        // Sort by name
+        selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
         const updatedClasses = data.classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem));
+        
         setData({
             ...data,
             newChangesMade: true,
-            classes: updatedClasses
+            // Sort by name
+            classes: updatedClasses.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+
         setIsEditDialogOpen(false);
     }
 

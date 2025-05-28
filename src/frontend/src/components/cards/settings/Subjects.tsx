@@ -45,7 +45,7 @@ function SettingsSubjects({ data, setData }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSubject, setSelectedSubject] = useState<any>({});
 
-    // List of all used subjects
+    // Array of all used subjects
     // Unused subjects can be deleted
     const usedSubjectsClasses = data.classes.map((classItem) => (classItem.subjects.map((subject) => (subject.name)))).flat();
     const usedSubjectsTeachers = data.teachers.map((teacherItem) => teacherItem.subjects).flat();
@@ -70,7 +70,8 @@ function SettingsSubjects({ data, setData }) {
         setData({
             ...data,
             newChangesMade: true,
-            subjects: [...data.subjects, selectedSubject]
+            // Sort by name
+            subjects: [...data.subjects, selectedSubject].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
         setIsAddDialogOpen(false);
     }
@@ -86,7 +87,8 @@ function SettingsSubjects({ data, setData }) {
         setData({
             ...data,
             newChangesMade: true,
-            subjects: updatedSubjects
+            // Sort by name
+            subjects: updatedSubjects.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
         setIsEditDialogOpen(false);
     }
