@@ -70,6 +70,16 @@ function SettingsClasses({ data, setData }) {
         // Sort by name
         selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
 
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedClass.name;
+        const existingNames = data.classes.map((classItem) => classItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedClass.name} (${counter})`;
+            counter++;
+        }
+        selectedClass.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
@@ -101,6 +111,16 @@ function SettingsClasses({ data, setData }) {
         selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
         const updatedClasses = data.classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem));
         
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedClass.name;
+        const existingNames = data.classes.map((classItem) => classItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedClass.name} (${counter})`;
+            counter++;
+        }
+        selectedClass.name = name;
+
         setData({
             ...data,
             newChangesMade: true,

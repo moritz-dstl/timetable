@@ -67,12 +67,23 @@ function SettingsSubjects({ data, setData }) {
     }
 
     const handleAddConfirm = () => {
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedSubject.name;
+        const existingNames = data.subjects.map((subjectItem) => subjectItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedSubject.name} (${counter})`;
+            counter++;
+        }
+        selectedSubject.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
             // Sort by name
             subjects: [...data.subjects, selectedSubject].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+
         setIsAddDialogOpen(false);
     }
 
@@ -84,12 +95,24 @@ function SettingsSubjects({ data, setData }) {
 
     const handleEditConfirm = () => {
         const updatedSubjects = data.subjects.map((subjectItem) => (subjectItem.id === selectedSubject.id ? selectedSubject : subjectItem));
+        
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedSubject.name;
+        const existingNames = data.subjects.map((subjectItem) => subjectItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedSubject.name} (${counter})`;
+            counter++;
+        }
+        selectedSubject.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
             // Sort by name
             subjects: updatedSubjects.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+        
         setIsEditDialogOpen(false);
     }
 

@@ -69,6 +69,16 @@ function SettingsTeachers({ data, setData }) {
     const handleAddConfirm = () => {
         selectedTeacher.subjects.sort();
 
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedTeacher.name;
+        const existingNames = data.teachers.map((teacherItem) => teacherItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedTeacher.name} (${counter})`;
+            counter++;
+        }
+        selectedTeacher.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
@@ -89,6 +99,16 @@ function SettingsTeachers({ data, setData }) {
         selectedTeacher.subjects.sort();
         const updatedTeachers = data.teachers.map((teacherItem) => (teacherItem.id === selectedTeacher.id ? selectedTeacher : teacherItem));
         
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedTeacher.name;
+        const existingNames = data.teachers.map((teacherItem) => teacherItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedTeacher.name} (${counter})`;
+            counter++;
+        }
+        selectedTeacher.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
