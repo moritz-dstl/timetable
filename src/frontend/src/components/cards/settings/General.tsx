@@ -120,7 +120,7 @@ function SettingsGeneral({ data, setData }) {
 
                     <div className="flex flex-col gap-4">
                         {/* Slider: Max consecutive periods */}
-                        <div className="flex flex-col gap-2 min-h-0 md:min-h-[56px]">
+                        <div className="flex flex-col gap-2 min-h-0 md:min-h-[57px]">
                             <Label>Max. number of consecutive periods</Label>
                             <Slider
                                 min={1}
