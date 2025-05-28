@@ -82,7 +82,6 @@ function SettingsSubjects({ data, setData }) {
     }
 
     const handleEditConfirm = () => {
-        console.log(selectedSubject);
         const updatedSubjects = data.subjects.map((subjectItem) => (subjectItem.id === selectedSubject.id ? selectedSubject : subjectItem));
         setData({
             ...data,
