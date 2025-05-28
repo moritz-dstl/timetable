@@ -40,6 +40,7 @@ import {
 import {
     PlusCircle,
     Search,
+    Copy,
     Edit,
     Trash2
 } from "lucide-react";
@@ -64,7 +65,7 @@ function SettingsClasses({ data, setData }) {
             subjects: [],
         });
     }
-
+    
     const handleAddConfirm = () => {
         // Sort by name
         selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
@@ -77,6 +78,16 @@ function SettingsClasses({ data, setData }) {
         });
 
         setIsAddDialogOpen(false);
+    }
+    
+    // Handle duplicate class
+    const handleDuplicate = (classItem) => {
+        setIsAddDialogOpen(true);
+        setSelectedClass({
+            id: new Date().getTime(),
+            name: classItem.name + " Copy",
+            subjects: classItem.subjects,
+        });
     }
 
     // Handle edit class
@@ -290,6 +301,14 @@ function SettingsClasses({ data, setData }) {
                                         {/* Action buttons */}
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
+                                                {/* Duplicate button */}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleDuplicate(classItem)}
+                                                >
+                                                    <Copy className="h-4 w-4" />
+                                                </Button>
                                                 {/* Edit button */}
                                                 <Button
                                                     variant="ghost"
