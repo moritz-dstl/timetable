@@ -22,7 +22,7 @@ function Register() {
     const cookies = new Cookies();
 
     // User logged in -> redirect home
-    if (cookies.get("auth")) {
+    if (cookies.get("user")) {
         window.location.href = "/";
     }
 
@@ -35,14 +35,14 @@ function Register() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    
+
     // Handle register new user
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
         setIsLoading(true);
 
-        // Basic validation
+        // Validate equal passwords
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             setPassword("");
@@ -52,12 +52,30 @@ function Register() {
         }
 
         try {
-            // TODO: API
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            navigate("/login");
+            // Wait 500ms for loading effect
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            fetch(`${import.meta.env.VITE_API_ENDPOINT}/User/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "school_name": schoolname,
+                    "email": email,
+                    "password": password
+                }),
+            }).then((res) => {
+                if (res.ok) {
+                    navigate("/login");
+                }
+                else {
+                    setError("Something went wrong");
+                    setIsLoading(false);
+                }
+            });
         } catch (err) {
-            setError("An error occurred during registration");
-        } finally {
+            setError("An error occurred");
             setIsLoading(false);
         }
     };
@@ -84,7 +102,7 @@ function Register() {
                                     value={schoolname}
                                     onChange={(e) => setSchoolName(e.target.value)}
                                     required
-                                    />
+                                />
                             </div>
 
                             {/* Input: Email */}
@@ -127,7 +145,7 @@ function Register() {
                                     </button>
                                 </div>
                             </div>
-                            
+
                             {/* Input: Confirm password, with toggle visibility eye icon */}
                             <div className="space-y-2">
                                 <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -156,7 +174,7 @@ function Register() {
                                     </button>
                                 </div>
                             </div>
-                            
+
                             {/* Show alert if error */}
                             {error && (
                                 <Alert variant="destructive" className="mb-4">
@@ -181,7 +199,7 @@ function Register() {
                         </Button>
                     </CardFooter>
                 </Card>
-                
+
             </div>
         </div>
     );

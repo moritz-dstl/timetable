@@ -11,9 +11,9 @@ function runProgressBar(timeRemainingSeconds, totalDurationSeconds) {
 
     const deltaPercentage = Math.floor((1 / totalDurationSeconds) * 100);
     const percentage = Math.floor((1 - timeRemainingSeconds / totalDurationSeconds) * 100);
-    
+
     element?.animate(
-        { width: [`${percentage}%`, `${percentage+deltaPercentage}%`] },
+        { width: [`${percentage}%`, `${percentage + deltaPercentage}%`] },
         { duration: 1000, easing: 'linear' }
     );
 
@@ -25,112 +25,119 @@ function runProgressBar(timeRemainingSeconds, totalDurationSeconds) {
 };
 
 function GenerateTimetable({ data, setData }) {
-    const handleGenerate = () => {
-        setData({ ...data, timetable: { ...data.timetable, isGenerating: true } });
+    const handleGenerate = async () => {
+        var timetableGenerateID = null;
 
-        setTimeout(() => {
-            const timetable = {
-                isGenerating: false,
-                exists: true,
-                numOfPeriods: 8,
-                classes: ["1A", "2B", "3C"],
-                teachers: ["Mr. Smith", "Mrs. Smith"],
-                lessons: [
-                    {
-                        id: 1,
-                        day: "Monday",
-                        period: 1,
-                        class: "1A",
-                        subject: "Math",
-                        teacher: "Mr. Smith",
-                    },
-                    {
-                        id: 2,
-                        day: "Monday",
-                        period: 2,
-                        class: "1A",
-                        subject: "English",
-                        teacher: "Mr. Smith",
-                    },
-                    {
-                        id: 3,
-                        day: "Monday",
-                        period: 3,
-                        class: "1A",
-                        subject: "Physics",
-                        teacher: "Mrs. Smith",
-                    },
-                    {
-                        id: 4,
-                        day: "Monday",
-                        period: 1,
-                        class: "2B",
-                        subject: "Chemistry",
-                        teacher: "Mrs. Smith",
-                    },
-                    {
-                        id: 5,
-                        day: "Tuesday",
-                        period: 2,
-                        class: "2B",
-                        subject: "Science",
-                        teacher: "Mrs. Smith",
-                    },
-                    {
-                        id: 6,
-                        day: "Wednesday",
-                        period: 4,
-                        class: "3C",
-                        subject: "History",
-                        teacher: "Mr. Smith",
-                    },
-                    {
-                        id: 7,
-                        day: "Wednesday",
-                        period: 5,
-                        class: "3C",
-                        subject: "English",
-                        teacher: "Mr. Smith",
-                    },
-                    {
-                        id: 8,
-                        day: "Thursday",
-                        period: 6,
-                        class: "2B",
-                        subject: "Math",
-                        teacher: "Mr. Smith",
-                    },
-                    {
-                        id: 9,
-                        day: "Friday",
-                        period: 7,
-                        class: "1A",
-                        subject: "Physics",
-                        teacher: "Mrs. Smith",
-                    },
-                    {
-                        id: 10,
-                        day: "Friday",
-                        period: 8,
-                        class: "2B",
-                        subject: "Chemistry",
-                        teacher: "Mrs. Smith",
-                    },
-                ]
-            };
+        // Start generating
+        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/start_computing`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((res) => res.json())
+            .then((json) => timetableGenerateID = json["job_id"]);
 
-            // When using setTimeout, closures capture the initial state, 
-            // so to ensure the latest state is used, update state with a 
-            // function that receives the current value.
-            setData(prevData => {
-                const newData = { ...prevData, timetable: timetable };
-                localStorage.setItem("data", JSON.stringify(newData));
-                return newData;
-            });
+        setData({
+            ...data, timetable: {
+                isGenerating: true,
+                exists: false,
+                numOfPeriods: data.settings.numPeriodsPerDay,
+                classes: [],
+                teachers: [],
+                lessons: []
+            }
+        });
 
-        }, data.settings.durationToGenerateSeconds * 1000);
+        // Get result after set duration to generate
+        setTimeout(async () => {
+            const timetable = data.timetable;
 
-        runProgressBar(data.settings.durationToGenerateSeconds, data.settings.durationToGenerateSeconds);
+            await fetch(`${import.meta.env.VITE_API_ENDPOINT}/status/${timetableGenerateID}`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((res) => res.json())
+                .then((json) => {
+                    if (json["status"] !== "finished") {
+                        setData(prevData => {
+                            const newData = { ...prevData, timetable: { ...prevData.timetable, isGenerating: false } };
+                            localStorage.setItem("data", JSON.stringify(newData));
+                            return newData;
+                        });
+
+                        console.error("Failed to generate timetable: not finished.")
+                        return;
+                    };
+
+                    if (json["result"]["status"] !== "success") {
+                        setData(prevData => {
+                            const newData = { ...prevData, timetable: { ...prevData.timetable, isGenerating: false } };
+                            localStorage.setItem("data", JSON.stringify(newData));
+                            return newData;
+                        });
+                        console.error("Failed to generate timetable: not successfull.")
+                        return;
+                    };
+
+                    const jsonClasses = json["result"]["classes"];
+                    const jsonTeachers = json["result"]["teachers"];
+
+                    timetable.isGenerating = false;
+                    timetable.exists = true;
+                    timetable.classes = Object.keys(jsonClasses);
+                    timetable.teachers = Object.keys(jsonTeachers);
+
+                    var counter = 0;
+                    const daysOfWeek = {
+                        Mo: "Monday",
+                        Tu: "Tuesday",
+                        We: "Wednesday",
+                        Th: "Thursday",
+                        Fr: "Friday"
+                    }
+
+                    for (const [className, timetableDays] of Object.entries(jsonClasses)) {
+                        for (const [day, lessons] of Object.entries(timetableDays as Array<string>)) {
+                            timetable.numOfPeriods = lessons.length;
+                            for (const lesson of Object.entries(lessons)) {
+                                const period = parseInt(lesson[0]) + 1;
+                                const subject = lesson[1].split(' ')[0];
+                                const teacher = lesson[1].replace(subject, '').replace(' (', '').replace(')', '');
+
+                                if (subject !== "free") {
+                                    timetable.lessons.push({
+                                        id: counter,
+                                        day: daysOfWeek[day],
+                                        period: period,
+                                        class: className,
+                                        subject: subject,
+                                        teacher: teacher
+                                    });
+                                }
+
+                                counter++;
+                            }
+                        }
+                    }
+
+                    // When using setTimeout, closures capture the initial state, 
+                    // so to ensure the latest state is used, update state with a 
+                    // function that receives the current value.
+                    setData(prevData => {
+                        const newData = { ...prevData, timetable: timetable };
+                        localStorage.setItem("data", JSON.stringify(newData));
+                        return newData;
+                    });
+
+                });
+        }, data.settings.durationToGenerateSeconds * 1000 + 3000);
+        // Add three seconds to duration to make sure the generating is finished
+        runProgressBar(data.settings.durationToGenerateSeconds + 3, data.settings.durationToGenerateSeconds + 3);
     }
 
     return (

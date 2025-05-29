@@ -22,7 +22,7 @@ function Login() {
     const cookies = new Cookies();
 
     // User logged in -> redirect home
-    if (cookies.get("auth")) {
+    if (cookies.get("user")) {
         window.location.href = "/";
     }
 
@@ -40,17 +40,35 @@ function Login() {
         setIsLoading(true);
 
         try {
-            // TODO: API
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            if (email === "admin@email.com" && password === "password") {
-                cookies.set("auth", "token123");
-                navigate("/");
-            } else {
-                setError("Invalid email or password");
-            }
+            // Wait 500ms for loading effect
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            fetch(`${import.meta.env.VITE_API_ENDPOINT}/User/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "email": email,
+                    "password": password
+                }),
+            }).then((res) => {
+                if (res.ok) {
+                    cookies.set("user", btoa(email));
+                    navigate("/");
+                }
+                else if (res.status === 500) {
+                    setError("An error occurred");
+                    setIsLoading(false);
+                }
+                else {
+                    setError("Invalid email or password");
+                    setIsLoading(false);
+                }
+            });
         } catch (err) {
             setError("An error occurred");
-        } finally {
             setIsLoading(false);
         }
     };
@@ -109,7 +127,7 @@ function Login() {
                                 </div>
 
                             </div>
-                            
+
                             {/* Show alert if error */}
                             {error && (
                                 <Alert variant="destructive" className="mb-4">
@@ -124,14 +142,14 @@ function Login() {
                             <Button variant="link" type="button" className="text-sm p-0 h-auto">
                                 Forgot password?
                             </Button>
-                            
+
                             {/* Button: Log in */}
                             <Button type="submit" className="w-full" disabled={isLoading}>
                                 {isLoading ? "Signing in..." : "Sign in"}
                             </Button>
                         </form>
                     </CardContent>
-                    
+
                     <CardFooter className="flex justify-center text-sm text-gray-500">
                         <p className="text-sm pr-1 text-gray-600">Don't have an account?</p>
                         <Button variant="link" type="button" className="text-sm p-0" onClick={() => navigate("/register")}>
@@ -139,7 +157,7 @@ function Login() {
                         </Button>
                     </CardFooter>
                 </Card>
-                
+
             </div>
         </div>
     );
