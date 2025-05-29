@@ -67,7 +67,8 @@ function Login() {
                     setIsLoading(false);
                 }
             });
-        } catch (err) {
+        } catch (error) {
+            console.error(error);
             setError("An error occurred");
             setIsLoading(false);
         }

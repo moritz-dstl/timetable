@@ -10,9 +10,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../../ui/dialog";
+import { Alert, AlertDescription } from "../../ui/alert";
 
 // Icons
-import { Eraser, Save } from "lucide-react";
+import { TriangleAlert, Eraser, Save } from "lucide-react";
 
 async function apiSaveData(data, setData) {
     const numOfClasses = data.classes.map((classItem) => classItem.name).length;
@@ -20,7 +21,7 @@ async function apiSaveData(data, setData) {
 
     setData({
         ...data,
-        settings: { ...data.settings, durationToGenerateSeconds: durationToGenerateSeconds }
+        timetable: { ...data.timetable, durationToGenerateSeconds: durationToGenerateSeconds }
     });
 
     var apiDataBody = {
@@ -71,7 +72,6 @@ async function apiSaveData(data, setData) {
 
     var responseStatusSuccess = true;
 
-    
     await fetch(`${import.meta.env.VITE_API_ENDPOINT}/Settings/set`, {
         method: "POST",
         credentials: "include",
@@ -79,40 +79,53 @@ async function apiSaveData(data, setData) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(apiDataBody)
-    }).then((res) => { responseStatusSuccess = res.ok });
-    
+    })
+        .then((res) => { responseStatusSuccess = res.ok })
+        .catch((error) => { responseStatusSuccess = false });
+
     return responseStatusSuccess;
 }
 
 function SettingsDiscardSave({ data, setData }) {
+    const [error, setError] = useState("");
     const [isSaving, setIsSaving] = useState(false);
     const [isDiscardDialogOpen, setIsDiscardDialogOpen] = useState(false);
 
     const handleDiscard = () => {
+        setError("");
         const storedData = localStorage.getItem("data");
         if (storedData) setData({ ...JSON.parse(storedData), newChangesMade: false });
         setIsDiscardDialogOpen(false);
     }
 
     const handleSave = async () => {
+        setError("");
         setIsSaving(true);
 
-        // Wait 500ms for loading effect
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const responseStatusSuccess = await apiSaveData(data, setData);
+        try {
+            // Wait 500ms for loading effect
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            const responseStatusSuccess = await apiSaveData(data, setData);
 
-        if (responseStatusSuccess) {
-            setData({ ...data, newChangesMade: false });
-            localStorage.setItem("data", JSON.stringify({ ...data, newChangesMade: false }));
+            if (responseStatusSuccess) {
+                setData({ ...data, newChangesMade: false });
+                localStorage.setItem("data", JSON.stringify({ ...data, newChangesMade: false }));
+            }
+            else {
+                setError("Data could not be saved");
+            }
+        } catch (error) {
+            console.error(error);
+            setError("An error occurred");
+        } finally {
+            setIsSaving(false);
         }
-
-        setIsSaving(false);
     }
 
     if (data.newChangesMade) {
         return (
             <>
-                <div className="flex flex-row gap-4 justify-end">
+                <div className="flex flex-row gap-4 align-center justify-end">
                     {/* Discard button */}
                     <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)} disabled={data.timetable.isGenerating}>
                         <Eraser className="mr-2 h-4 w-4" />
@@ -124,8 +137,17 @@ function SettingsDiscardSave({ data, setData }) {
                         <Save className="mr-2 h-4 w-4" />
                         {isSaving ? "Saving..." : "Save"}
                     </Button>
-
                 </div>
+
+                {/* Show alert if error */}
+                {error && (
+                    <Alert variant="destructive" className="flex items-center justify-center p-1">
+                        <div className="flex items-center">
+                            <TriangleAlert className="h-4 w-4 mr-3" />
+                            <AlertDescription>{error}</AlertDescription>
+                        </div>
+                    </Alert>
+                )}
 
                 {/* Delete dialog */}
                 <Dialog open={isDiscardDialogOpen}>

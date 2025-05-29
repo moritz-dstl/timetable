@@ -33,10 +33,12 @@ async function apiFetchData(cookies, setData, setIsLoading) {
             start: 4,
             end: 6,
         },
-        durationToGenerateSeconds: 30
     };
 
     var timetable = {
+        uuid: null,
+        timestampGeneratingStart: null,
+        durationToGenerateSeconds: 30,
         isGenerating: false,
         exists: false,
         numOfPeriods: settings.numPeriodsPerDay,
@@ -74,7 +76,10 @@ async function apiFetchData(cookies, setData, setIsLoading) {
         }
     })
         .then((res) => res.json())
-        .then((json) => user.schoolName = json["school_name"]);
+        .then((json) => user.schoolName = json["school_name"])
+        .catch((error) => {
+            console.error(error);
+        });
 
     // Get settings, classes, teachers, and subjects
     await fetch(`${import.meta.env.VITE_API_ENDPOINT}/Settings/get`, {
@@ -86,6 +91,8 @@ async function apiFetchData(cookies, setData, setIsLoading) {
     })
         .then((res) => res.json())
         .then((json) => {
+            const isObjectEmpty = (obj) => Object.keys(obj).length === 0;
+
             const jsonSettings = json["settings"];
             const jsonSchool = json["school"];
             const jsonForceDoubleLesson = json["prefer_block_subjects"];
@@ -94,67 +101,73 @@ async function apiFetchData(cookies, setData, setIsLoading) {
             const jsonTeacherSubjects = json["teacher_subjects"];
             const jsonClasses = json["classes"];
 
-            // Settings
-            settings.preferEarlyPeriods = Boolean(jsonSettings["prefer_early_hours"]);
-            settings.allowDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
-            settings.maxConsecutivePeriods = jsonSettings["max_consecutive_hours"];
-            settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
-            settings.breakWindow.start = jsonSettings["break_window_start"];
-            settings.breakWindow.end = jsonSettings["break_window_end"];
-            settings.durationToGenerateSeconds = jsonSettings["max_time_for_solving"];
-            settings.numPeriodsPerDay = jsonSchool["hours_per_day"];
+            if (!isObjectEmpty(jsonSettings) && !isObjectEmpty(jsonSchool)) {
+                // Settings
+                settings.preferEarlyPeriods = Boolean(jsonSettings["prefer_early_hours"]);
+                settings.allowDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
+                settings.maxConsecutivePeriods = jsonSettings["max_consecutive_hours"];
+                settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
+                settings.breakWindow.start = jsonSettings["break_window_start"];
+                settings.breakWindow.end = jsonSettings["break_window_end"];
+                settings.numPeriodsPerDay = jsonSchool["hours_per_day"];
+                timetable.durationToGenerateSeconds = jsonSettings["max_time_for_solving"];
 
-            // Timetable
-            timetable.numOfPeriods = jsonSchool["hours_per_day"];
+                // Timetable
+                timetable.numOfPeriods = jsonSchool["hours_per_day"];
 
-            // Subjects
-            const subjectsArray = JSON.parse(jsonSchool["subjects"].replace(/'/g, '"'));
-            subjectsArray.forEach((subject, index) => {
-                const isMaxParallelSet = jsonMaxParallel.find((subjectItem) => subjectItem["subject_name"] === subject);
-                const maxParallel = isMaxParallelSet ? isMaxParallelSet["max_parallel"] : 0;
-                const forceDoubleLesson = jsonForceDoubleLesson.find((subjectItem) => subjectItem["subject_name"] === subject) ? true : false;
+                // Subjects
+                const subjectsArray = JSON.parse(jsonSchool["subjects"].replace(/'/g, '"'));
+                subjectsArray.forEach((subject, index) => {
+                    const isMaxParallelSet = jsonMaxParallel.find((subjectItem) => subjectItem["subject_name"] === subject);
+                    const maxParallel = isMaxParallelSet ? isMaxParallelSet["max_parallel"] : 0;
+                    const forceDoubleLesson = jsonForceDoubleLesson.find((subjectItem) => subjectItem["subject_name"] === subject) ? true : false;
 
-                subjects.push({
-                    id: index,
-                    name: subject,
-                    maxParallel: maxParallel,
-                    forceDoubleLesson: forceDoubleLesson
+                    subjects.push({
+                        id: index,
+                        name: subject,
+                        maxParallel: maxParallel,
+                        forceDoubleLesson: forceDoubleLesson
+                    });
                 });
-            });
 
-            // Classes
-            const classesArray = JSON.parse(jsonSchool["classes"].replace(/'/g, '"'));
-            classesArray.forEach((cls, index) => {
-                const allSubjectsForClass = jsonClasses.filter((classSubject) => cls === classSubject["class_name"]).map((classSubject) => ({ name: classSubject["subject"], hoursPerWeek: classSubject["hours_per_week"] }));
+                // Classes
+                const classesArray = JSON.parse(jsonSchool["classes"].replace(/'/g, '"'));
+                classesArray.forEach((cls, index) => {
+                    const allSubjectsForClass = jsonClasses.filter((classSubject) => cls === classSubject["class_name"]).map((classSubject) => ({ name: classSubject["subject"], hoursPerWeek: classSubject["hours_per_week"] }));
 
-                classes.push({
-                    id: index,
-                    name: cls,
-                    // Sort by name
-                    subjects: allSubjectsForClass.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+                    classes.push({
+                        id: index,
+                        name: cls,
+                        // Sort by name
+                        subjects: allSubjectsForClass.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+                    });
                 });
-            });
 
-            // Teachers
-            jsonTeachers.forEach((teacher) => {
-                const teacherID = teacher["Tid"];
-                const allSubjectsForTeacher = jsonTeacherSubjects.filter((teacherSubject) => teacherID === teacherSubject["Tid"]).map((teacherSubject) => teacherSubject["subject"]);
+                // Teachers
+                jsonTeachers.forEach((teacher) => {
+                    const teacherID = teacher["Tid"];
+                    const allSubjectsForTeacher = jsonTeacherSubjects.filter((teacherSubject) => teacherID === teacherSubject["Tid"]).map((teacherSubject) => teacherSubject["subject"]);
 
-                teachers.push({
-                    id: teacherID,
-                    name: teacher["name"],
-                    subjects: allSubjectsForTeacher.sort(),
-                    maxHoursPerWeek: teacher["max_hours"]
+                    teachers.push({
+                        id: teacherID,
+                        name: teacher["name"],
+                        subjects: allSubjectsForTeacher.sort(),
+                        maxHoursPerWeek: teacher["max_hours"]
+                    });
                 });
-            });
+
+            }
 
             const allData = {
                 user: user,
                 timetable: timetable,
                 newChangesMade: false,
                 settings: settings,
+                // Sort by name using localeCompare with numeric option for natural order
+                classes: classes.sort((a, b) =>
+                    a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+                ),
                 // Sort by name
-                classes: classes.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
                 teachers: teachers.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
                 subjects: subjects.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
             };
@@ -163,6 +176,9 @@ async function apiFetchData(cookies, setData, setIsLoading) {
             localStorage.setItem("data", JSON.stringify(allData));
 
             setIsLoading(false);
+        })
+        .catch((error) => {
+            console.error(error);
         });
 }
 
