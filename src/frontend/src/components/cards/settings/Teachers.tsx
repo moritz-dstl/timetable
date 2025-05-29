@@ -101,7 +101,7 @@ function SettingsTeachers({ data, setData }) {
         
         // Name cannot be duplicate -> Rename with counter
         let name = selectedTeacher.name;
-        const existingNames = data.teachers.map((teacherItem) => teacherItem.name);
+        const existingNames = data.teachers.map((teacherItem) => selectedTeacher.id !== teacherItem.id && teacherItem.name);
         let counter = 1;
         while (existingNames.includes(name)) {
             name = `${selectedTeacher.name} (${counter})`;

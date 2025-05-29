@@ -113,7 +113,7 @@ function SettingsClasses({ data, setData }) {
         
         // Name cannot be duplicate -> Rename with counter
         let name = selectedClass.name;
-        const existingNames = data.classes.map((classItem) => classItem.name);
+        const existingNames = data.classes.map((classItem) => selectedClass.id !== classItem.id && classItem.name);
         let counter = 1;
         while (existingNames.includes(name)) {
             name = `${selectedClass.name} (${counter})`;

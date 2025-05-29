@@ -98,7 +98,7 @@ function SettingsSubjects({ data, setData }) {
         
         // Name cannot be duplicate -> Rename with counter
         let name = selectedSubject.name;
-        const existingNames = data.subjects.map((subjectItem) => subjectItem.name);
+        const existingNames = data.subjects.map((subjectItem) => selectedSubject.id !== subjectItem.id && subjectItem.name);
         let counter = 1;
         while (existingNames.includes(name)) {
             name = `${selectedSubject.name} (${counter})`;
