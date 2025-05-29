@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 // Components
 import { Button } from "../ui/button";
@@ -7,55 +7,49 @@ import { Alert, AlertDescription } from "../ui/alert";
 // Icons
 import { TriangleAlert, RefreshCw } from "lucide-react";
 
-async function apiGetTimetableAndSetData(data, setData, setError) {
+enum API_GENERATE_STATUS { RUNNING, SUCCESS, FAILED, ERROR };
+
+// Gets the status of the timetable generation and returns a dictiary with a 
+// API_GENERATE_STATUS and if successfull the timetable.
+// Take in a reference to the data.
+async function apiGetTimetable(dataRef) {
+    var response = {
+        status: API_GENERATE_STATUS.RUNNING,
+        timetable: {}
+    };
+
     try {
-        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/status/${data.timetable.uuid}`, {
+        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/status/${dataRef.current.timetable.uuid}`, {
             method: "GET",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             }
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    response.status = API_GENERATE_STATUS.ERROR;
+                    return;
+                }
+                return res.json();
+            })
             .then((json) => {
                 if (json["status"] !== "finished") {
-                    setData(recentData => {
-                        const updatedData = {
-                            ...recentData,
-                            timetable: {
-                                ...recentData.timetable,
-                                uuid: null,
-                                isGenerating: false
-                            }
-                        };
-                        localStorage.setItem("data", JSON.stringify(updatedData));
-                        return updatedData;
-                    });
-                    setError("Failed to generate timetable");
+                    response.status = API_GENERATE_STATUS.RUNNING;
                     return;
                 };
 
                 if (json["result"]["status"] !== "success") {
-                    setData(recentData => {
-                        const updatedData = {
-                            ...recentData,
-                            timetable: {
-                                ...recentData.timetable,
-                                uuid: null,
-                                isGenerating: false
-                            }
-                        };
-                        localStorage.setItem("data", JSON.stringify(updatedData));
-                        return updatedData;
-                    });
-                    setError("Timetable could not be generated");
+                    response.status = API_GENERATE_STATUS.FAILED;
                     return;
                 };
+
+                console.log(json["result"]);
 
                 const jsonClasses = json["result"]["classes"];
                 const jsonTeachers = json["result"]["teachers"];
 
-                const timetable = data.timetable;
+                const timetable = dataRef.current.timetable;
 
                 timetable.uuid = null;
                 timetable.isGenerating = false;
@@ -96,74 +90,97 @@ async function apiGetTimetableAndSetData(data, setData, setError) {
                     }
                 }
 
-                // When using setTimeout, closures capture the initial state, 
-                // so to ensure the latest state is used, update state with a 
-                // function that receives the current value.
-                setData(recentData => {
-                    const updatedData = { ...recentData, timetable: timetable };
-                    localStorage.setItem("data", JSON.stringify(updatedData));
-                    return updatedData;
-                });
-
+                response.status = API_GENERATE_STATUS.SUCCESS;
+                response.timetable = timetable;
             })
             .catch((error) => {
-                setError("An error occured");
-                setData(recentData => {
-                    const updatedData = {
-                        ...recentData,
-                        timetable: {
-                            ...recentData.timetable,
-                            uuid: null,
-                            isGenerating: false
-                        }
-                    };
-                    localStorage.setItem("data", JSON.stringify(updatedData));
-                    return updatedData;
-                });
+                response.status = API_GENERATE_STATUS.ERROR;
             });
     } catch (error) {
         console.error(error);
-        setError("An error occured");
-        setData(recentData => {
-            const updatedData = {
-                ...recentData,
-                timetable: {
-                    ...recentData.timetable,
-                    uuid: null,
-                    isGenerating: false
-                }
-            };
-            localStorage.setItem("data", JSON.stringify(updatedData));
-            return updatedData;
-        });
+        response.status = API_GENERATE_STATUS.ERROR;
+    } finally {
+        return response;
     }
 }
 
-// Function animates a progress bar by updating its width and sets remaining time in HH:MM:SS
+// Checks on the status of the generation and acts accordingly.
+// Stops when set duration to generate is exceeded. 
+// It also animates a progress bar by updating its width and sets remaining time in HH:MM:SS
 // every second to visually represent the duration for generating.
-async function runProgressBar(data, setData, setError) {
-    // Add three seconds to duration to make sure the generating is finished
-    const durationToGenerateSeconds = data.timetable.durationToGenerateSeconds + 3;
-    const timestampGeneratingStart = data.timetable.timestampGeneratingStart;
-
-    const timestampNow = new Date().getTime();
-    const timestampFinished = timestampGeneratingStart + durationToGenerateSeconds * 1000;
-
-    // Done generating -> Set data to get result in useEffect
-    if (timestampNow > timestampFinished) {
-        setData(recentData => {
-            const updatedData = { ...recentData, timetable: { ...recentData.timetable, isGenerating: false } };
-            localStorage.setItem("data", JSON.stringify(updatedData));
-            return updatedData;
-        });
+// Params: 
+//  - dataRef: reference to the data
+//  - setData
+//  - setError
+async function runGenerateCheckAndProgress(dataRef, setData, setError) {
+    if (!dataRef.current.timetable.uuid) {
         return;
     }
 
+    const checkFreqencySeconds = 20;
+
+    const durationToGenerateSeconds = dataRef.current.timetable.durationToGenerateSeconds;
+    const timestampGeneratingStart = dataRef.current.timetable.timestampGeneratingStart;
+
+    const timestampNow = new Date().getTime();
+    const timestampFinished = timestampGeneratingStart + durationToGenerateSeconds * 1000;
     const timeElapsed = timestampNow - timestampGeneratingStart;
     const timeElapsedSeconds = Math.floor(timeElapsed / 1000);
     const timeRemainingSeconds = Math.floor((timestampFinished - timestampNow) / 1000)
+
     const deltaPercentage = Math.floor((1 / durationToGenerateSeconds) * 100);
     const percentage = Math.floor((timeElapsedSeconds / durationToGenerateSeconds) * 100);
+
+    const setDurationToGeneratePassed = timestampNow > timestampFinished;
+
+    if (timeRemainingSeconds % checkFreqencySeconds === 0 || setDurationToGeneratePassed) {
+        const res = await apiGetTimetable(dataRef);
+
+        if (res.status === API_GENERATE_STATUS.RUNNING && setDurationToGeneratePassed) {
+            setError("Timetable could not be generated");
+            setData(recentData => {
+                const updatedData = {
+                    ...recentData,
+                    timetable: { ...recentData.timetable, uuid: null, isGenerating: false }
+                };
+                localStorage.setItem("data", JSON.stringify(updatedData));
+                return updatedData;
+            });
+            return;
+        }
+        else if (res.status === API_GENERATE_STATUS.ERROR) {
+            setError("An error occured");
+            setData(recentData => {
+                const updatedData = {
+                    ...recentData,
+                    timetable: { ...recentData.timetable, uuid: null, isGenerating: false }
+                };
+                localStorage.setItem("data", JSON.stringify(updatedData));
+                return updatedData;
+            });
+            return;
+        }
+        else if (res.status === API_GENERATE_STATUS.FAILED) {
+            setError("Failed to generate timetable");
+            setData(recentData => {
+                const updatedData = {
+                    ...recentData,
+                    timetable: { ...recentData.timetable, uuid: null, isGenerating: false }
+                };
+                localStorage.setItem("data", JSON.stringify(updatedData));
+                return updatedData;
+            });
+            return;
+        }
+        else if (res.status === API_GENERATE_STATUS.SUCCESS) {
+            setData(recentData => {
+                const updatedData = { ...recentData, timetable: res.timetable };
+                localStorage.setItem("data", JSON.stringify(updatedData));
+                return updatedData;
+            });
+            return;
+        }
+    }
 
     const elementTime = document.querySelector("#timeRemaining");
     const elementBar = document.querySelector("#progressBar");
@@ -178,31 +195,22 @@ async function runProgressBar(data, setData, setError) {
     );
 
     setTimeout(() => {
-        runProgressBar(data, setData, setError);
+        runGenerateCheckAndProgress(dataRef, setData, setError);
     }, 1000);
 };
 
 function GenerateTimetable({ data, setData }) {
     const [error, setError] = useState("");
 
-    // Use a ref to access the current count value in an async callback.
+    // Use a ref to access the current data value in an async function
     const dataRef = useRef(data);
     dataRef.current = data;
 
     if (data.timetable.isGenerating) {
-        runProgressBar(dataRef.current, setData, setError);
+        runGenerateCheckAndProgress(dataRef, setData, setError);
     }
 
-    // Get timetable from API when done generating.
-    // Timetable uuid is set to null when generating failed or done fetching.
-    useEffect(() => {
-        if (!data.timetable.isGenerating && data.timetable.uuid) {
-            apiGetTimetableAndSetData(dataRef.current, setData, setError);
-        }
-    }, [dataRef.current.timetable.isGenerating]);
-
-
-    const handleGenerate = async () => {
+    const handleStartGenerate = async () => {
         setError("");
 
         // Reset timetable data
@@ -288,7 +296,7 @@ function GenerateTimetable({ data, setData }) {
             {/* Button */}
             <Button
                 className="w-full"
-                onClick={handleGenerate}
+                onClick={handleStartGenerate}
                 disabled={data.timetable.isGenerating || data.newChangesMade}
             >
                 <RefreshCw className={`mr-2 h-4 w-4 ${data.timetable.isGenerating && "animate-spin"}`} />
