@@ -15,15 +15,7 @@ import { Alert, AlertDescription } from "../../ui/alert";
 // Icons
 import { TriangleAlert, Eraser, Save } from "lucide-react";
 
-async function apiSaveData(data, setData) {
-    const numOfClasses = data.classes.map((classItem) => classItem.name).length;
-    const durationToGenerateSeconds = 3 * numOfClasses ** 2 + 2 * numOfClasses + 30;
-
-    setData({
-        ...data,
-        timetable: { ...data.timetable, durationToGenerateSeconds: durationToGenerateSeconds }
-    });
-
+async function apiSaveData(data) {
     var apiDataBody = {
         settings: {
             prefer_early_hours: data.settings.preferEarlyPeriods,
@@ -34,7 +26,7 @@ async function apiSaveData(data, setData) {
             break_window_end: data.settings.breakWindow.end,
             weight_block_scheduling: 10,
             weight_time_of_hours: 10,
-            max_time_for_solving: durationToGenerateSeconds
+            max_time_for_solving: 3 * data.classes.length ** 2 + 2 * data.classes.length + 30,
         },
         school: {
             classes: data.classes.map((classItem) => classItem.name),
@@ -105,7 +97,7 @@ function SettingsDiscardSave({ data, setData }) {
         try {
             // Wait 500ms for loading effect
             await new Promise((resolve) => setTimeout(resolve, 500));
-            const responseStatusSuccess = await apiSaveData(data, setData);
+            const responseStatusSuccess = await apiSaveData(data);
 
             if (responseStatusSuccess) {
                 setData({ ...data, newChangesMade: false });
