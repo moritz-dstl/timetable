@@ -44,8 +44,6 @@ async function apiGetTimetable(dataRef) {
                     return;
                 };
 
-                console.log(json["result"]);
-
                 const jsonClasses = json["result"]["classes"];
                 const jsonTeachers = json["result"]["teachers"];
 
