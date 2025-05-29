@@ -13,9 +13,19 @@ function Header() {
 
     // Handle log user out
     const handleLogout = () => {
-        cookies.remove("auth");
-        localStorage.removeItem("data");
-        window.location.reload();
+        fetch(`${import.meta.env.VITE_API_ENDPOINT}/User/logout`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then((res) => {
+            if (res.ok) {
+                cookies.remove("user");
+                localStorage.removeItem("data");
+                window.location.reload();
+            }
+        });
     }
 
     return (
@@ -32,7 +42,7 @@ function Header() {
                 </span>
                 <div id="header-buttons" className="flex items-center gap-4">
                     {
-                        !cookies.get("auth") ? (
+                        !cookies.get("user") ? (
                             // Show sign in and sign out buttons if user is not logged in
                             <>
                                 <Button variant="outline" size="sm" className="text-sm" onClick={() => navigate("/login")}>

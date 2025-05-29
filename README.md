@@ -58,7 +58,12 @@ Once everything is running, you can use the following API endpoints via `localho
    npm i
    ```
 
-4. Start the development server:
+4. Configure .env:
+   ```ini
+   VITE_API_ENDPOINT=http://localhost:8000
+   ```
+
+5. Start the development server:
    ```bash
    npm run dev
    ```

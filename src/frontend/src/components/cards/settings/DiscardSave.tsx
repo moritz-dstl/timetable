@@ -14,6 +14,76 @@ import {
 // Icons
 import { Eraser, Save } from "lucide-react";
 
+async function apiSaveData(data, setData) {
+    const numOfClasses = data.classes.map((classItem) => classItem.name).length;
+    const durationToGenerateSeconds = 3 * numOfClasses ** 2 + 2 * numOfClasses + 30;
+
+    setData({
+        ...data,
+        settings: { ...data.settings, durationToGenerateSeconds: durationToGenerateSeconds }
+    });
+
+    var apiDataBody = {
+        settings: {
+            prefer_early_hours: data.settings.preferEarlyPeriods,
+            allow_block_scheduling: data.settings.allowDoubleLessons,
+            max_hours_per_day: data.settings.maxRepetitionsSubjectPerDay,
+            max_consecutive_hours: data.settings.maxConsecutivePeriods,
+            break_window_start: data.settings.breakWindow.start,
+            break_window_end: data.settings.breakWindow.end,
+            weight_block_scheduling: 10,
+            weight_time_of_hours: 10,
+            max_time_for_solving: durationToGenerateSeconds
+        },
+        school: {
+            classes: data.classes.map((classItem) => classItem.name),
+            subjects: data.subjects.map((subjectItem) => subjectItem.name),
+            hours_per_day: data.settings.numPeriodsPerDay
+        },
+        teachers: data.teachers.map((teacherItem) => ({
+            name: teacherItem.name,
+            max_hours: teacherItem.maxHoursPerWeek,
+            subjects: teacherItem.subjects
+        })),
+        class_allocations:
+            data.classes.map((classItem) => (
+                classItem.subjects.map((subjectItem) => ({
+                    class_name: classItem.name,
+                    subject: subjectItem.name,
+                    hours_per_week: subjectItem.hoursPerWeek
+                }))
+            )).flat(),
+        subject_parallel_limits:
+            data.subjects
+                .filter((subjectItem) => subjectItem.maxParallel != 0)
+                .map((subjectItem) => ({
+                    subject_name: subjectItem.name,
+                    max_parallel: subjectItem.maxParallel
+                })),
+        prefer_block_subjects:
+            data.subjects
+                .filter((subjectItem) => subjectItem.forceDoubleLesson)
+                .map((subjectItem) => ({
+                    subject_name: subjectItem.name,
+                    weight: 60
+                }))
+    };
+
+    var responseStatusSuccess = true;
+
+    
+    await fetch(`${import.meta.env.VITE_API_ENDPOINT}/Settings/set`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(apiDataBody)
+    }).then((res) => { responseStatusSuccess = res.ok });
+    
+    return responseStatusSuccess;
+}
+
 function SettingsDiscardSave({ data, setData }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isDiscardDialogOpen, setIsDiscardDialogOpen] = useState(false);
@@ -26,9 +96,16 @@ function SettingsDiscardSave({ data, setData }) {
 
     const handleSave = async () => {
         setIsSaving(true);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setData({ ...data, newChangesMade: false });
-        localStorage.setItem("data", JSON.stringify({ ...data, newChangesMade: false }));
+
+        // Wait 500ms for loading effect
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const responseStatusSuccess = await apiSaveData(data, setData);
+
+        if (responseStatusSuccess) {
+            setData({ ...data, newChangesMade: false });
+            localStorage.setItem("data", JSON.stringify({ ...data, newChangesMade: false }));
+        }
+
         setIsSaving(false);
     }
 
@@ -37,13 +114,13 @@ function SettingsDiscardSave({ data, setData }) {
             <>
                 <div className="flex flex-row gap-4 justify-end">
                     {/* Discard button */}
-                    <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)}>
+                    <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)} disabled={data.timetable.isGenerating}>
                         <Eraser className="mr-2 h-4 w-4" />
                         Discard
                     </Button>
 
                     {/* Save button */}
-                    <Button onClick={handleSave} disabled={isSaving}>
+                    <Button onClick={handleSave} disabled={isSaving || data.timetable.isGenerating}>
                         <Save className="mr-2 h-4 w-4" />
                         {isSaving ? "Saving..." : "Save"}
                     </Button>

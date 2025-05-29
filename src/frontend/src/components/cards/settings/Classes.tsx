@@ -40,6 +40,7 @@ import {
 import {
     PlusCircle,
     Search,
+    Copy,
     Edit,
     Trash2
 } from "lucide-react";
@@ -64,14 +65,39 @@ function SettingsClasses({ data, setData }) {
             subjects: [],
         });
     }
-
+    
     const handleAddConfirm = () => {
+        // Sort by name
+        selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
+
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedClass.name;
+        const existingNames = data.classes.map((classItem) => classItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedClass.name} (${counter})`;
+            counter++;
+        }
+        selectedClass.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
-            classes: [...data.classes, selectedClass]
+            // Sort by name
+            classes: [...data.classes, selectedClass].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+
         setIsAddDialogOpen(false);
+    }
+    
+    // Handle duplicate class
+    const handleDuplicate = (classItem) => {
+        setIsAddDialogOpen(true);
+        setSelectedClass({
+            id: new Date().getTime(),
+            name: classItem.name + " Copy",
+            subjects: classItem.subjects,
+        });
     }
 
     // Handle edit class
@@ -81,12 +107,27 @@ function SettingsClasses({ data, setData }) {
     }
 
     const handleEditConfirm = () => {
+        // Sort by name
+        selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
         const updatedClasses = data.classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem));
+        
+        // Name cannot be duplicate -> Rename with counter
+        let name = selectedClass.name;
+        const existingNames = data.classes.map((classItem) => selectedClass.id !== classItem.id && classItem.name);
+        let counter = 1;
+        while (existingNames.includes(name)) {
+            name = `${selectedClass.name} (${counter})`;
+            counter++;
+        }
+        selectedClass.name = name;
+
         setData({
             ...data,
             newChangesMade: true,
-            classes: updatedClasses
+            // Sort by name
+            classes: updatedClasses.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
+
         setIsEditDialogOpen(false);
     }
 
@@ -280,6 +321,14 @@ function SettingsClasses({ data, setData }) {
                                         {/* Action buttons */}
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
+                                                {/* Duplicate button */}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleDuplicate(classItem)}
+                                                >
+                                                    <Copy className="h-4 w-4" />
+                                                </Button>
                                                 {/* Edit button */}
                                                 <Button
                                                     variant="ghost"

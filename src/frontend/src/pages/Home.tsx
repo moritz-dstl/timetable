@@ -14,11 +14,163 @@ import Overview from "./Overview";
 import Settings from "./Settings";
 import Timetable from "./Timetable";
 
+async function apiFetchData(cookies, setData, setIsLoading) {
+    // Wait 500ms for loading effect
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    var user = {
+        schoolName: "",
+        email: atob(cookies.get("user"))
+    }
+
+    var settings = {
+        preferEarlyPeriods: true,
+        allowDoubleLessons: true,
+        numPeriodsPerDay: 8,
+        maxConsecutivePeriods: 6,
+        maxRepetitionsSubjectPerDay: 2,
+        breakWindow: {
+            start: 4,
+            end: 6,
+        },
+        durationToGenerateSeconds: 30
+    };
+
+    var timetable = {
+        isGenerating: false,
+        exists: false,
+        numOfPeriods: settings.numPeriodsPerDay,
+        classes: [],
+        teachers: [],
+        lessons: []
+    };
+
+    var subjects: {
+        id: number;
+        name: string;
+        maxParallel: number;    // 0 if doesn't matter
+        forceDoubleLesson: boolean
+    }[] = [];
+
+    var teachers: {
+        id: number;
+        name: string;
+        subjects: Array<string>;
+        maxHoursPerWeek: number;
+    }[] = [];
+
+    var classes: {
+        id: number;
+        name: string;
+        subjects: Array<{ name: string; hoursPerWeek: number; }>;
+    }[] = [];
+
+    // Get user school name
+    await fetch(`${import.meta.env.VITE_API_ENDPOINT}/User/get_school`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((res) => res.json())
+        .then((json) => user.schoolName = json["school_name"]);
+
+    // Get settings, classes, teachers, and subjects
+    await fetch(`${import.meta.env.VITE_API_ENDPOINT}/Settings/get`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((res) => res.json())
+        .then((json) => {
+            const jsonSettings = json["settings"];
+            const jsonSchool = json["school"];
+            const jsonForceDoubleLesson = json["prefer_block_subjects"];
+            const jsonMaxParallel = json["subject_parallel_limits"];
+            const jsonTeachers = json["teachers"];
+            const jsonTeacherSubjects = json["teacher_subjects"];
+            const jsonClasses = json["classes"];
+
+            // Settings
+            settings.preferEarlyPeriods = Boolean(jsonSettings["prefer_early_hours"]);
+            settings.allowDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
+            settings.maxConsecutivePeriods = jsonSettings["max_consecutive_hours"];
+            settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
+            settings.breakWindow.start = jsonSettings["break_window_start"];
+            settings.breakWindow.end = jsonSettings["break_window_end"];
+            settings.durationToGenerateSeconds = jsonSettings["max_time_for_solving"];
+            settings.numPeriodsPerDay = jsonSchool["hours_per_day"];
+
+            // Timetable
+            timetable.numOfPeriods = jsonSchool["hours_per_day"];
+
+            // Subjects
+            const subjectsArray = JSON.parse(jsonSchool["subjects"].replace(/'/g, '"'));
+            subjectsArray.forEach((subject, index) => {
+                const isMaxParallelSet = jsonMaxParallel.find((subjectItem) => subjectItem["subject_name"] === subject);
+                const maxParallel = isMaxParallelSet ? isMaxParallelSet["max_parallel"] : 0;
+                const forceDoubleLesson = jsonForceDoubleLesson.find((subjectItem) => subjectItem["subject_name"] === subject) ? true : false;
+
+                subjects.push({
+                    id: index,
+                    name: subject,
+                    maxParallel: maxParallel,
+                    forceDoubleLesson: forceDoubleLesson
+                });
+            });
+
+            // Classes
+            const classesArray = JSON.parse(jsonSchool["classes"].replace(/'/g, '"'));
+            classesArray.forEach((cls, index) => {
+                const allSubjectsForClass = jsonClasses.filter((classSubject) => cls === classSubject["class_name"]).map((classSubject) => ({ name: classSubject["subject"], hoursPerWeek: classSubject["hours_per_week"] }));
+
+                classes.push({
+                    id: index,
+                    name: cls,
+                    // Sort by name
+                    subjects: allSubjectsForClass.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+                });
+            });
+
+            // Teachers
+            jsonTeachers.forEach((teacher) => {
+                const teacherID = teacher["Tid"];
+                const allSubjectsForTeacher = jsonTeacherSubjects.filter((teacherSubject) => teacherID === teacherSubject["Tid"]).map((teacherSubject) => teacherSubject["subject"]);
+
+                teachers.push({
+                    id: teacherID,
+                    name: teacher["name"],
+                    subjects: allSubjectsForTeacher.sort(),
+                    maxHoursPerWeek: teacher["max_hours"]
+                });
+            });
+
+            const allData = {
+                user: user,
+                timetable: timetable,
+                newChangesMade: false,
+                settings: settings,
+                // Sort by name
+                classes: classes.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+                teachers: teachers.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+                subjects: subjects.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+            };
+
+            setData(allData);
+            localStorage.setItem("data", JSON.stringify(allData));
+
+            setIsLoading(false);
+        });
+}
+
 function Home() {
     const cookies = new Cookies();
 
     // If user is not logged in
-    if (!cookies.get("auth")) {
+    if (!cookies.get("user")) {
         return <Welcome />;
     }
 
@@ -33,132 +185,7 @@ function Home() {
             setIsLoading(false);
             return;
         }
-
-        const user = {
-            schoolName: "DHBW-Stuttgart",
-            email: "admin@example.com"
-        }
-
-        const settings = {
-            preferEarlyPeriods: true,
-            allowDoubleLessons: true,
-            numPeriodsPerDay: 8,
-            maxConsecutivePeriods: 6,
-            maxRepetitionsSubjectPerDay: 2,
-            breakWindow: {
-                start: 4,
-                end: 6,
-            },
-            durationToSolveSeconds: 15
-        };
-
-        const classes = [
-            {
-                id: 1,
-                name: "1A",
-                subjects: [
-                    { name: "Math", hoursPerWeek: 5 },
-                    { name: "English", hoursPerWeek: 4 },
-                    { name: "Science", hoursPerWeek: 3 },
-                ],
-            },
-            {
-                id: 2,
-                name: "2B",
-                subjects: [
-                    { name: "Math", hoursPerWeek: 4 },
-                    { name: "English", hoursPerWeek: 4 },
-                    { name: "History", hoursPerWeek: 2 },
-                ],
-            },
-            {
-                id: 3,
-                name: "3C",
-                subjects: [
-                    { name: "Math", hoursPerWeek: 5 },
-                    { name: "Physics", hoursPerWeek: 3 },
-                    { name: "Chemistry", hoursPerWeek: 3 },
-                ],
-            },
-        ];
-
-        const teachers = [
-            {
-                id: 1,
-                name: "Mr. Smith",
-                subjects: ["Math", "English", "History"],
-                maxHoursPerWeek: 18
-            },
-            {
-                id: 2,
-                name: "Mrs. Smith",
-                subjects: ["Physics", "Chemistry", "Science"],
-                maxHoursPerWeek: 20
-            }
-        ];
-
-        const subjects = [
-            {
-                id: 1,
-                name: "Math",
-                maxParallel: 0,
-                forceDoubleLesson: true
-            },
-            {
-                id: 2,
-                name: "English",
-                maxParallel: 0,
-                forceDoubleLesson: false
-            },
-            {
-                id: 3,
-                name: "Science",
-                maxParallel: 2,
-                forceDoubleLesson: false
-            },
-            {
-                id: 4,
-                name: "Physics",
-                maxParallel: 2,
-                forceDoubleLesson: false
-            },
-            {
-                id: 5,
-                name: "Chemistry",
-                maxParallel: 2,
-                forceDoubleLesson: true
-            },
-            {
-                id: 6,
-                name: "History",
-                maxParallel: 0,
-                forceDoubleLesson: false
-            },
-        ]
-
-        const timetable = {
-            isGenerating: false,
-            exists: false,
-            numOfPeriods: settings.numPeriodsPerDay,
-            classes: [],
-            teachers: [],
-            lessons: []
-        };
-
-        const allData = {
-            user: user,
-            settings: settings,
-            classes: classes,
-            teachers: teachers,
-            subjects: subjects,
-            timetable: timetable,
-            newChangesMade: false
-        };
-
-        setData(allData);
-        localStorage.setItem("data", JSON.stringify(allData));
-
-        setIsLoading(false);
+        apiFetchData(cookies, setData, setIsLoading);
     }, []);
 
     return (
