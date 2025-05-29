@@ -21,13 +21,33 @@ import { Download } from "lucide-react";
 
 // Function to choose background color color from any string value
 function stringToBackgroundColor(string) {
-    const colors = ["bg-red-100", "bg-orange-100", "bg-green-100", "bg-sky-100", "bg-blue-100", "bg-purple-100", "bg-fuchsia-100"];
+    const colors = [
+        "bg-red-200",
+        "bg-orange-200",
+        "bg-amber-200",
+        "bg-yellow-200",
+        "bg-lime-200",
+        "bg-green-200",
+        "bg-emerald-200",
+        "bg-teal-200",
+        "bg-cyan-200",
+        "bg-sky-200",
+        "bg-blue-200",
+        "bg-indigo-200",
+        "bg-violet-200",
+        "bg-purple-200",
+        "bg-fuchsia-200",
+        "bg-pink-200",
+        "bg-rose-200",
+    ];
 
-    var charSum = 0;
-    for (var i = 0; i < string.length; i++)
-        charSum += string.charCodeAt(i);
+    var hash = 0;
+    for (var i = 0; i < string.length; i++) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+    }
 
-    return colors[Math.abs(charSum % colors.length)];
+    return colors[Math.abs(hash % colors.length)];
 }
 
 function DisplayTimetable({ data }) {
@@ -42,7 +62,7 @@ function DisplayTimetable({ data }) {
         setSelectedViewClassTeacher("class");
         setAllClassesTeacheres(data.timetable.classes);
         setSelectedClassTeacher(data.timetable.classes[0]);
-    }, [data.timetable.isGenerating]);
+    }, [data.timetable.uuid]);
 
     // Filter classes for search
     const filteredLessonsByClass = data.timetable.lessons.filter((lessonItem) => lessonItem.class === selectedClassTeacher);
