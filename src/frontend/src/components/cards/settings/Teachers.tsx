@@ -83,9 +83,9 @@ function SettingsTeachers({ data, setData }) {
             ...data,
             newChangesMade: true,
             // Sort by name
-            teachers: [...data.teachers, selectedTeacher].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+            teachers: [...data.teachers, selectedTeacher].sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
-        
+
         setIsAddDialogOpen(false);
     }
 
@@ -98,7 +98,7 @@ function SettingsTeachers({ data, setData }) {
     const handleEditConfirm = () => {
         selectedTeacher.subjects.sort();
         const updatedTeachers = data.teachers.map((teacherItem) => (teacherItem.id === selectedTeacher.id ? selectedTeacher : teacherItem));
-        
+
         // Name cannot be duplicate -> Rename with counter
         let name = selectedTeacher.name;
         const existingNames = data.teachers.map((teacherItem) => selectedTeacher.id !== teacherItem.id && teacherItem.name);
@@ -113,9 +113,9 @@ function SettingsTeachers({ data, setData }) {
             ...data,
             newChangesMade: true,
             // Sort by name
-            teachers: updatedTeachers.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+            teachers: updatedTeachers.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
         });
-        
+
         setIsEditDialogOpen(false);
     }
 
@@ -188,11 +188,14 @@ function SettingsTeachers({ data, setData }) {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {data.subjects.map((subject) => (
-                                            <SelectItem key={subject.id} value={subject.name}>
-                                                {subject.name}
-                                            </SelectItem>
-                                        ))}
+                                        {/* Only select subject from selectedTeacher or all unused subjects */}
+                                        {data.subjects.filter(({ name }) => !selectedTeacher.subjects.some((subjectName) => subjectName === name) || subject === name)
+                                            .map((subjectOption) => (
+                                                <SelectItem key={subjectOption.id} value={subjectOption.name}>
+                                                    {subjectOption.name}
+                                                </SelectItem>
+                                            ))
+                                        }
                                     </SelectContent>
                                 </Select>
                                 {/* Button: Delete subject */}
@@ -219,9 +222,10 @@ function SettingsTeachers({ data, setData }) {
                     size="sm"
                     className="min-h-8"
                     onClick={() => {
+                        const allUnusedSubject = data.subjects.filter(({ name }) => !selectedTeacher.subjects.some((subjectName) => subjectName === name));
                         const updatedSubjects = [
                             ...selectedTeacher.subjects,
-                            data.subjects[0].name,
+                            allUnusedSubject[0].name,
                         ];
                         setSelectedTeacher({
                             ...selectedTeacher,
