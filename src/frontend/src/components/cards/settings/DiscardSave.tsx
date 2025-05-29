@@ -19,7 +19,7 @@ async function apiSaveData(data) {
     var apiDataBody = {
         settings: {
             prefer_early_hours: data.settings.preferEarlyPeriods,
-            allow_block_scheduling: data.settings.allowDoubleLessons,
+            allow_block_scheduling: data.settings.preferDoubleLessons,
             max_hours_per_day: data.settings.maxRepetitionsSubjectPerDay,
             max_consecutive_hours: data.settings.maxConsecutivePeriods,
             break_window_start: data.settings.breakWindow.start,

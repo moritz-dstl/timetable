@@ -25,7 +25,7 @@ async function apiFetchData(cookies, setData, setIsLoading) {
 
     var settings = {
         preferEarlyPeriods: true,
-        allowDoubleLessons: true,
+        preferDoubleLessons: true,
         numPeriodsPerDay: 8,
         maxConsecutivePeriods: 6,
         maxRepetitionsSubjectPerDay: 2,
@@ -104,7 +104,7 @@ async function apiFetchData(cookies, setData, setIsLoading) {
             if (!isObjectEmpty(jsonSettings) && !isObjectEmpty(jsonSchool)) {
                 // Settings
                 settings.preferEarlyPeriods = Boolean(jsonSettings["prefer_early_hours"]);
-                settings.allowDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
+                settings.preferDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
                 settings.maxConsecutivePeriods = jsonSettings["max_consecutive_hours"];
                 settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
                 settings.breakWindow.start = jsonSettings["break_window_start"];

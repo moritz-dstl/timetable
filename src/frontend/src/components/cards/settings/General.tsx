@@ -65,14 +65,14 @@ function SettingsGeneral({ data, setData }) {
                     {/* Switch: Allow consecutive periods */}
                     <div className="flex flex-row gap-3 items-center">
                         <Switch
-                            checked={data.settings.allowDoubleLessons}
+                            checked={data.settings.preferDoubleLessons}
                             onCheckedChange={(checked) => setData({
                                 ...data,
                                 newChangesMade: true,
-                                settings: { ...data.settings, allowDoubleLessons: checked }
+                                settings: { ...data.settings, preferDoubleLessons: checked }
                             })}
                         />
-                        <Label>Allow double lessons</Label>
+                        <Label>Prefer double lessons</Label>
                     </div>
                 </div>
 
