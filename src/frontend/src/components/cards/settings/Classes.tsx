@@ -65,7 +65,7 @@ function SettingsClasses({ data, setData }) {
             subjects: [],
         });
     }
-    
+
     const handleAddConfirm = () => {
         // Sort by name
         selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
@@ -83,13 +83,15 @@ function SettingsClasses({ data, setData }) {
         setData({
             ...data,
             newChangesMade: true,
-            // Sort by name
-            classes: [...data.classes, selectedClass].sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+            // Sort by name using localeCompare with numeric option for natural order
+            classes: [...data.classes, selectedClass].sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+            ),
         });
 
         setIsAddDialogOpen(false);
     }
-    
+
     // Handle duplicate class
     const handleDuplicate = (classItem) => {
         setIsAddDialogOpen(true);
@@ -110,7 +112,7 @@ function SettingsClasses({ data, setData }) {
         // Sort by name
         selectedClass.subjects.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
         const updatedClasses = data.classes.map((classItem) => (classItem.id === selectedClass.id ? selectedClass : classItem));
-        
+
         // Name cannot be duplicate -> Rename with counter
         let name = selectedClass.name;
         const existingNames = data.classes.map((classItem) => selectedClass.id !== classItem.id && classItem.name);
@@ -124,8 +126,10 @@ function SettingsClasses({ data, setData }) {
         setData({
             ...data,
             newChangesMade: true,
-            // Sort by name
-            classes: updatedClasses.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)),
+            // Sort by name using localeCompare with numeric option for natural order
+            classes: updatedClasses.sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+            ),
         });
 
         setIsEditDialogOpen(false);
