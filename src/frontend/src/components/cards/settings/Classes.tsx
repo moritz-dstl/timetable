@@ -188,11 +188,14 @@ function SettingsClasses({ data, setData }) {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {data.subjects.map((subject) => (
-                                            <SelectItem key={subject.id} value={subject.name}>
-                                                {subject.name}
-                                            </SelectItem>
-                                        ))}
+                                        {/* Only select subject from selectedClass or all unused subjects */}
+                                        {data.subjects.filter(({ name }) => !selectedClass.subjects.some((classSubject) => classSubject.name === name) || subject.name === name)
+                                            .map((subjectOption) => (
+                                                <SelectItem key={subjectOption.id} value={subjectOption.name}>
+                                                    {subjectOption.name}
+                                                </SelectItem>
+                                            ))
+                                        }
                                     </SelectContent>
                                 </Select>
                                 {/* Input: Hours per week */}
@@ -238,9 +241,10 @@ function SettingsClasses({ data, setData }) {
                     size="sm"
                     className="min-h-8"
                     onClick={() => {
+                        const allUnusedSubject = data.subjects.filter(({ name }) => !selectedClass.subjects.some((subject) => subject.name === name));
                         const updatedSubjects = [
                             ...selectedClass.subjects,
-                            { name: data.subjects[0].name, hoursPerWeek: 1 },
+                            { name: allUnusedSubject[0].name, hoursPerWeek: 1 },
                         ];
                         setSelectedClass({
                             ...selectedClass,
