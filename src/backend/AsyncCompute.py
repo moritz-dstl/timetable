@@ -258,6 +258,29 @@ def start_computing():
 
 
 
+            # HARD CONSTRAINT: Prevent scheduling of subjects that are not assigned to a class
+            # This constraint ensures that each class only gets scheduled the subjects 
+            # that are explicitly assigned to it (based on the 'class_subject_hours' data).
+            # Any subject that is not listed for the class must not appear in its timetable.
+            # Without this, the solver may assign "foreign" subjects (like Physics in a class 
+            # that doesn’t have it) simply because it helps satisfy other constraints.
+            
+            for c in classes:
+                allowed_subjects = set(class_subject_hours[c].keys())  # Subjects allowed for this class
+                for subject in subjects:
+                    if subject not in allowed_subjects:
+                        subj_idx = subject_indices[subject]
+                        occurrences = []
+                        for d in range(len(days)):
+                            for h in range(hours_per_day):
+                                # Boolean variable: is this non-assigned subject scheduled in this slot?
+                                is_scheduled = model.NewBoolVar(f'{c}_{subject}_{d}_{h}_notallowed')
+                                model.Add(schedule[(c, d, h)] == subj_idx).OnlyEnforceIf(is_scheduled)
+                                model.Add(schedule[(c, d, h)] != subj_idx).OnlyEnforceIf(is_scheduled.Not())
+                                occurrences.append(is_scheduled)
+                        # Total occurrences of this subject for this class must be zero
+                        model.Add(sum(occurrences) == 0)
+
 
             # Constraint: Limit the number of simultaneous lessons for specific subjects.
             # Background: Some subjects – such as Physical Education or Science – require special rooms
