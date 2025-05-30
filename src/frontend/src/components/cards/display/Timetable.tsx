@@ -19,37 +19,6 @@ import { Switch } from "../../ui/switch";
 // Icons
 import { Download } from "lucide-react";
 
-// Function to choose background color color from any string value
-function stringToBackgroundColor(string) {
-    const colors = [
-        "bg-red-200",
-        "bg-orange-200",
-        "bg-amber-200",
-        "bg-yellow-200",
-        "bg-lime-200",
-        "bg-green-200",
-        "bg-emerald-200",
-        "bg-teal-200",
-        "bg-cyan-200",
-        "bg-sky-200",
-        "bg-blue-200",
-        "bg-indigo-200",
-        "bg-violet-200",
-        "bg-purple-200",
-        "bg-fuchsia-200",
-        "bg-pink-200",
-        "bg-rose-200",
-    ];
-
-    var hash = 0;
-    for (var i = 0; i < string.length; i++) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-        hash = hash & hash;
-    }
-
-    return colors[Math.abs(hash % colors.length)];
-}
-
 function DisplayTimetable({ data }) {
     const [selectedViewClassTeacher, setSelectedViewClassTeacher] = useState("class");
     const [allClassesTeachers, setAllClassesTeacheres] = useState(data.timetable.classes);
@@ -68,6 +37,28 @@ function DisplayTimetable({ data }) {
     const filteredLessonsByClass = data.timetable.lessons.filter((lessonItem) => lessonItem.class === selectedClassTeacher);
     const filteredLessonsByTeacher = data.timetable.lessons.filter((lessonItem) => lessonItem.teacher === selectedClassTeacher);
     const filteredLessons = selectedViewClassTeacher === "class" ? filteredLessonsByClass : filteredLessonsByTeacher;
+
+    // All subjects for coloring
+    const allLessonSubjects = [...new Set(data.timetable.lessons.map((lessonItem) => lessonItem.subject))];
+    const bgColors = [
+        "bg-red-200",
+        "bg-blue-200",
+        "bg-green-200",
+        "bg-yellow-200",
+        "bg-orange-200",
+        "bg-purple-200",
+        "bg-cyan-200",
+        "bg-pink-200",
+        "bg-lime-200",
+        "bg-indigo-200",
+        "bg-emerald-200",
+        "bg-fuchsia-200",
+        "bg-teal-200",
+        "bg-amber-200",
+        "bg-sky-200",
+        "bg-rose-200",
+        "bg-violet-200",
+    ];
 
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const rangePeriods = Array.from({ length: data.timetable.numOfPeriods }, (_, i) => i + 1);
@@ -161,7 +152,7 @@ function DisplayTimetable({ data }) {
                                                             // Display lesson for day and period if it exists
                                                             <td key={index} className="p-1 border">
                                                                 {lesson ? (
-                                                                    <div className={`min-h-20 p-2 rounded text-center ${useColors && stringToBackgroundColor(lesson.subject)}`}>
+                                                                    <div className={`min-h-20 p-2 rounded text-center ${useColors && bgColors[allLessonSubjects.indexOf(lesson.subject) % bgColors.length]}`}>
                                                                         <div className="text-sm font-medium">
                                                                             {lesson.subject}
                                                                         </div>
