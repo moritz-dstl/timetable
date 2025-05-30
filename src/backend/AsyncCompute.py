@@ -213,18 +213,20 @@ def start_computing():
 
 
 
-            # Each class must have a break if it is scheduled for more than MAX_CONSECUTIVE_HOURS in a day
+            # Each class must have a break if it is scheduled for more than MAX_CONSECUTIVE_HOURS in a row
             for c in classes:
                 for d in range(len(days)):
-                    # sliding window: any block of (max_consecutive_hours + 1) must contain ≥1 free
-                    for start in range(hours_per_day - MAX_CONSECUTIVE_HOURS):
-                        window = [
-                            is_occupied[(c, d, h)]
-                            for h in range(start, start + MAX_CONSECUTIVE_HOURS + 1)
-                        ]
-                        model.Add(sum(window) <= MAX_CONSECUTIVE_HOURS)
-                    # additionally: at least one free slot inside the official break window
-                    model.Add(sum(is_occupied[(c, d, h)] for h in BREAK_WINDOW) <= len(BREAK_WINDOW) - 1)
+                    for h in range(hours_per_day - MAX_CONSECUTIVE_HOURS):
+                        # Only check the following block if there is actually a lesson starting at this hour
+                        model.AddImplication(
+                            is_occupied[(c, d, h)],
+                            sum(is_occupied[(c, d, h2)] for h2 in range(h, h + MAX_CONSECUTIVE_HOURS + 1)) <= MAX_CONSECUTIVE_HOURS
+                        )
+
+                    # Additionally: there must be at least one free slot during the official break window (BREAK_WINDOW)
+                    model.Add(
+                        sum(is_occupied[(c, d, h)] for h in BREAK_WINDOW) <= len(BREAK_WINDOW) - 1
+                    )
 
 
 
@@ -266,20 +268,21 @@ def start_computing():
             # that doesn’t have it) simply because it helps satisfy other constraints.
             
             for c in classes:
-                allowed_subjects = set(class_subject_hours[c].keys())  # Subjects allowed for this class
-                for subject in subjects:
-                    if subject not in allowed_subjects:
-                        subj_idx = subject_indices[subject]
-                        occurrences = []
-                        for d in range(len(days)):
-                            for h in range(hours_per_day):
-                                # Boolean variable: is this non-assigned subject scheduled in this slot?
-                                is_scheduled = model.NewBoolVar(f'{c}_{subject}_{d}_{h}_notallowed')
-                                model.Add(schedule[(c, d, h)] == subj_idx).OnlyEnforceIf(is_scheduled)
-                                model.Add(schedule[(c, d, h)] != subj_idx).OnlyEnforceIf(is_scheduled.Not())
-                                occurrences.append(is_scheduled)
-                        # Total occurrences of this subject for this class must be zero
-                        model.Add(sum(occurrences) == 0)
+                allowed_subjects = set(class_subject_hours[c].keys())
+                disallowed_subjects = set(subjects) - allowed_subjects
+
+                for subject in disallowed_subjects:
+                    subj_idx = subject_indices[subject]
+                    for d in range(len(days)):
+                        for h in range(hours_per_day):
+                            # Only check if the time slot is actually occupied
+                            b = model.NewBoolVar(f'{c}_{subject}_{d}_{h}_not_allowed')
+                            model.Add(schedule[(c, d, h)] == subj_idx).OnlyEnforceIf(b)
+                            model.Add(schedule[(c, d, h)] != subj_idx).OnlyEnforceIf(b.Not())
+                            
+                            # A disallowed subject must never be scheduled during an occupied slot
+                            model.Add(b == 0).OnlyEnforceIf(is_occupied[(c, d, h)])
+
 
 
             # Constraint: Limit the number of simultaneous lessons for specific subjects.
@@ -518,7 +521,7 @@ def start_computing():
                         model.AddBoolOr([is_free_now.Not(), still_something_later.Not()]).OnlyEnforceIf(is_inner_gap.Not())
 
                         # Penalize such gaps in the objective function to reduce non-terminal free periods
-                        penalty_weight = 10000  # Tune this to influence the importance of avoiding gaps
+                        penalty_weight = 20  # Tune this to influence the importance of avoiding gaps
                         objective_terms.append(is_inner_gap * -penalty_weight)
 
 
