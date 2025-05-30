@@ -116,9 +116,7 @@ The endpoint `POST /Settings/set` expects a JSON object containing the following
 | `prefer_early_hours`      | `bool`   | whether earlier periods should be preferred                          |
 | `allow_block_scheduling`  | `bool`   | whether double lessons (blocks) are allowed                          |
 | `max_hours_per_day`       | `int`    | maximum number of hours a subject can appear per day                 |
-| `max_consecutive_hours`   | `int`    | maximum consecutive lessons allowed in a day                         |
-| `break_window_start`      | `int`    | inclusive                                                            |
-| `break_window_end`        | `int`    | inclusive; define the time window in which a lunchbreak must occur   |
+| `global_break`            | `int`    | timeslot where a break globaly must occure                         |
 | `weight_block_scheduling` | `int`    | weighting factor for encouraging block scheduling                    |
 | `weight_time_of_hours`    | `int`    | weighting factor for the preference of early or late hours           |
 | `max_time_for_solving`    | `int`    | maximum solving time in seconds for the timetable algorithm          |
@@ -172,9 +170,7 @@ The endpoint `POST /Settings/set` expects a JSON object containing the following
         "prefer_early_hours": true,
         "allow_block_scheduling": true,
         "max_hours_per_day": 2,
-        "max_consecutive_hours": 7,
-        "break_window_start": 4,
-        "break_window_end": 6,
+        "global_break": 7,
         "weight_block_scheduling": 10,
         "weight_time_of_hours": 10,
         "max_time_for_solving": 180

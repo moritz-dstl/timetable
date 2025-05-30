@@ -32,7 +32,7 @@ def start_computing():
                     prefer_early_hours,
                     allow_block_scheduling,
                     max_hours_per_day,
-                    max_consecutive_hours,
+                    global_break,
                     break_window_start,
                     break_window_end,
                     weight_block_scheduling,
@@ -59,9 +59,9 @@ def start_computing():
             ALLOW_BLOCK_SCHEDULING = settings[1]
 
             # Set scheduling parameters
-            MAX_HOURS_PER_DAY = settings[2]
-            MAX_CONSECUTIVE_HOURS = settings[3]
-            BREAK_WINDOW = range(settings[4], settings[5])
+            MAX_HOURS_PER_DAY = settings[2] - 1
+            GLOBAL_BREAK = settings[3]
+            BREAK_WINDOW = range(settings[4]-1, settings[5])
 
             # Set weights for the soft restrictions
             WEIGHT_BLOCK_SCHEDULING = settings[6]
@@ -213,50 +213,35 @@ def start_computing():
 
 
 
-            # Each class must have a break if it is scheduled for more than MAX_CONSECUTIVE_HOURS in a row
+            # This is a hard constraint to ensure that the subject taught before the break is different from the one after the break.
+            # This is important to avoid situations where the same subject is taught immediately before and after the break,
+            # which can be confusing for students and disrupts the flow of the day.
+            prev_hour = GLOBAL_BREAK - 1
+
             for c in classes:
                 for d in range(len(days)):
-                    for h in range(hours_per_day - MAX_CONSECUTIVE_HOURS):
-                        # Only check the following block if there is actually a lesson starting at this hour
-                        model.AddImplication(
-                            is_occupied[(c, d, h)],
-                            sum(is_occupied[(c, d, h2)] for h2 in range(h, h + MAX_CONSECUTIVE_HOURS + 1)) <= MAX_CONSECUTIVE_HOURS
-                        )
+                    subj_prev = schedule[(c, d, prev_hour)]
+                    subj_curr = schedule[(c, d, GLOBAL_BREAK)]
 
-                    # Additionally: there must be at least one free slot during the official break window (BREAK_WINDOW)
-                    model.Add(
-                        sum(is_occupied[(c, d, h)] for h in BREAK_WINDOW) <= len(BREAK_WINDOW) - 1
-                    )
+                    # Nur prüfen, wenn beide Stunden überhaupt belegt sind (also keine "free"-Slots)
+                    both_occupied = model.NewBoolVar(f'{c}_{d}_both_occupied_{prev_hour}_{GLOBAL_BREAK}')
+                    model.AddBoolAnd([
+                        is_occupied[(c, d, prev_hour)],
+                        is_occupied[(c, d, GLOBAL_BREAK)]
+                    ]).OnlyEnforceIf(both_occupied)
+                    model.AddBoolOr([
+                        is_occupied[(c, d, prev_hour)].Not(),
+                        is_occupied[(c, d, GLOBAL_BREAK)].Not()
+                    ]).OnlyEnforceIf(both_occupied.Not())
 
+                    # Bedingung: Wenn beide belegt, dann unterschiedliche Fächer
+                    are_different = model.NewBoolVar(f'{c}_{d}_diff_subj_{prev_hour}_{GLOBAL_BREAK}')
+                    model.Add(subj_prev != subj_curr).OnlyEnforceIf(are_different)
+                    model.Add(subj_prev == subj_curr).OnlyEnforceIf(are_different.Not())
 
+                    # Erzwinge: Wenn beide belegt sind → Fächer müssen verschieden sein
+                    model.AddImplication(both_occupied, are_different)
 
-            # Constraint: Teachers need a break if they teach more than MAX_CONSECUTIVE_HOURS in a day.
-            # If a teacher teaches too many hours in one day, they must have at least one free period within the defined BREAK_WINDOW.
-            for teacher_tid, t_idx in teacher_indices.items():
-                for d in range(len(days)):
-                    teaches = []      # is_teaching BoolVar for each hour
-
-                    for h in range(hours_per_day):
-                        # make a BoolVar per class, OR them to one "is_teaching"
-                        teach_in_class = []
-                        for c in classes:
-                            b = model.NewBoolVar(f"{teacher_tid}_{c}_{d}_{h}")
-                            model.Add(teacher_schedule[(c, d, h)] == t_idx).OnlyEnforceIf(b)
-                            model.Add(teacher_schedule[(c, d, h)] != t_idx).OnlyEnforceIf(b.Not())
-                            teach_in_class.append(b)
-
-                        is_teaching = model.NewBoolVar(f"{teacher_tid}_{d}_{h}_teach")
-                        model.AddBoolOr(teach_in_class).OnlyEnforceIf(is_teaching)
-                        model.AddBoolAnd([b.Not() for b in teach_in_class]).OnlyEnforceIf(is_teaching.Not())
-                        teaches.append(is_teaching)
-
-                    # sliding window: no stretch longer than MAX_CONSECUTIVE_HOURS
-                    for start in range(hours_per_day - MAX_CONSECUTIVE_HOURS):
-                        window = teaches[start : start + MAX_CONSECUTIVE_HOURS + 1]
-                        model.Add(sum(window) <= MAX_CONSECUTIVE_HOURS)
-
-                    # at least one free hour inside BREAK_WINDOW
-                    model.Add(sum(teaches[h] for h in BREAK_WINDOW) <= len(BREAK_WINDOW) - 1)
 
 
 
@@ -460,14 +445,6 @@ def start_computing():
                         for h in range(hours_per_day):
                             period_weight = (hours_per_day - h) * WEIGHT_TIME_OF_HOURS
                             objective_terms.append(is_occupied[(c, d, h)] * period_weight)
-            # ---------- soft: prefer LATE periods ----------------------------
-            else:   # PREFER_EARLY_HOURS == False
-                for c in classes:
-                    for d in range(len(days)):
-                        for h in range(hours_per_day):
-                            period_weight = h * WEIGHT_TIME_OF_HOURS
-                            objective_terms.append(is_occupied[(c, d, h)] * period_weight)
-
 
             # Soft constraint: Prefer double periods – a subject should ideally be scheduled in two consecutive hours.
             # This encourages "block lessons", which are often desirable for subjects like Math or Physical Education.
@@ -521,7 +498,7 @@ def start_computing():
                         model.AddBoolOr([is_free_now.Not(), still_something_later.Not()]).OnlyEnforceIf(is_inner_gap.Not())
 
                         # Penalize such gaps in the objective function to reduce non-terminal free periods
-                        penalty_weight = 20  # Tune this to influence the importance of avoiding gaps
+                        penalty_weight = 2  # Tune this to influence the importance of avoiding gaps
                         objective_terms.append(is_inner_gap * -penalty_weight)
 
 
@@ -563,7 +540,13 @@ def start_computing():
                             else:
                                 entry = "free"
                             periods.append(entry)
-                        class_timetable[day] = periods
+
+                        # modified Output: from GLOBAL_BREAK move all periods one step forward
+                        shifted = periods[:GLOBAL_BREAK]
+                        shifted.append("free")  # adding a break
+                        shifted += periods[GLOBAL_BREAK:]
+                        class_timetable[day] = shifted
+
                     result["classes"][c] = class_timetable
 
 
@@ -582,8 +565,15 @@ def start_computing():
                                     entry    = f"{subject} ({c})"
                                     break
                             periods.append(entry)
-                        daily[day] = periods
+
+                        # adding a break in GLOBAL_BREAK slot
+                        shifted = periods[:GLOBAL_BREAK]
+                        shifted.append("free")
+                        shifted += periods[GLOBAL_BREAK:]
+                        daily[day] = shifted
+
                     teacher_timetable[teacher] = daily
+
                 result["teachers"] = teacher_timetable
 
 
