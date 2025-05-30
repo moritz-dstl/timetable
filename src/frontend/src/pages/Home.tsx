@@ -36,12 +36,9 @@ async function apiFetchData(cookies, setData, setIsLoading) {
     };
 
     var timetable = {
-        uuid: null,
-        timestampGeneratingStart: null,
-        durationToGenerateSeconds: 30,
-        isGenerating: false,
-        exists: false,
+        durationToGenerateSeconds: 10,
         numOfPeriods: settings.numPeriodsPerDay,
+        exists: false,
         classes: [],
         teachers: [],
         lessons: []

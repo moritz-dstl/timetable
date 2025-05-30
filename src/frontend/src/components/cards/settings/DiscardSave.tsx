@@ -15,6 +15,10 @@ import { Alert, AlertDescription } from "../../ui/alert";
 // Icons
 import { TriangleAlert, Eraser, Save } from "lucide-react";
 
+function getDurationToGenerateSeconds(numOfClasses) {
+    return (3 * numOfClasses ** 2 + 2 * numOfClasses + 30) * 2;
+}
+
 async function apiSaveData(data) {
     var apiDataBody = {
         settings: {
@@ -26,7 +30,7 @@ async function apiSaveData(data) {
             break_window_end: data.settings.breakWindow.end,
             weight_block_scheduling: 10,
             weight_time_of_hours: 10,
-            max_time_for_solving: (3 * data.classes.length ** 2 + 2 * data.classes.length + 30) * 2,
+            max_time_for_solving: getDurationToGenerateSeconds(data.classes.length),
         },
         school: {
             classes: data.classes.map((classItem) => classItem.name),
@@ -100,8 +104,16 @@ function SettingsDiscardSave({ data, setData }) {
             const responseStatusSuccess = await apiSaveData(data);
 
             if (responseStatusSuccess) {
-                setData({ ...data, newChangesMade: false });
-                localStorage.setItem("data", JSON.stringify({ ...data, newChangesMade: false }));
+                const updatedData = {
+                    ...data,
+                    newChangesMade: false,
+                    timetable: {
+                        ...data.timetable,
+                        durationToGenerateSeconds: getDurationToGenerateSeconds(data.classes.length)
+                    }
+                }
+                setData(updatedData);
+                localStorage.setItem("data", JSON.stringify(updatedData));
             }
             else {
                 setError("Data could not be saved");
@@ -119,13 +131,13 @@ function SettingsDiscardSave({ data, setData }) {
             <>
                 <div className="flex flex-row gap-4 align-center justify-end">
                     {/* Discard button */}
-                    <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)} disabled={data.timetable.isGenerating}>
+                    <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)}>
                         <Eraser className="mr-2 h-4 w-4" />
                         Discard
                     </Button>
 
                     {/* Save button */}
-                    <Button onClick={handleSave} disabled={isSaving || data.timetable.isGenerating}>
+                    <Button onClick={handleSave} disabled={isSaving}>
                         <Save className="mr-2 h-4 w-4" />
                         {isSaving ? "Saving..." : "Save"}
                     </Button>
