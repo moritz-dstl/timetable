@@ -217,7 +217,7 @@ function GenerateTimetable({ data, setData }) {
                 ...data.timetable,
                 uuid: null,
                 isGenerating: true,
-                durationToGenerateSeconds: 3 * data.classes.length ** 2 + 2 * data.classes.length + 30,
+                durationToGenerateSeconds: (3 * data.classes.length ** 2 + 2 * data.classes.length + 30) * 2,
                 timestampGeneratingStart: new Date().getTime(),
                 exists: false,
                 classes: [],

@@ -44,4 +44,9 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Prevent html2canvas from rendering line breaks, causing unwanted spacing in the generated image */
+  img {
+    @apply inline-block;
+  }
 }
