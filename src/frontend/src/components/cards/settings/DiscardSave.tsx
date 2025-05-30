@@ -26,7 +26,7 @@ async function apiSaveData(data) {
             break_window_end: data.settings.breakWindow.end,
             weight_block_scheduling: 10,
             weight_time_of_hours: 10,
-            max_time_for_solving: 3 * data.classes.length ** 2 + 2 * data.classes.length + 30,
+            max_time_for_solving: (3 * data.classes.length ** 2 + 2 * data.classes.length + 30) * 2,
         },
         school: {
             classes: data.classes.map((classItem) => classItem.name),
