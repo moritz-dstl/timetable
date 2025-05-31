@@ -33,8 +33,6 @@ def start_computing():
                     allow_block_scheduling,
                     max_hours_per_day,
                     global_break,
-                    break_window_start,
-                    break_window_end,
                     weight_block_scheduling,
                     weight_time_of_hours,
                     max_time_for_solving
@@ -61,14 +59,14 @@ def start_computing():
             # Set scheduling parameters
             MAX_HOURS_PER_DAY = settings[2] - 1
             GLOBAL_BREAK = settings[3]
-            BREAK_WINDOW = range(settings[4]-1, settings[5])
+
 
             # Set weights for the soft restrictions
-            WEIGHT_BLOCK_SCHEDULING = settings[6]
-            WEIGHT_TIME_OF_HOURS = settings[7]
+            WEIGHT_BLOCK_SCHEDULING = settings[4]
+            WEIGHT_TIME_OF_HOURS = settings[5]
 
             # Set maximum time for solving the problem
-            MAX_TIME_FOR_SOLVING = settings[8]
+            MAX_TIME_FOR_SOLVING = settings[6]
 
             # Fetch subjects that strongly prefer block periods
             cursor.execute("""
