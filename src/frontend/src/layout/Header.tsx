@@ -30,17 +30,11 @@ function Header() {
 
     return (
         <header className="border-b p-4 bg-gray-50">
-            <div className="flex items-center justify-between">
-                <span className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
-                    <div className="h-8 w-8">
-                        <Boxes className="h-8 w-8" color="#FF9100" />
-                    </div>
-                    <span className="flex gap-1">
-                        <h1 className="block sm:hidden text-2xl font-bold">Fottg</h1>
-                        <h1 className="hidden sm:block text-2xl font-bold">Free Online Timetable Generator</h1>
-                    </span>
-                </span>
-                <div id="header-buttons" className="flex items-center gap-4">
+            <div className="relative flex justify-left sm:justify-center">
+                <Boxes className="absolute h-8 w-8 text-primary cursor-pointer" onClick={() => navigate("/")} />
+            </div>
+            <div className="flex">
+                <div className="flex gap-4 ml-auto">
                     {
                         !cookies.get("user") ? (
                             // Show sign in and sign out buttons if user is not logged in
