@@ -33,6 +33,7 @@
 - Advanced scheduling options (block scheduling, parallel limits, etc.)
 - Dockerized deployment for easy setup
 - User-friendly frontend
+- Export generated timetable as PDF
 
 
 ## Getting Started
