@@ -1,23 +1,3 @@
-<style>
-details {
-    border: 1px solid rgb(255, 255, 255, 0.1);
-    border-radius: 6px;
-    padding: 0.5em 1em 0.5em 1em;
-    margin-bottom: 1em;
-}
-summary {
-    font-weight: bold;
-    font-size: 1.1em;
-    cursor: pointer;
-    padding: 0.2em 0;
-}
-details[open] > summary {
-    border-bottom: 1px solid rgb(255, 255, 255, 0.2);
-    padding-bottom: 1em;
-    margin-bottom: 1em;
-}
-</style>
-
 # Fottg - Free Online Timetable Generator
 
 <p align="center">
@@ -135,7 +115,8 @@ details[open] > summary {
 
 ### API Reference
 
-<details>
+---
+<details style="border-radius: 6px;">
 <summary><strong>User</strong></summary>
 
 - **Register:**  
@@ -161,13 +142,17 @@ details[open] > summary {
     ```
 </details>
 
+---
+
 <details>
 <summary><strong>Settings</strong></summary>
 
 - **Set Settings:**  
     `POST /Settings/set`  
     Provide a JSON object with keys for `settings`, `school`, `teachers`, `class_allocations`, etc.
-
+    
+    ---
+    
     <details>
     <summary>Keys</summary>
 
@@ -233,6 +218,8 @@ details[open] > summary {
 
     </details>
 
+    ---
+
     <details>
     <summary>Example</summary>
 
@@ -272,10 +259,14 @@ details[open] > summary {
 
     </details>
 
+    ---
+
 - **Get Settings:**  
     `GET /Settings/get`  
     Returns the current configuration.
-
+    
+    ---
+    
     <details>
     <summary><strong>Example</strong></summary>
 
@@ -386,7 +377,11 @@ details[open] > summary {
 
     </details>
 
+    ---
+
 </details>
+
+---
 
 <details>
 <summary><strong>Timetable Computation</strong></summary>
@@ -404,6 +399,8 @@ details[open] > summary {
 - **Check Status:**  
     `GET /status/<job_id>`  
     Returns computation status and, when finished, the generated timetable.
+
+    ---
 
     <details>
     <summary>Example</summary>
@@ -431,7 +428,12 @@ details[open] > summary {
     ```
 
     </details>
+
+    ---
+
 </details>
+
+---
 
 ## Contributing
 
