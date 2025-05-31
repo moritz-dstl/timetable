@@ -23,7 +23,7 @@ import { TriangleAlertIcon, EraserIcon, SaveIcon } from "lucide-react";
  * @returns The estimated duration in seconds.
  */
 function getDurationToGenerateSeconds(numOfClasses: number) {
-    return (3 * numOfClasses ** 2 + 2 * numOfClasses + 30) * 2;
+    return Math.floor((3 * numOfClasses ** 2 + 2 * numOfClasses + 30) * 1.2);
 }
 
 /**
