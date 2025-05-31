@@ -13,7 +13,7 @@ import {
 import { Alert, AlertDescription } from "../../ui/alert";
 
 // Icons
-import { TriangleAlert, Eraser, Save } from "lucide-react";
+import { TriangleAlertIcon, EraserIcon, SaveIcon } from "lucide-react";
 
 /**
  * Calculates the estimated duration in seconds required to generate a timetable,
@@ -143,13 +143,13 @@ function SettingsDiscardSave({ data, setData }) {
                 <div className="flex flex-row gap-4 align-center justify-end">
                     {/* Discard button */}
                     <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)}>
-                        <Eraser className="mr-2 h-4 w-4" />
+                        <EraserIcon className="mr-2 h-4 w-4" />
                         Discard
                     </Button>
 
                     {/* Save button */}
                     <Button onClick={handleSave} disabled={isSaving}>
-                        <Save className="mr-2 h-4 w-4" />
+                        <SaveIcon className="mr-2 h-4 w-4" />
                         {isSaving ? "Saving..." : "Save"}
                     </Button>
                 </div>
@@ -158,7 +158,7 @@ function SettingsDiscardSave({ data, setData }) {
                 {error && (
                     <Alert variant="destructive" className="flex items-center justify-center p-1">
                         <div className="flex items-center">
-                            <TriangleAlert className="h-4 w-4 mr-3" />
+                            <TriangleAlertIcon className="h-4 w-4 mr-3" />
                             <AlertDescription>{error}</AlertDescription>
                         </div>
                     </Alert>

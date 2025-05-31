@@ -7,7 +7,7 @@ import {
 } from "../../ui/card";
 
 // Icons
-import { GraduationCap } from "lucide-react";
+import { GraduationCapIcon } from "lucide-react";
 
 function TotalClasses({ data }) {
     return (
@@ -19,7 +19,7 @@ function TotalClasses({ data }) {
             </CardHeader>
             <CardContent>
                 <div className="flex items-center gap-2">
-                    <GraduationCap className="h-6 w-6 text-muted-foreground" />
+                    <GraduationCapIcon className="h-6 w-6 text-muted-foreground" />
                     <span className="text-2xl font-bold">
                         {data.classes.length}
                     </span>

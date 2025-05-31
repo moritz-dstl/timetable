@@ -11,7 +11,7 @@ import { Input } from "../../ui/input";
 import { Badge } from "../../ui/badge";
 
 // Icons
-import { Search } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
 function DisplaySubjects({ data }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +28,7 @@ function DisplaySubjects({ data }) {
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
                     {/* Search bar */}
                     <div className="relative">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             type="search"
                             placeholder="Search"

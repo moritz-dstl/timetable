@@ -38,10 +38,10 @@ import {
 
 // Icons
 import {
-    PlusCircle,
-    Search,
-    Edit,
-    Trash2
+    PlusCircleIcon,
+    SearchIcon,
+    EditIcon,
+    Trash2Icon
 } from "lucide-react";
 
 function SettingsTeachers({ data, setData }) {
@@ -210,7 +210,7 @@ function SettingsTeachers({ data, setData }) {
                                         });
                                     }}
                                 >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2Icon className="h-4 w-4" />
                                 </Button>
                             </div>
                         ),
@@ -233,7 +233,7 @@ function SettingsTeachers({ data, setData }) {
                         });
                     }}
                 >
-                    <PlusCircle className="mr-2 h-4 w-4" />
+                    <PlusCircleIcon className="mr-2 h-4 w-4" />
                     Add Subject
                 </Button>
             </div>
@@ -254,7 +254,7 @@ function SettingsTeachers({ data, setData }) {
 
                         {/* Search bar */}
                         <div className="relative">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
                                 placeholder="Search"
@@ -266,7 +266,7 @@ function SettingsTeachers({ data, setData }) {
 
                         {/* Add button */}
                         <Button onClick={handleOpenAddDialog}>
-                            <PlusCircle className="mr-2 h-4 w-4" />
+                            <PlusCircleIcon className="mr-2 h-4 w-4" />
                             Add
                         </Button>
 
@@ -319,7 +319,7 @@ function SettingsTeachers({ data, setData }) {
                                                     size="icon"
                                                     onClick={() => handleOpenEditDialog(teacherItem)}
                                                 >
-                                                    <Edit className="h-4 w-4" />
+                                                    <EditIcon className="h-4 w-4" />
                                                 </Button>
                                                 {/* Delete button */}
                                                 <Button
@@ -327,7 +327,7 @@ function SettingsTeachers({ data, setData }) {
                                                     size="icon"
                                                     onClick={() => handleOpenDeleteDialog(teacherItem)}
                                                 >
-                                                    <Trash2 className="h-4 w-4" />
+                                                    <Trash2Icon className="h-4 w-4" />
                                                 </Button>
                                             </div>
                                         </TableCell>

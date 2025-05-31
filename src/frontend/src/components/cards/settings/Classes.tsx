@@ -38,11 +38,11 @@ import {
 
 // Icons
 import {
-    PlusCircle,
-    Search,
-    Copy,
-    Edit,
-    Trash2
+    PlusCircleIcon,
+    SearchIcon,
+    CopyIcon,
+    EditIcon,
+    Trash2Icon
 } from "lucide-react";
 
 function SettingsClasses({ data, setData }) {
@@ -229,7 +229,7 @@ function SettingsClasses({ data, setData }) {
                                         });
                                     }}
                                 >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2Icon className="h-4 w-4" />
                                 </Button>
                             </div>
                         ),
@@ -252,7 +252,7 @@ function SettingsClasses({ data, setData }) {
                         });
                     }}
                 >
-                    <PlusCircle className="mr-2 h-4 w-4" />
+                    <PlusCircleIcon className="mr-2 h-4 w-4" />
                     Add Subject
                 </Button>
             </div>
@@ -273,7 +273,7 @@ function SettingsClasses({ data, setData }) {
 
                         {/* Search bar */}
                         <div className="relative">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
                                 placeholder="Search"
@@ -285,7 +285,7 @@ function SettingsClasses({ data, setData }) {
 
                         {/* Add button */}
                         <Button onClick={handleOpenAddDialog}>
-                            <PlusCircle className="mr-2 h-4 w-4" />
+                            <PlusCircleIcon className="mr-2 h-4 w-4" />
                             Add
                         </Button>
 
@@ -335,7 +335,7 @@ function SettingsClasses({ data, setData }) {
                                                     size="icon"
                                                     onClick={() => handleDuplicate(classItem)}
                                                 >
-                                                    <Copy className="h-4 w-4" />
+                                                    <CopyIcon className="h-4 w-4" />
                                                 </Button>
                                                 {/* Edit button */}
                                                 <Button
@@ -343,7 +343,7 @@ function SettingsClasses({ data, setData }) {
                                                     size="icon"
                                                     onClick={() => handleOpenEditDialog(classItem)}
                                                 >
-                                                    <Edit className="h-4 w-4" />
+                                                    <EditIcon className="h-4 w-4" />
                                                 </Button>
                                                 {/* Delete button */}
                                                 <Button
@@ -351,7 +351,7 @@ function SettingsClasses({ data, setData }) {
                                                     size="icon"
                                                     onClick={() => handleOpenDeleteDialog(classItem)}
                                                 >
-                                                    <Trash2 className="h-4 w-4" />
+                                                    <Trash2Icon className="h-4 w-4" />
                                                 </Button>
                                             </div>
                                         </TableCell>

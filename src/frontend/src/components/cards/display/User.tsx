@@ -7,7 +7,7 @@ import {
 } from "../../ui/card";
 
 // Icons
-import { Mail } from "lucide-react";
+import { MailIcon } from "lucide-react";
 
 function DisplayUser({ data }) {
     return (
@@ -19,7 +19,7 @@ function DisplayUser({ data }) {
             </CardHeader>
             <CardContent>
                 <div className="flex flex-row items-center gap-2">
-                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <MailIcon className="h-5 w-5 text-muted-foreground" />
                     {data.user.email}
                 </div>
             </CardContent>

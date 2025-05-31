@@ -15,7 +15,7 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlert, Eye, EyeOff } from "lucide-react";
+import { TriangleAlertIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 
 function Login() {
     const navigate = useNavigate();
@@ -75,7 +75,7 @@ function Login() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-130px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
+        <div className="flex bg-gray-50 p-8 flex-nowrap justify-center items-center">
             <div className="w-full max-w-md space-y-4">
 
                 <div className="text-center">
@@ -120,9 +120,9 @@ function Login() {
                                         }
                                     >
                                         {showPassword ? (
-                                            <EyeOff className="h-4 w-4" />
+                                            <EyeOffIcon className="h-4 w-4" />
                                         ) : (
-                                            <Eye className="h-4 w-4" />
+                                            <EyeIcon className="h-4 w-4" />
                                         )}
                                     </button>
                                 </div>
@@ -133,13 +133,13 @@ function Login() {
                             {error && (
                                 <Alert variant="destructive" className="mb-4">
                                     <div className="flex items-center">
-                                        <TriangleAlert className="h-4 w-4 mr-3" />
+                                        <TriangleAlertIcon className="h-4 w-4 mr-3" />
                                         <AlertDescription>{error}</AlertDescription>
                                     </div>
                                 </Alert>
                             )}
 
-                            {/* TODO: Forgot password */}
+                            {/* Forgot password (TODO) */}
                             <Button variant="link" type="button" className="text-sm p-0 h-auto">
                                 Forgot password?
                             </Button>
