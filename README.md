@@ -241,15 +241,12 @@
         },
         "teachers": [
             { "name": "Smith", "max_hours": 20, "subjects": ["Math", "Physics"] }
-            // ...
         ],
         "class_allocations": [
             { "class_name": "C1", "subject": "Math", "hours_per_week": 4 }
-            // ...
         ],
         "subject_parallel_limits": [
             { "subject_name": "PE", "max_parallel": 2 }
-            // ...
         ],
         "prefer_block_subjects": [
             { "subject_name": "PE", "weight": 60 }
@@ -415,13 +412,11 @@
                     "Mo": ["Subject (Teacher)", "Subject (Teacher)", "free", "..."],
                     "Tu": ["...", "..."]
                 }
-                // ...
             },
             "teachers": {
                 "Smith": {
                     "Mo": ["Subject (C1)", "Subject (C2)", "free", "..."]
                 }
-                // ...
             }
         }
     }
