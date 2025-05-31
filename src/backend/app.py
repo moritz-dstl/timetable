@@ -1,8 +1,8 @@
 from flask import Flask, session
 from flask_cors import CORS
-from User import User
-from AsyncCompute import AsyncCompute
-from Settings import Settings
+from api_endpoints.User import User
+from api_endpoints.AsyncCompute import AsyncCompute
+from api_endpoints.Settings import Settings
 import logging
 import config
 
