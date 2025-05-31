@@ -42,7 +42,7 @@ def set_settings():
     if cursor.fetchone():
         cursor.execute("""
             UPDATE Settings SET prefer_early_hours = %s, allow_block_scheduling = %s,
-            max_hours_per_day = %s, global_break = %s weight_block_scheduling = %s, weight_time_of_hours = %s,
+            max_hours_per_day = %s, global_break = %s, weight_block_scheduling = %s, weight_time_of_hours = %s,
             max_time_for_solving = %s WHERE Uid = %s
         """, (
             settings_data['prefer_early_hours'],
