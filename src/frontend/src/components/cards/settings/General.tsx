@@ -22,11 +22,11 @@ function SettingsGeneral({ data, setData }) {
             ...data,
             settings: {
                 ...data.settings,
-                breakAtPeriod: data.settings.numPeriodsPerDay < data.settings.breakAtPeriod ? data.settings.numPeriodsPerDay : data.settings.breakAtPeriod,
-                maxRepetitionsSubjectPerDay: data.settings.numPeriodsPerDay < data.settings.maxRepetitionsSubjectPerDay ? data.settings.numPeriodsPerDay : data.settings.maxRepetitionsSubjectPerDay,
+                breakAtPeriod: data.settings.numPeriods < data.settings.breakAtPeriod ? data.settings.numPeriods : data.settings.breakAtPeriod,
+                maxRepetitionsSubjectPerDay: data.settings.numPeriods < data.settings.maxRepetitionsSubjectPerDay ? data.settings.numPeriods : data.settings.maxRepetitionsSubjectPerDay,
             }
         })
-    }, [data.settings.numPeriodsPerDay]);
+    }, [data.settings.numPeriods]);
 
     return (
         <Card>
@@ -73,15 +73,15 @@ function SettingsGeneral({ data, setData }) {
                 <div className="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-8">
                     {/* Input: Num of periods per day */}
                     <div className="flex flex-col gap-2">
-                        <Label>Number of periods per day</Label>
+                        <Label>Number of periods</Label>
                         <Input
                             type="number"
                             min={4}
-                            value={data.settings.numPeriodsPerDay}
+                            value={data.settings.numPeriods}
                             onChange={(e) => setData({
                                 ...data,
                                 newChangesMade: true,
-                                settings: { ...data.settings, numPeriodsPerDay: isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 4 ? 4 : parseInt(e.target.value) }
+                                settings: { ...data.settings, numPeriods: isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 4 ? 4 : parseInt(e.target.value) }
                             })}
                         />
                     </div>
@@ -91,7 +91,7 @@ function SettingsGeneral({ data, setData }) {
                         <Slider
                             className="lg:min-h-[36px]"
                             min={1}
-                            max={data.settings.numPeriodsPerDay}
+                            max={data.settings.numPeriods}
                             step={1}
                             value={[data.settings.breakAtPeriod]}
                             onValueChange={([value]) => setData({
@@ -107,7 +107,7 @@ function SettingsGeneral({ data, setData }) {
                         <Slider
                             className="lg:min-h-[36px]"
                             min={1}
-                            max={data.settings.numPeriodsPerDay}
+                            max={data.settings.numPeriods}
                             step={1}
                             value={[data.settings.maxRepetitionsSubjectPerDay]}
                             onValueChange={([value]) => setData({

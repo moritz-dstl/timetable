@@ -46,7 +46,7 @@ async function apiSaveData(data) {
         school: {
             classes: data.classes.map((classItem) => classItem.name),
             subjects: data.subjects.map((subjectItem) => subjectItem.name),
-            hours_per_day: data.settings.numPeriodsPerDay
+            hours_per_day: data.settings.numPeriods
         },
         teachers: data.teachers.map((teacherItem) => ({
             name: teacherItem.name,

@@ -22,7 +22,8 @@ enum FUNC_GENERATING_FLAG { NONE, START_PROGRESS_BAR };
  * Retrieves the status of timetable generation from the API using the provided UUID.
 
  * @param uuid - The unique identifier for the timetable generation job.
- * @returns An object with the status and, if successful, the timetable data (classes, teachers, lessons).
+ * @returns An object with the status and, if successful, the timetable 
+ *          data (numPeriods, classes, teachers, lessons).
  */
 async function apiGetTimetable(uuid: string) {
     var response = {
@@ -60,6 +61,7 @@ async function apiGetTimetable(uuid: string) {
                 const jsonTeachers = json["result"]["teachers"];
 
                 const timetable = {
+                    numPeriods: 0,  // Set in loop
                     classes: Object.keys(jsonClasses),
                     teachers: Object.keys(jsonTeachers),
                     lessons: Array<any>()
@@ -76,6 +78,7 @@ async function apiGetTimetable(uuid: string) {
 
                 for (const [className, timetableDays] of Object.entries(jsonClasses)) {
                     for (const [day, lessons] of Object.entries(timetableDays as Array<string>)) {
+                        timetable.numPeriods = lessons.length;
                         for (const lesson of Object.entries(lessons)) {
                             const period = parseInt(lesson[0]) + 1;
                             const subject = lesson[1].split(' ')[0];

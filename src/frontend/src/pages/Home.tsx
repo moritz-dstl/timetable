@@ -26,14 +26,14 @@ async function apiFetchData(cookies, setData, setIsLoading) {
     var settings = {
         preferEarlyPeriods: true,
         preferDoubleLessons: true,
-        numPeriodsPerDay: 8,
+        numPeriods: 8,
         maxRepetitionsSubjectPerDay: 2,
         breakAtPeriod: 6,
     };
 
     var timetable = {
         durationToGenerateSeconds: 10,
-        numOfPeriods: settings.numPeriodsPerDay,
+        numPeriods: settings.numPeriods,
         exists: false,
         classes: [],
         teachers: [],
@@ -100,11 +100,11 @@ async function apiFetchData(cookies, setData, setIsLoading) {
                 settings.preferDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
                 settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
                 settings.breakAtPeriod = jsonSettings["global_break"];
-                settings.numPeriodsPerDay = jsonSchool["hours_per_day"];
+                settings.numPeriods = jsonSchool["hours_per_day"];
                 timetable.durationToGenerateSeconds = jsonSettings["max_time_for_solving"];
 
                 // Timetable
-                timetable.numOfPeriods = jsonSchool["hours_per_day"];
+                timetable.numPeriods = jsonSchool["hours_per_day"];
 
                 // Subjects
                 const subjectsArray = JSON.parse(jsonSchool["subjects"].replace(/'/g, '"'));

@@ -64,7 +64,7 @@ function getHTMLTimetable(data, selectedViewClassTeacher, selectedClassTeacher, 
     ];
 
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const rangePeriods = Array.from({ length: data.timetable.numOfPeriods }, (_, i) => i + 1);
+    const rangePeriods = Array.from({ length: data.timetable.numPeriods }, (_, i) => i + 1);
 
     return (
         <div className="overflow-scroll rounded-xl">
