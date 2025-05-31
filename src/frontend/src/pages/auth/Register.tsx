@@ -132,7 +132,7 @@ function Register() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-130px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
+        <div className="flex bg-gray-50 p-8 flex-nowrap justify-center items-center">
             <div className="w-full max-w-md space-y-4">
 
                 <div className="text-center">
