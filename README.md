@@ -267,7 +267,7 @@
     <details>
     <summary><strong>Example</strong></summary>
 
-    ```
+    ```json
         {
             "classes": [
                 {
@@ -386,7 +386,7 @@
 - **Start Computation:**  
     `GET /start_computing`  
     Returns a job ID.
-    ```
+    ```json
     {
         "job_id": "24de5582-1b57-42dc-b5a3-bd2c4366806b",
         "status": "started"
