@@ -17,6 +17,46 @@ import { Alert, AlertDescription } from "../../components/ui/alert";
 // Icons
 import { TriangleAlert, Eye, EyeOff } from "lucide-react";
 
+/**
+ * Validates a password according to the following rules:
+ * - Must be between 8 and 32 characters in length.
+ * - Must contain at least one digit.
+ * - Must contain at least one lowercase letter.
+ * - Must contain at least one uppercase letter.
+ * - Must contain at least one special character.
+ *
+ * @param password - The password string to validate.
+ * @returns A tuple where the first element is a boolean indicating validity,
+ *          and the second element is an error message if invalid, or an empty string if valid.
+ */
+function validatePassword(password: string) {
+    var isValid = true;
+    var errorMessage = "";
+
+    if (password.length < 8 || password.length > 32) {
+        isValid = false;
+        errorMessage = "Password must be between 8 and 32 characters";
+    }
+    else if (!/[0-9]/.test(password)) {
+        isValid = false;
+        errorMessage = "Password must include at least one digit";
+    }
+    else if (!/[a-z]/.test(password)) {
+        isValid = false;
+        errorMessage = "Password must include at least one lowercase letter";
+    }
+    else if (!/[A-Z]/.test(password)) {
+        isValid = false;
+        errorMessage = "Password must include at least one uppercase letter";
+    }
+    else if (!/[*.!@\$%^&(){}\[\]:;<>,.?/~_+\-=|\\]/.test(password)) {
+        isValid = false;
+        errorMessage = "Password must include at least one special character";
+    } 
+
+    return [isValid, errorMessage];
+}
+
 function Register() {
     const navigate = useNavigate();
     const cookies = new Cookies();
@@ -41,6 +81,16 @@ function Register() {
         e.preventDefault();
         setError("");
         setIsLoading(true);
+
+        // Validate password pattern
+        const [passwordIsValid, errorMessage] = validatePassword(password);
+        if (!passwordIsValid) {
+            setError(errorMessage as string);
+            setConfirmPassword("");
+            setIsLoading(false);
+            return;
+        }
+
 
         // Validate equal passwords
         if (password !== confirmPassword) {
@@ -96,9 +146,8 @@ function Register() {
 
                             {/* Input: School name */}
                             <div className="space-y-2">
-                                <Label htmlFor="schoolname">School Name</Label>
+                                <Label>School Name</Label>
                                 <Input
-                                    id="schoolname"
                                     type="text"
                                     value={schoolname}
                                     onChange={(e) => setSchoolName(e.target.value)}
@@ -108,9 +157,8 @@ function Register() {
 
                             {/* Input: Email */}
                             <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
+                                <Label>Email</Label>
                                 <Input
-                                    id="email"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -120,12 +168,17 @@ function Register() {
 
                             {/* Input: Password, with toggle visibility eye icon */}
                             <div className="space-y-2">
-                                <Label htmlFor="password">Password</Label>
+                                <Label>Password</Label>
                                 <div className="relative">
                                     <Input
-                                        id="password"
                                         type={showPassword ? "text" : "password"}
                                         value={password}
+                                        // At least 8 characters in length, but no more than 32.
+                                        // At least one digit [0-9] 
+                                        // At least one lowercase character [a-z] 
+                                        // At least one uppercase character [A-Z] 
+                                        // At least one special character [*.!@#$%^&(){}[]:;<>,.?/~_+-=|\] 
+                                        pattern={"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$"}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                     />
@@ -149,10 +202,9 @@ function Register() {
 
                             {/* Input: Confirm password, with toggle visibility eye icon */}
                             <div className="space-y-2">
-                                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                <Label>Confirm Password</Label>
                                 <div className="relative">
                                     <Input
-                                        id="confirmPassword"
                                         type={showConfirmPassword ? "text" : "password"}
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
