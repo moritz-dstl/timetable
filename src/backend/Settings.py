@@ -22,7 +22,7 @@ def set_settings():
         settings_data.get('prefer_early_hours'),
         settings_data.get('allow_block_scheduling'),
         settings_data.get('max_hours_per_day'),
-        settings_data.get('max_consecutive_hours'),
+        settings_data.get('global_break'),
         settings_data.get('break_window_start'),
         settings_data.get('break_window_end'),
         settings_data.get('weight_block_scheduling'),
@@ -44,14 +44,14 @@ def set_settings():
     if cursor.fetchone():
         cursor.execute("""
             UPDATE Settings SET prefer_early_hours = %s, allow_block_scheduling = %s,
-            max_hours_per_day = %s, max_consecutive_hours = %s, break_window_start = %s,
+            max_hours_per_day = %s, global_break = %s, break_window_start = %s,
             break_window_end = %s, weight_block_scheduling = %s, weight_time_of_hours = %s,
             max_time_for_solving = %s WHERE Uid = %s
         """, (
             settings_data['prefer_early_hours'],
             settings_data['allow_block_scheduling'],
             settings_data['max_hours_per_day'],
-            settings_data['max_consecutive_hours'],
+            settings_data['global_break'],
             settings_data['break_window_start'],
             settings_data['break_window_end'],
             settings_data['weight_block_scheduling'],
@@ -62,7 +62,7 @@ def set_settings():
     else:
         cursor.execute("""
             INSERT INTO Settings (Uid, prefer_early_hours, allow_block_scheduling,
-            max_hours_per_day, max_consecutive_hours, break_window_start, break_window_end,
+            max_hours_per_day, global_break, break_window_start, break_window_end,
             weight_block_scheduling, weight_time_of_hours, max_time_for_solving)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
@@ -70,7 +70,7 @@ def set_settings():
             settings_data['prefer_early_hours'],
             settings_data['allow_block_scheduling'],
             settings_data['max_hours_per_day'],
-            settings_data['max_consecutive_hours'],
+            settings_data['global_break'],
             settings_data['break_window_start'],
             settings_data['break_window_end'],
             settings_data['weight_block_scheduling'],
