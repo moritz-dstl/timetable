@@ -22,7 +22,7 @@ import { Button } from "../../ui/button";
 import { Switch } from "../../ui/switch";
 
 // Icons
-import { Boxes, Download } from "lucide-react";
+import { BoxesIcon, DownloadIcon } from "lucide-react";
 
 /**
  * Generates a JSX representation of a timetable for a given class or teacher.
@@ -178,7 +178,7 @@ function DisplayTimetable({ data }) {
             element.innerHTML = ReactDOMServer.renderToStaticMarkup(
                 <div className="w-[1000px]">
                     <div className="flex justify-center w-full mb-16">
-                        <Boxes className="h-16 w-16" color="#FF9100" />
+                        <BoxesIcon className="h-16 w-16" color="#FF9100" />
                     </div>
                     <div className="m-10">
                         <div className="flex justify-between">
@@ -305,7 +305,7 @@ function DisplayTimetable({ data }) {
                     </div>
                     {/* Export button */}
                     <Button onClick={handleExport} disabled={!data.timetable.exists || isExporting} >
-                        <Download className="mr-0 sm:mr-2 h-4 w-4" />
+                        <DownloadIcon className="mr-0 sm:mr-2 h-4 w-4" />
                         <p className="hidden sm:block">{isExporting ? "Exporting..." : "Export"}</p>
                     </Button>
                 </div>

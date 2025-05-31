@@ -7,7 +7,7 @@ import {
 } from "../../ui/card";
 
 // Icons
-import { Users } from "lucide-react";
+import { UsersIcon } from "lucide-react";
 
 function TotalTeachers({ data }) {
     return (
@@ -19,7 +19,7 @@ function TotalTeachers({ data }) {
             </CardHeader>
             <CardContent>
                 <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-muted-foreground" />
+                    <UsersIcon className="h-5 w-5 text-muted-foreground" />
                     <span className="text-2xl font-bold">
                         {data.teachers.length}
                     </span>

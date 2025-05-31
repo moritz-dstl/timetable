@@ -15,7 +15,7 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlert, Eye, EyeOff } from "lucide-react";
+import { TriangleAlertIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 
 function Login() {
     const navigate = useNavigate();
@@ -120,9 +120,9 @@ function Login() {
                                         }
                                     >
                                         {showPassword ? (
-                                            <EyeOff className="h-4 w-4" />
+                                            <EyeOffIcon className="h-4 w-4" />
                                         ) : (
-                                            <Eye className="h-4 w-4" />
+                                            <EyeIcon className="h-4 w-4" />
                                         )}
                                     </button>
                                 </div>
@@ -133,7 +133,7 @@ function Login() {
                             {error && (
                                 <Alert variant="destructive" className="mb-4">
                                     <div className="flex items-center">
-                                        <TriangleAlert className="h-4 w-4 mr-3" />
+                                        <TriangleAlertIcon className="h-4 w-4 mr-3" />
                                         <AlertDescription>{error}</AlertDescription>
                                     </div>
                                 </Alert>

@@ -1,6 +1,6 @@
 
 // Icons
-import { Boxes } from "lucide-react";
+import { BoxesIcon } from "lucide-react";
 
 function Footer() {
     // Links except GitHub not implemented (TODO)
@@ -10,7 +10,7 @@ function Footer() {
                 <div className="grid grid-rows md:grid-cols-2 gap-8">
                     <div>
                         <div className="flex items-center mb-4 gap-2">
-                            <Boxes className="h-6 w-6 text-primary" />
+                            <BoxesIcon className="h-6 w-6 text-primary" />
                             <span className="text-xl font-bold">Fottg</span>
                         </div>
                         <p className="text-muted-foreground max-w-xs">

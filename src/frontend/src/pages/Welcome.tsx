@@ -9,7 +9,7 @@ import {
 import { Button } from "../components/ui/button";
 
 // Icons
-import { ArrowRight, LayoutDashboard, RefreshCw, Download } from "lucide-react";
+import { ArrowRightIcon, LayoutDashboardIcon, RefreshCwIcon, DownloadIcon } from "lucide-react";
 
 function Welcome() {
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ function Welcome() {
                         <p className="text-lg md:text-xl">A comprehensive solution for educational institutions to create optimal timetables with ease.</p>
                         <div className="pt-4 gap-4">
                             <Button size="lg" variant="secondary" className="gap-2 font-semibold" onClick={() => navigate("/register")}>
-                                Get started <ArrowRight className="h-4 w-4" />
+                                Get started <ArrowRightIcon className="h-4 w-4" />
                             </Button>
                         </div>
                     </div>
@@ -45,21 +45,21 @@ function Welcome() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                         <Card>
                             <CardContent className="pt-6 flex flex-col items-center">
-                                <LayoutDashboard className="h-6 w-6 mb-4 text-primary" />
+                                <LayoutDashboardIcon className="h-6 w-6 mb-4 text-primary" />
                                 <h3 className="text-xl font-semibold mb-2 text-center">Resource Management</h3>
                                 <p className="text-muted-foreground text-center">Easily manage classes, teachers, and subjects with our intuitive interface.</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardContent className="pt-6 flex flex-col items-center">
-                                <RefreshCw className="h-6 w-6 mb-4 text-primary" />
+                                <RefreshCwIcon className="h-6 w-6 mb-4 text-primary" />
                                 <h3 className="text-xl font-semibold mb-2 text-center">Timetable Generation</h3>
                                 <p className="text-muted-foreground text-center">Generate optimal timetables based on your resources and constraints.</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardContent className="pt-6 flex flex-col items-center">
-                                <Download className="h-6 w-6 mb-4 text-primary" />
+                                <DownloadIcon className="h-6 w-6 mb-4 text-primary" />
                                 <h3 className="text-xl font-semibold mb-2 text-center">Export Timetables</h3>
                                 <p className="text-muted-foreground text-center">Download your timetables as PDF for easy distribution.</p>
                             </CardContent>
@@ -116,7 +116,7 @@ function Welcome() {
                     <h2 className="text-2xl font-bold mb-6">Ready to get started?</h2>
                     <p className="text-lg max-w-xl mx-auto mb-8">Join thousands of schools already using Fottg to save time and reduce scheduling headaches.</p>
                     <Button size="lg" variant="secondary" className="gap-2 font-semibold" onClick={() => navigate("/register")}>
-                        Create Free Account <ArrowRight className="h-4 w-4" />
+                        Create Free Account <ArrowRightIcon className="h-4 w-4" />
                     </Button>
                 </div>
             </section>

@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 
 // Icons
-import { TriangleAlert, RefreshCw } from "lucide-react";
+import { TriangleAlertIcon, RefreshCwIcon } from "lucide-react";
 
 // Enums
 enum API_GENERATE_STATUS { RUNNING, SUCCESS, FAILED, ERROR };
@@ -250,7 +250,7 @@ function GenerateTimetable({ data, setData }) {
             {error && (
                 <Alert variant="destructive" className="flex items-center justify-center p-1">
                     <div className="flex items-center">
-                        <TriangleAlert className="h-4 w-4 mr-3" />
+                        <TriangleAlertIcon className="h-4 w-4 mr-3" />
                         <AlertDescription>{error}</AlertDescription>
                     </div>
                 </Alert>
@@ -265,7 +265,7 @@ function GenerateTimetable({ data, setData }) {
                 onClick={handleStartGenerate}
                 disabled={isGenerating || data.newChangesMade}
             >
-                <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating && "animate-spin"}`} />
+                <RefreshCwIcon className={`mr-2 h-4 w-4 ${isGenerating && "animate-spin"}`} />
                 {isGenerating ? "Generating..." : "Generate Timetable"}
             </Button >
 
@@ -274,7 +274,7 @@ function GenerateTimetable({ data, setData }) {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle className="flex flex-row items-center">
-                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                            <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" />
                             Generating...
                         </DialogTitle>
                         <DialogDescription>

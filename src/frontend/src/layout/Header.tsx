@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { Button } from "../components/ui/button";
 
 // Icons
-import { Boxes, LogOut } from "lucide-react";
+import { BoxesIcon, LogOutIcon } from "lucide-react";
 
 function Header() {
     const navigate = useNavigate();
@@ -31,7 +31,7 @@ function Header() {
     return (
         <header className="border-b p-4 bg-gray-50">
             <div className="relative flex justify-left sm:justify-center">
-                <Boxes className="absolute h-8 w-8 text-primary cursor-pointer" onClick={() => navigate("/")} />
+                <BoxesIcon className="absolute h-8 w-8 text-primary cursor-pointer" onClick={() => navigate("/")} />
             </div>
             <div className="flex">
                 <div className="flex gap-4 ml-auto">
@@ -49,7 +49,7 @@ function Header() {
                         ) : (
                             // Show logout button if user is logged in
                             <Button variant="outline" size="sm" className="text-sm" onClick={handleLogout}>
-                                <LogOut className="pr-2" />Logout
+                                <LogOutIcon className="pr-2" />Logout
                             </Button>
                         )
                     }
