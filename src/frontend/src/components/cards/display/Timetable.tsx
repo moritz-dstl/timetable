@@ -129,7 +129,7 @@ function DisplayTimetable({ data }) {
         setSelectedViewClassTeacher("class");
         setAllClassesTeacheres(data.timetable.classes);
         setSelectedClassTeacher(data.timetable.classes[0]);
-    }, [data.timetable.uuid]);
+    }, [data.timetable.exists]);
 
     const handleExport = () => {
         setIsExporting(true);
@@ -262,7 +262,7 @@ function DisplayTimetable({ data }) {
                                 setAllClassesTeacheres(listAllClassesteachers);
                                 setSelectedClassTeacher(listAllClassesteachers[0]);
                             }}
-                            disabled={true ? !data.timetable.exists || data.timetable.isGenerating : false}
+                            disabled={!data.timetable.exists}
                         >
                             <SelectTrigger className="w-[50%] sm:w-[180px]">
                                 <SelectValue />
@@ -276,7 +276,7 @@ function DisplayTimetable({ data }) {
                         <Select
                             value={selectedClassTeacher}
                             onValueChange={setSelectedClassTeacher}
-                            disabled={true ? !data.timetable.exists || data.timetable.isGenerating : false}
+                            disabled={!data.timetable.exists}
                         >
                             <SelectTrigger className="w-[50%] sm:w-[180px]">
                                 <SelectValue />
@@ -293,7 +293,7 @@ function DisplayTimetable({ data }) {
                         </Select>
                     </div>
                     {/* Export button */}
-                    <Button onClick={handleExport} disabled={true ? !data.timetable.exists || data.timetable.isGenerating || isExporting : false}>
+                    <Button onClick={handleExport} disabled={!data.timetable.exists || isExporting} >
                         <Download className="mr-0 sm:mr-2 h-4 w-4" />
                         <p className="hidden sm:block">{isExporting ? "Exporting..." : "Export"}</p>
                     </Button>
