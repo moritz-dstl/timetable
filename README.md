@@ -290,9 +290,7 @@ The endpoint `GET /Settings/get` returns a JSON object with the following struct
         "settings": {
             "Uid": 1,
             "allow_block_scheduling": 1,
-            "break_window_end": 6,
-            "break_window_start": 4,
-            "max_consecutive_hours": 7,
+            "global_break": 6,
             "max_hours_per_day": 2,
             "max_time_for_solving": 180,
             "prefer_early_hours": 1,

@@ -27,12 +27,8 @@ async function apiFetchData(cookies, setData, setIsLoading) {
         preferEarlyPeriods: true,
         preferDoubleLessons: true,
         numPeriodsPerDay: 8,
-        maxConsecutivePeriods: 6,
         maxRepetitionsSubjectPerDay: 2,
-        breakWindow: {
-            start: 4,
-            end: 6,
-        },
+        breakAtPeriod: 6,
     };
 
     var timetable = {
@@ -102,10 +98,8 @@ async function apiFetchData(cookies, setData, setIsLoading) {
                 // Settings
                 settings.preferEarlyPeriods = Boolean(jsonSettings["prefer_early_hours"]);
                 settings.preferDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
-                settings.maxConsecutivePeriods = jsonSettings["max_consecutive_hours"];
                 settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
-                settings.breakWindow.start = jsonSettings["break_window_start"];
-                settings.breakWindow.end = jsonSettings["break_window_end"];
+                settings.breakAtPeriod = jsonSettings["global_break"];
                 settings.numPeriodsPerDay = jsonSchool["hours_per_day"];
                 timetable.durationToGenerateSeconds = jsonSettings["max_time_for_solving"];
 
