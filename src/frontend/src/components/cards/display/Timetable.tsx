@@ -24,6 +24,17 @@ import { Switch } from "../../ui/switch";
 // Icons
 import { Boxes, Download } from "lucide-react";
 
+/**
+ * Generates a JSX representation of a timetable for a given class or teacher.
+ *
+ * @param data - The data object
+ * @param selectedViewClassTeacher - Determines whether to display the timetable by "class" or "teacher".
+ * @param selectedClassTeacher - The currently selected class or teacher whose timetable is to be displayed.
+ * @param useColors - Boolean indicating whether to apply background colors to subjects.
+ * @param setUseColors - State setter function to toggle the use of colors.
+ * @param isExport - Optional flag indicating if the timetable is being rendered for export, which disables certain UI elements.
+ * @returns A JSX element representing the timetable table for the selected class or teacher.
+ */
 function getHTMLTimetable(data, selectedViewClassTeacher, selectedClassTeacher, useColors, setUseColors, isExport = false) {
     // Filter classes for selection
     const filteredLessonsByClass = data.timetable.lessons.filter((lessonItem) => lessonItem.class === selectedClassTeacher);

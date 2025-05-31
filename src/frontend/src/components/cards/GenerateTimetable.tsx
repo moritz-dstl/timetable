@@ -19,11 +19,12 @@ enum API_GENERATE_STATUS { RUNNING, SUCCESS, FAILED, ERROR };
 enum FUNC_GENERATING_FLAG { NONE, START_PROGRESS_BAR };
 
 /**
- * Gets the status of the timetable generation and returns a dictiary with a 
- * API_GENERATE_STATUS and if successfull the timetable (classes, teachers, lessons).
- * Take in a the uuid of the generating timetable.
+ * Retrieves the status of timetable generation from the API using the provided UUID.
+
+ * @param uuid - The unique identifier for the timetable generation job.
+ * @returns An object with the status and, if successful, the timetable data (classes, teachers, lessons).
  */
-async function apiGetTimetable(uuid) {
+async function apiGetTimetable(uuid: string) {
     var response = {
         status: API_GENERATE_STATUS.RUNNING,
         timetable: {}
@@ -109,23 +110,13 @@ async function apiGetTimetable(uuid) {
 }
 
 /**
- * Periodically polls the timetable generation status from the API.
- * Handles success and failure scenarios, updating states accordingly.
- * Also animates the progress bar animation and displays the remaining time in HH:MM:SS format.
- * 
- * @param {int} flag FUNC_GENERATING_FLAG
- * @param {Object} timetable
- *  {
- *      uuid [string],
- *      durationToGenerateSeconds [int],
- *      timestampGeneratingStart [int]
- *  }
- * @param {Object} setters 
- *  {
- *      setData,
- *      setIsGenerating,
- *      setError
- *  }
+ * Polls the API at regular intervals to check the status of timetable generation.
+ * Updates UI state based on the API response, including handling errors and completion.
+ * Manages progress bar animation and displays the remaining generation time in HH:MM:SS format.
+ *
+ * @param flag - Indicates whether to start the progress bar animation (FUNC_GENERATING_FLAG).
+ * @param timetable - Object containing uuid, durationToGenerateSeconds, and timestampGeneratingStart.
+ * @param setters - Object with setData, setIsGenerating, and setError functions for state management.
  */
 async function pollTimetableGenerationStatus(flag, timetable, setters) {
     const checkFreqencySeconds = 20;
