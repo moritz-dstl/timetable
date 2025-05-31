@@ -15,19 +15,30 @@ import { Alert, AlertDescription } from "../../ui/alert";
 // Icons
 import { TriangleAlert, Eraser, Save } from "lucide-react";
 
-function getDurationToGenerateSeconds(numOfClasses) {
+/**
+ * Calculates the estimated duration in seconds required to generate a timetable,
+ * based on the number of classes provided.
+ *
+ * @param numOfClasses - The number of classes in the timetable.
+ * @returns The estimated duration in seconds.
+ */
+function getDurationToGenerateSeconds(numOfClasses: number) {
     return (3 * numOfClasses ** 2 + 2 * numOfClasses + 30) * 2;
 }
 
+/**
+ * Sends the provided data to the API to save the current settings.
+ *
+ * @param data - The data object.
+ * @returns A boolean indicating whether the save operation was successful.
+ */
 async function apiSaveData(data) {
     var apiDataBody = {
         settings: {
             prefer_early_hours: data.settings.preferEarlyPeriods,
             allow_block_scheduling: data.settings.preferDoubleLessons,
             max_hours_per_day: data.settings.maxRepetitionsSubjectPerDay,
-            max_consecutive_hours: data.settings.maxConsecutivePeriods,
-            break_window_start: data.settings.breakWindow.start,
-            break_window_end: data.settings.breakWindow.end,
+            global_break: data.settings.breakAtPeriod,
             weight_block_scheduling: 10,
             weight_time_of_hours: 10,
             max_time_for_solving: getDurationToGenerateSeconds(data.classes.length),
@@ -35,7 +46,7 @@ async function apiSaveData(data) {
         school: {
             classes: data.classes.map((classItem) => classItem.name),
             subjects: data.subjects.map((subjectItem) => subjectItem.name),
-            hours_per_day: data.settings.numPeriodsPerDay
+            hours_per_day: data.settings.numPeriods
         },
         teachers: data.teachers.map((teacherItem) => ({
             name: teacherItem.name,

@@ -22,19 +22,11 @@ function SettingsGeneral({ data, setData }) {
             ...data,
             settings: {
                 ...data.settings,
-                maxConsecutivePeriods: data.settings.numPeriodsPerDay < data.settings.maxConsecutivePeriods ? data.settings.numPeriodsPerDay : data.settings.maxConsecutivePeriods,
-                maxRepetitionsSubjectPerDay: data.settings.numPeriodsPerDay < data.settings.maxRepetitionsSubjectPerDay ? data.settings.numPeriodsPerDay : data.settings.maxRepetitionsSubjectPerDay,
-                breakWindow: {
-                    ...data.settings.breakWindow,
-                    end: data.settings.numPeriodsPerDay < data.settings.breakWindow.end ? data.settings.numPeriodsPerDay : data.settings.breakWindow.end,
-                    start: Math.min(
-                        data.settings.breakWindow.start,
-                        (data.settings.numPeriodsPerDay < data.settings.breakWindow.end ? data.settings.numPeriodsPerDay : data.settings.breakWindow.end) - 1
-                    ),
-                }
+                breakAtPeriod: data.settings.numPeriods-1 < data.settings.breakAtPeriod ? data.settings.numPeriods-1 : data.settings.breakAtPeriod,
+                maxRepetitionsSubjectPerDay: data.settings.numPeriods < data.settings.maxRepetitionsSubjectPerDay ? data.settings.numPeriods : data.settings.maxRepetitionsSubjectPerDay,
             }
         })
-    }, [data.settings.numPeriodsPerDay]);
+    }, [data.settings.numPeriods]);
 
     return (
         <Card>
@@ -62,7 +54,7 @@ function SettingsGeneral({ data, setData }) {
                         />
                         <Label>Prefer early periods</Label>
                     </div>
-                    {/* Switch: Allow consecutive periods */}
+                    {/* Switch: Prefer double lessons */}
                     <div className="flex flex-row gap-3 items-center">
                         <Switch
                             checked={data.settings.preferDoubleLessons}
@@ -78,77 +70,52 @@ function SettingsGeneral({ data, setData }) {
 
                 <Separator />
 
-                <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-8">
-                    <div className="flex flex-col gap-4">
-                        {/* Input: Num of periods per day */}
-                        <div className="flex flex-col gap-2">
-                            <Label>Number of periods per day</Label>
-                            <Input
-                                type="number"
-                                min={4}
-                                value={data.settings.numPeriodsPerDay}
-                                onChange={(e) => setData({
-                                    ...data,
-                                    newChangesMade: true,
-                                    settings: { ...data.settings, numPeriodsPerDay: isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 4 ? 4 : parseInt(e.target.value) }
-                                })}
-                            />
-                        </div>
-                        {/* Slider: Break window */}
-                        <div className="flex flex-col gap-2">
-                            <Label>Break window in periods</Label>
-                            <Slider
-                                min={1}
-                                max={data.settings.numPeriodsPerDay}
-                                step={1}
-                                value={[data.settings.breakWindow.start, data.settings.breakWindow.end]}
-                                onValueChange={([start, end]) => setData({
-                                    ...data,
-                                    newChangesMade: true,
-                                    settings: {
-                                        ...data.settings,
-                                        breakWindow: {
-                                            ...data.settings.breakWindow,
-                                            start: start >= end ? start - 1 : start,
-                                            end: end,
-                                        }
-                                    }
-                                })}
-                            />
-                        </div>
+                <div className="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-8">
+                    {/* Input: Num of periods per day */}
+                    <div className="flex flex-col gap-2">
+                        <Label>Number of periods</Label>
+                        <Input
+                            type="number"
+                            min={4}
+                            value={data.settings.numPeriods}
+                            onChange={(e) => setData({
+                                ...data,
+                                newChangesMade: true,
+                                settings: { ...data.settings, numPeriods: isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 4 ? 4 : parseInt(e.target.value) }
+                            })}
+                        />
                     </div>
-
-                    <div className="flex flex-col gap-4">
-                        {/* Slider: Max consecutive periods */}
-                        <div className="flex flex-col gap-2 min-h-0 md:min-h-[57px]">
-                            <Label>Max. number of consecutive periods</Label>
-                            <Slider
-                                min={1}
-                                max={data.settings.numPeriodsPerDay}
-                                step={1}
-                                value={[data.settings.maxConsecutivePeriods]}
-                                onValueChange={([value]) => setData({
-                                    ...data,
-                                    newChangesMade: true,
-                                    settings: { ...data.settings, maxConsecutivePeriods: value }
-                                })}
-                            />
-                        </div>
-                        {/* Slider: Max repetitions of subject */}
-                        <div className="flex flex-col gap-2">
-                            <Label className="md:text-nowrap md:overflow-scroll">Max. number of period repetitions for subject per day</Label>
-                            <Slider
-                                min={1}
-                                max={data.settings.numPeriodsPerDay}
-                                step={1}
-                                value={[data.settings.maxRepetitionsSubjectPerDay]}
-                                onValueChange={([value]) => setData({
-                                    ...data,
-                                    newChangesMade: true,
-                                    settings: { ...data.settings, maxRepetitionsSubjectPerDay: value }
-                                })}
-                            />
-                        </div>
+                    {/* Slider: Break at period */}
+                    <div className="flex flex-col gap-2">
+                        <Label>Period designated for a break</Label>
+                        <Slider
+                            className="lg:min-h-[36px]"
+                            min={2}
+                            max={data.settings.numPeriods-1}
+                            step={1}
+                            value={[data.settings.breakAtPeriod]}
+                            onValueChange={([value]) => setData({
+                                ...data,
+                                newChangesMade: true,
+                                settings: { ...data.settings, breakAtPeriod: value }
+                            })}
+                        />
+                    </div>
+                    {/* Slider: Max number of periods a subject can appear per day */}
+                    <div className="flex flex-col gap-2">
+                        <Label>Maximum periods per subject per day</Label>
+                        <Slider
+                            className="lg:min-h-[36px]"
+                            min={1}
+                            max={data.settings.numPeriods}
+                            step={1}
+                            value={[data.settings.maxRepetitionsSubjectPerDay]}
+                            onValueChange={([value]) => setData({
+                                ...data,
+                                newChangesMade: true,
+                                settings: { ...data.settings, maxRepetitionsSubjectPerDay: value }
+                            })}
+                        />
                     </div>
                 </div>
             </CardContent>

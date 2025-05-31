@@ -26,18 +26,14 @@ async function apiFetchData(cookies, setData, setIsLoading) {
     var settings = {
         preferEarlyPeriods: true,
         preferDoubleLessons: true,
-        numPeriodsPerDay: 8,
-        maxConsecutivePeriods: 6,
+        numPeriods: 8,
         maxRepetitionsSubjectPerDay: 2,
-        breakWindow: {
-            start: 4,
-            end: 6,
-        },
+        breakAtPeriod: 6,
     };
 
     var timetable = {
         durationToGenerateSeconds: 10,
-        numOfPeriods: settings.numPeriodsPerDay,
+        numPeriods: settings.numPeriods,
         exists: false,
         classes: [],
         teachers: [],
@@ -102,15 +98,13 @@ async function apiFetchData(cookies, setData, setIsLoading) {
                 // Settings
                 settings.preferEarlyPeriods = Boolean(jsonSettings["prefer_early_hours"]);
                 settings.preferDoubleLessons = Boolean(jsonSettings["allow_block_scheduling"]);
-                settings.maxConsecutivePeriods = jsonSettings["max_consecutive_hours"];
                 settings.maxRepetitionsSubjectPerDay = jsonSettings["max_hours_per_day"];
-                settings.breakWindow.start = jsonSettings["break_window_start"];
-                settings.breakWindow.end = jsonSettings["break_window_end"];
-                settings.numPeriodsPerDay = jsonSchool["hours_per_day"];
+                settings.breakAtPeriod = jsonSettings["global_break"];
+                settings.numPeriods = jsonSchool["hours_per_day"];
                 timetable.durationToGenerateSeconds = jsonSettings["max_time_for_solving"];
 
                 // Timetable
-                timetable.numOfPeriods = jsonSchool["hours_per_day"];
+                timetable.numPeriods = jsonSchool["hours_per_day"];
 
                 // Subjects
                 const subjectsArray = JSON.parse(jsonSchool["subjects"].replace(/'/g, '"'));
