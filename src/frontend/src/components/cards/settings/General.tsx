@@ -22,7 +22,7 @@ function SettingsGeneral({ data, setData }) {
             ...data,
             settings: {
                 ...data.settings,
-                breakAtPeriod: data.settings.numPeriods < data.settings.breakAtPeriod ? data.settings.numPeriods : data.settings.breakAtPeriod,
+                breakAtPeriod: data.settings.numPeriods-1 < data.settings.breakAtPeriod ? data.settings.numPeriods-1 : data.settings.breakAtPeriod,
                 maxRepetitionsSubjectPerDay: data.settings.numPeriods < data.settings.maxRepetitionsSubjectPerDay ? data.settings.numPeriods : data.settings.maxRepetitionsSubjectPerDay,
             }
         })
@@ -90,8 +90,8 @@ function SettingsGeneral({ data, setData }) {
                         <Label>Period designated for a break</Label>
                         <Slider
                             className="lg:min-h-[36px]"
-                            min={1}
-                            max={data.settings.numPeriods}
+                            min={2}
+                            max={data.settings.numPeriods-1}
                             step={1}
                             value={[data.settings.breakAtPeriod]}
                             onValueChange={([value]) => setData({
