@@ -57,8 +57,8 @@ def start_computing():
             ALLOW_BLOCK_SCHEDULING = settings[1]
 
             # Set scheduling parameters
-            MAX_HOURS_PER_DAY = settings[2] - 1
-            GLOBAL_BREAK = settings[3]
+            MAX_HOURS_PER_DAY = settings[2]
+            GLOBAL_BREAK = settings[3] -1 # Adjust for zero-based indexing (e.g. 8 hours per day means indices 0-7)
 
 
             # Set weights for the soft restrictions
@@ -92,7 +92,7 @@ def start_computing():
             # Apply settings
             classes = ast.literal_eval(school_data[0])    # List of classes e.g. ['C1', 'C2', 'C3'] >> converted from string to list
             subjects = ast.literal_eval(school_data[1])   # List of subjects e.g. ['Math', 'English', 'History']    
-            hours_per_day = school_data[2]  # Number of hours per day e.g. 8
+            hours_per_day = school_data[2] - 1  # Number of hours per day e.g. 8
             days = ['Mo', 'Tu', 'We', 'Th', 'Fr']  # List of days
 
             school_id = Uid  # Each user manages exactly one school dataset, so Uid == school_id
