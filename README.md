@@ -35,6 +35,7 @@
 - User-friendly frontend
 - WCAG accessibility has been considered
 - Page supports keyboard navigation (Tip: Press <kbd>Shift</kbd> + <kbd>Esc</kbd> to jump to top)
+- Export generated timetable as PDF
 
 
 ## Getting Started
@@ -269,7 +270,7 @@
     <details>
     <summary><strong>Example</strong></summary>
 
-    ```
+    ```json
         {
             "classes": [
                 {
@@ -388,7 +389,7 @@
 - **Start Computation:**  
     `GET /start_computing`  
     Returns a job ID.
-    ```
+    ```json
     {
         "job_id": "24de5582-1b57-42dc-b5a3-bd2c4366806b",
         "status": "started"
