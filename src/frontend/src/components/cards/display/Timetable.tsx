@@ -68,17 +68,17 @@ function getHTMLTimetable(data, selectedViewClassTeacher, selectedClassTeacher, 
 
     return (
         <div className="overflow-scroll rounded-xl">
-            <table className="w-full border-hidden">
+            <table className="w-full border-hidden" aria-label="Timetable">
                 {/* Head: Days of the week */}
-                <thead>
-                    <tr className="bg-gray-50">
-                        <th className="p-3 pt-4 border align-center">
+                <thead aria-label="Columns">
+                    <tr className="bg-gray-50" aria-label="Column Names">
+                        <th className="p-3 pt-4 border align-center" aria-label="Show colors" >
                             {!isExport && (
-                                <Switch checked={useColors} onCheckedChange={setUseColors} />
+                                <Switch checked={useColors} onCheckedChange={setUseColors} tabIndex={10} />
                             )}
                         </th>
                         {daysOfWeek.map((day) => (
-                            <th key={day} className="p-3 border text-sm w-[19%]">
+                            <th key={day} className="p-3 border text-sm w-[19%]" aria-label={day} >
                                 {day}
                             </th>
                         ))}
@@ -88,9 +88,9 @@ function getHTMLTimetable(data, selectedViewClassTeacher, selectedClassTeacher, 
                     {
                         // For every row (period)
                         rangePeriods.map((period) => (
-                            <tr key={period}>
+                            <tr key={period} aria-label={`Period: ${period}`}>
                                 {/* First column */}
-                                <td className="p-2 border text-sm font-bold text-center bg-gray-50">
+                                <td className="p-2 border text-sm font-bold text-center bg-gray-50" aria-hidden={true}>
                                     {period}
                                 </td>
                                 {
@@ -100,16 +100,20 @@ function getHTMLTimetable(data, selectedViewClassTeacher, selectedClassTeacher, 
 
                                         return (
                                             // Display lesson for day and period if it exists
-                                            <td key={index} className="p-1 border">
+                                            <td
+                                                key={index}
+                                                className="p-1 border"
+                                                aria-label={day}
+                                            >
                                                 {lesson ? (
                                                     <div className={`min-h-20 p-2 rounded text-center ${useColors && bgColors[allLessonSubjects.indexOf(lesson.subject) % bgColors.length]}`}>
-                                                        <div className="text-sm font-medium">
+                                                        <div className="text-sm font-medium" aria-label={`Subject: ${lesson.subject}`} >
                                                             {lesson.subject}
                                                         </div>
-                                                        <div className="text-xs mt-1">
+                                                        <div className="text-xs mt-1" aria-label={`Teacher: ${lesson.teacher}`} >
                                                             {lesson.teacher}
                                                         </div>
-                                                        <div className="text-xs mt-1">
+                                                        <div className="text-xs mt-1" aria-label={`Class: ${lesson.class}`} >
                                                             {lesson.class}
                                                         </div>
                                                     </div>
@@ -275,7 +279,7 @@ function DisplayTimetable({ data }) {
                             }}
                             disabled={!data.timetable.exists}
                         >
-                            <SelectTrigger className="w-[50%] sm:w-[180px]">
+                            <SelectTrigger className="w-[50%] sm:w-[180px]" aria-label="Select classes or teachers" tabIndex={10}>
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -289,7 +293,7 @@ function DisplayTimetable({ data }) {
                             onValueChange={setSelectedClassTeacher}
                             disabled={!data.timetable.exists}
                         >
-                            <SelectTrigger className="w-[50%] sm:w-[180px]">
+                            <SelectTrigger className="w-[50%] sm:w-[180px]" aria-label={`Select ${selectedViewClassTeacher}`} tabIndex={10}>
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -304,9 +308,9 @@ function DisplayTimetable({ data }) {
                         </Select>
                     </div>
                     {/* Export button */}
-                    <Button onClick={handleExport} disabled={!data.timetable.exists || isExporting} >
-                        <DownloadIcon className="mr-0 sm:mr-2 h-4 w-4" />
-                        <p className="hidden sm:block">{isExporting ? "Exporting..." : "Export"}</p>
+                    <Button onClick={handleExport} disabled={!data.timetable.exists || isExporting} aria-label="Export" tabIndex={10}>
+                        <DownloadIcon className="mr-0 sm:mr-2 h-4 w-4"aria-hidden={true} />
+                        <p className="hidden sm:block" aria-hidden={true}>{isExporting ? "Exporting..." : "Export"}</p>
                     </Button>
                 </div>
             </CardHeader>

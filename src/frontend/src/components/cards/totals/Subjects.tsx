@@ -19,7 +19,7 @@ function TotalSubjects({ data }) {
                 </CardHeader>
                 <CardContent>
                     <div className="flex items-center gap-2">
-                        <LibraryBigIcon className="h-5 w-5 text-muted-foreground" />
+                        <LibraryBigIcon className="h-5 w-5 text-muted-foreground" aria-hidden={true} />
                         <span className="text-2xl font-bold">
                             {data.subjects.length}
                         </span>

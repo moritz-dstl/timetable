@@ -49,4 +49,11 @@
   img {
     @apply inline-block;
   }
+
+  /* WCAG accessible focus style */
+  :focus-visible {
+    outline: 2px solid black;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 }

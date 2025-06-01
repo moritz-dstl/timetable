@@ -1,72 +1,173 @@
-
 // Icons
 import { BoxesIcon } from "lucide-react";
 
 function Footer() {
-    // Links except GitHub not implemented (TODO)
+    // Links except for GitHub are not implemented (TODO)
     return (
-        <footer className="border-t p-8 bg-gray-50">
+        <footer
+            id="footer"
+            role="banner"
+            className="border-t p-8 bg-gray-50"
+            aria-label="Footer"
+            tabIndex={99}
+            onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    document.querySelector<HTMLElement>("#product-features-link")?.focus();
+                }
+                else if (event.key === "Escape") {
+                    event.preventDefault();
+                    document.querySelector<HTMLElement>("#footer")?.focus();
+                }
+                else if (event.key === "Tab" && document.activeElement?.id === "footer") {
+                    event.preventDefault();
+                    document.querySelector<HTMLElement>("#header-icon")?.focus();
+                }
+            }}
+        >
             <div>
                 <div className="grid grid-rows md:grid-cols-2 gap-8">
                     <div>
                         <div className="flex items-center mb-4 gap-2">
-                            <BoxesIcon className="h-6 w-6 text-primary" />
-                            <span className="text-xl font-bold">Fottg</span>
+                            <BoxesIcon className="h-6 w-6 text-primary" aria-hidden={true} />
+                            <span id="footer-heading" className="text-xl font-bold">
+                                Fottg
+                            </span>
                         </div>
-                        <p className="text-muted-foreground max-w-xs">
+                        <p
+                            id="footer-description"
+                            className="text-muted-foreground max-w-xs"
+                            aria-labelledby="footer-description"
+                        >
                             A comprehensive solution for educational institutions to create optimal timetables with ease.
                         </p>
                     </div>
                     <div className="grid grid-cols-3 gap-8">
-                        <div>
-                            <h3 className="font-semibold mb-4">Product</h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">Features</a>
+                        <nav aria-labelledby="footer-product-heading">
+                            <h3
+                                id="footer-product-heading"
+                                className="font-semibold mb-4"
+                            >
+                                Product
+                            </h3>
+                            <ul className="space-y-2" aria-labelledby="footer-product-heading">
+                                <li aria-labelledby="product-features-link">
+                                    <a
+                                        id="product-features-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                    >
+                                        Features
+                                    </a>
                                 </li>
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">FAQ</a>
+                                <li aria-labelledby="product-faq-link">
+                                    <a
+                                        id="product-faq-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                    >
+                                        FAQ
+                                    </a>
                                 </li>
                             </ul>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold mb-4">Resources</h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">Documentation</a>
-                                </li>
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">Tutorials</a>
-                                </li>
-                                <li>
+                        </nav>
+                        <nav aria-labelledby="footer-resources-heading">
+                            <h3
+                                id="footer-resources-heading"
+                                className="font-semibold mb-4"
+                            >
+                                Resources
+                            </h3>
+                            <ul className="space-y-2" aria-labelledby="footer-resources-heading">
+                                <li aria-labelledby="resources-documentation-link">
                                     <a
+                                        id="resources-documentation-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                    >
+                                        Documentation
+                                    </a>
+                                </li>
+                                <li aria-labelledby="resources-tutorials-link">
+                                    <a
+                                        id="resources-tutorials-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                    >
+                                        Tutorials
+                                    </a>
+                                </li>
+                                <li aria-labelledby="resources-github-link">
+                                    <a
+                                        id="resources-github-link"
                                         href="https://github.com/moritz-dstl/timetable/"
                                         target="_blank"
                                         className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
                                     >
                                         GitHub Repository
                                     </a>
                                 </li>
                             </ul>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold mb-4">Legal</h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">Imprint</a>
+                        </nav>
+                        <nav aria-labelledby="footer-legal-heading">
+                            <h3
+                                id="footer-legal-heading"
+                                className="font-semibold mb-4"
+                            >
+                                Legal
+                            </h3>
+                            <ul className="space-y-2" aria-labelledby="footer-legal-heading">
+                                <li aria-labelledby="legal-imprint-link">
+                                    <a
+                                        id="legal-imprint-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                    >
+                                        Imprint
+                                    </a>
                                 </li>
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">Privacy Policy</a>
+                                <li aria-labelledby="legal-privacy-link">
+                                    <a
+                                        id="legal-privacy-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                    >
+                                        Privacy Policy
+                                    </a>
                                 </li>
-                                <li>
-                                    <a href="#" className="text-muted-foreground hover:text-primary">Terms of Service</a>
+                                <li aria-labelledby="legal-terms-link">
+                                    <a
+                                        id="legal-terms-link"
+                                        href="#"
+                                        className="text-muted-foreground hover:text-primary"
+                                        tabIndex={99}
+                                        onKeyDown={(event) => {
+                                            if (event.key === "Tab") {
+                                                event.preventDefault();
+                                                document.querySelector<HTMLElement>("#product-features-link")?.focus();
+                                            }
+                                        }}
+                                    >
+                                        Terms of Service
+                                    </a>
                                 </li>
                             </ul>
-                        </div>
+                        </nav>
                     </div>
                 </div>
-                <div className="border-t border-border mt-8 pt-8 pb-0 text-center text-muted-foreground">
-                    Copyright &copy; {new Date().getFullYear()} Fottg. All rights reserved.
+                <div
+                    className="border-t border-border mt-8 pt-8 pb-0 text-center text-muted-foreground"
+                    id="footer-copyright"
+                    aria-label="Copyright"
+                >
+                    Copyright &copy; {new Date().getFullYear()} Fottg. Made with love.
                 </div>
             </div>
         </footer>

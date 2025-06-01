@@ -182,7 +182,15 @@ function Home() {
     }
 
     const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState({});
+    const [data, setData] = useState<{
+        user?: any;
+        timetable?: any;
+        newChangesMade?: boolean;
+        settings?: any;
+        classes?: any[];
+        teachers?: any[];
+        subjects?: any[];
+    }>({});
 
     // Load data once on page load
     useEffect(() => {
@@ -195,35 +203,100 @@ function Home() {
         apiFetchData(cookies, setData, setIsLoading);
     }, []);
 
-    return (
-        <div className="min-h-[calc(100vh-347px)] pb-8 flex bg-gray-50 flex-nowrap">
 
+    return (
+        <main aria-label="Main Content" className="min-h-[calc(100vh-347px)] pb-8 flex bg-gray-50 flex-nowrap">
             <Tabs defaultValue="overview" className="w-full p-4">
-                <div className="flex justify-between">
-                    <div></div>
-                    <TabsList className="m-4">
-                        <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="settings">Settings</TabsTrigger>
-                        <TabsTrigger value="timetable">Timetable</TabsTrigger>
+                <div className="flex justify-center">
+                    <TabsList
+                        aria-label="Tabs"
+                        className="m-4"
+                    >
+                        {/* Overview */}
+                        <TabsTrigger
+                            id="tab-overview"
+                            value="overview"
+                            tabIndex={0}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    document.querySelector<HTMLElement>("#display-classes-search-bar")?.focus();
+                                }
+                            }}
+                        >
+                            Overview
+                        </TabsTrigger>
+
+                        {/* Settings */}
+                        <TabsTrigger
+                            id="tab-settings"
+                            value="settings"
+                            tabIndex={0}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    if (!isLoading) {
+                                        document.querySelector<HTMLElement>(data.newChangesMade ? "#settings-button-discard" : "#content-settings-general")?.focus();
+                                    }
+                                }
+                            }}
+                        >
+                            Settings
+                        </TabsTrigger>
+
+                        {/* Timetable */}
+                        <TabsTrigger
+                            id="tab-timetable"
+                            value="timetable"
+                            tabIndex={0}
+                            onKeyDown={(event) => {
+                                if (event.key === "Tab") {
+                                    event.preventDefault();
+                                    document.querySelector<HTMLElement>("#tab-overview")?.focus();
+                                }
+                                else if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    document.querySelector<HTMLElement>("#timetable-generate-button")?.focus();
+                                }
+                            }}
+                        >
+                            Timetable
+                        </TabsTrigger>
                     </TabsList>
-                    <div></div>
                 </div>
 
-                <TabsContent value="overview" className="space-y-6">
+                {/* Overview */}
+                <TabsContent
+                    id="content-overview"
+                    value="overview"
+                    className="space-y-6"
+                    aria-label="Overview"
+                >
                     <Overview isLoading={isLoading} data={data} />
                 </TabsContent>
 
-                <TabsContent value="settings" className="space-y-6">
+                {/* Settings */}
+                <TabsContent
+                    id="content-settings"
+                    value="settings"
+                    className="space-y-6"
+                    aria-label="Settings"
+                >
                     <Settings isLoading={isLoading} data={data} setData={setData} />
                 </TabsContent>
 
-                <TabsContent value="timetable" className="space-y-6">
+                {/* Timetable */}
+                <TabsContent
+                    id="content-timetable"
+                    value="timetable"
+                    className="space-y-6"
+                    aria-label="Timetable"
+                >
                     <Timetable isLoading={isLoading} data={data} setData={setData} />
                 </TabsContent>
 
             </Tabs>
-
-        </div>
+        </main>
     );
 }
 

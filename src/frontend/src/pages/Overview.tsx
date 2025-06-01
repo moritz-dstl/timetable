@@ -14,27 +14,38 @@ import DisplaySubjects from "../components/cards/display/Subjects"
 function Overview({ isLoading, data }) {
     if (isLoading) {
         return (
-            <div className="min-h-[calc(100vh-490px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center">
+            <section
+                className="min-h-[calc(100vh-490px)] flex bg-gray-50 p-4 flex-nowrap justify-center items-center"
+                aria-busy="true"
+                aria-live="polite"
+                role="status"
+            >
                 <div className="text-center">
-                    <Loader />
+                    <Loader aria-label="Loading content" />
                 </div>
-            </div>
+            </section>
         );
     }
 
     return (
         <>
-            <DisplayUser data={data} />
-            <div className="grid grid-cols-3 gap-3">
-                <TotalClasses data={data} />
-                <TotalTeachers data={data} />
-                <TotalSubjects data={data} />
-            </div>
-            <div className="grid grid-rows xl:grid-cols-3 gap-3">
-                <DisplayClasses data={data} />
-                <DisplayTeachers data={data} />
-                <DisplaySubjects data={data} />
-            </div>
+            <section aria-label="User Details">
+                <DisplayUser data={data} />
+            </section>
+            <section aria-label="Totals" className="mt-4">
+                <div className="grid grid-cols-3 gap-3">
+                    <TotalClasses data={data} />
+                    <TotalTeachers data={data} />
+                    <TotalSubjects data={data} />
+                </div>
+            </section>
+            <section aria-label="Summaries" className="mt-4">
+                <div className="grid grid-rows xl:grid-cols-3 gap-3">
+                    <DisplayClasses data={data} />
+                    <DisplayTeachers data={data} />
+                    <DisplaySubjects data={data} />
+                </div>
+            </section>
         </>
     );
 }

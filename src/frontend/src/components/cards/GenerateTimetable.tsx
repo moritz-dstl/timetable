@@ -168,12 +168,12 @@ async function pollTimetableGenerationStatus(flag, timetable, setters) {
     }
 
     // Set remaining time HH:MM:SS
-    const elementTime = document.querySelector("#timeRemaining");
+    const elementTime = document.querySelector("#generate-time-remaining");
     if (elementTime) elementTime.innerHTML = new Date(timeRemainingSeconds * 1000).toISOString().slice(11, 19);
 
     // Animate width
     if (flag === FUNC_GENERATING_FLAG.START_PROGRESS_BAR) {
-        const elementBar = document.querySelector("#progressBar");
+        const elementBar = document.querySelector("#progress-bar");
         if (elementBar) elementBar.animate(
             { width: ["0%", "100%"] },
             { duration: (timeRemainingSeconds + 1) * 1000, easing: 'linear' }
@@ -248,44 +248,50 @@ function GenerateTimetable({ data, setData }) {
         <>
             {/* Show alert if error */}
             {error && (
-                <Alert variant="destructive" className="flex items-center justify-center p-1">
-                    <div className="flex items-center">
-                        <TriangleAlertIcon className="h-4 w-4 mr-3" />
+                <Alert aria-label={error} variant="destructive" className="flex items-center justify-center p-1">
+                    <div className="flex items-center" aria-hidden={true}>
+                        <TriangleAlertIcon className="h-4 w-4 mr-3" aria-hidden={true} />
                         <AlertDescription>{error}</AlertDescription>
                     </div>
                 </Alert>
             )}
             {/* Message when unsaved changes */}
             {
-                data.newChangesMade && <p className="text-center text-gray-500">Please save or discard the changes made in settings in order to generate a timetable.</p>
+                data.newChangesMade && <p id="content-timetable-msg-unsaved-changes" aria-labelledby="content-timetable-msg-unsaved-changes" className="text-center text-gray-500">Please save or discard the changes made in settings in order to generate a timetable.</p>
             }
             {/* Button */}
             <Button
+                id="timetable-generate-button"
                 className="w-full"
                 onClick={handleStartGenerate}
                 disabled={isGenerating || data.newChangesMade}
+                tabIndex={10}
+                aria-label="Generate Timetable"
             >
-                <RefreshCwIcon className={`mr-2 h-4 w-4 ${isGenerating && "animate-spin"}`} />
+                <RefreshCwIcon className={`mr-2 h-4 w-4 ${isGenerating && "animate-spin"}`} aria-hidden={true} />
                 {isGenerating ? "Generating..." : "Generate Timetable"}
             </Button >
 
             {/* Generating dialog */}
-            <Dialog open={isGenerating}>
+            <Dialog open={isGenerating} aria-modal={true}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="flex flex-row items-center">
-                            <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" />
+                        <DialogTitle
+                            id="generating-dialog-title"
+                            className="flex flex-row items-center"
+                        >
+                            <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" aria-hidden={true} />
                             Generating...
                         </DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription id="generating-dialog-description" aria-labelledby="generating-dialog-description">
                             Please do not reload this page!
                         </DialogDescription>
                     </DialogHeader>
                     {/* Progress bar */}
-                    <div className="w-full text-center">
-                        <p id="timeRemaining">__:__:__</p>
-                        <div className="h-2 w-full mt-2 bg-orange-200 rounded-full">
-                            <div id="progressBar" className="h-2 w-0 bg-primary rounded-full"></div>
+                    <div className="w-full text-center" aria-label="Time remaining">
+                        <p id="generate-time-remaining" aria-labelledby="generate-time-remaining" aria-live="polite" aria-atomic={true}>__:__:__</p>
+                        <div className="h-2 w-full mt-2 bg-orange-200 rounded-full" aria-hidden={true}>
+                            <div id="progress-bar" className="h-2 w-0 bg-primary rounded-full"></div>
                         </div>
                     </div>
                 </DialogContent>

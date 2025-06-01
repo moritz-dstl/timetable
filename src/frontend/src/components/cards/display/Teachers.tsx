@@ -28,39 +28,42 @@ function DisplayTeachers({ data }) {
     const filteredTeachers = data.teachers.filter((teacherItem) => teacherItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-        <Card>
+        <Card aria-labelledby="display-teachers-card-title">
             <CardHeader className="flex flex-col sm:flex-row xl:flex-col items-center justify-between">
                 <div className="text-center pb-4 xl:pb-4 sm:text-left sm:pb-0">
-                    <CardTitle>Teachers</CardTitle>
+                    <CardTitle id="display-teachers-card-title">Teachers</CardTitle>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
                     {/* Search bar */}
                     <div className="relative">
-                        <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden={true} />
                         <Input
+                            id="display-teachers-search-bar"
                             type="search"
                             placeholder="Search"
                             className="pl-8 w-[250px]"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            aria-label="Search teacher"
+                            tabIndex={10}
                         />
                     </div>
                 </div>
             </CardHeader>
 
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
+                <Table aria-labelledby="display-teachers-card-title">
+                    <TableHeader aria-label="Columns">
+                        <TableRow aria-label="Column Names">
                             <TableHead>Name</TableHead>
                             <TableHead>Subjects</TableHead>
                         </TableRow>
                     </TableHeader>
 
-                    <TableBody>
+                    <TableBody aria-label="Rows">
                         {
                             filteredTeachers.map((teacherItem) => (
-                                <TableRow key={teacherItem.id}>
+                                <TableRow key={teacherItem.id} aria-label={`Teacher: ${teacherItem.name}`}>
 
                                     {/* Teacher name */}
                                     <TableCell className="font-medium">
@@ -71,7 +74,10 @@ function DisplayTeachers({ data }) {
                                     <TableCell>
                                         <div className="flex flex-wrap gap-1">
                                             {teacherItem.subjects.map((subject, index) => (
-                                                <Badge key={index} variant="outline">
+                                                <Badge key={index} variant="outline" aria-label={
+                                                    `${subject}` +
+                                                    (index < teacherItem.subjects.length - 1 ? ", " : "")
+                                                }>
                                                     {subject}
                                                 </Badge>
                                             ))}

@@ -19,7 +19,7 @@ function TotalTeachers({ data }) {
             </CardHeader>
             <CardContent>
                 <div className="flex items-center gap-2">
-                    <UsersIcon className="h-5 w-5 text-muted-foreground" />
+                    <UsersIcon className="h-5 w-5 text-muted-foreground" aria-hidden={true} />
                     <span className="text-2xl font-bold">
                         {data.teachers.length}
                     </span>

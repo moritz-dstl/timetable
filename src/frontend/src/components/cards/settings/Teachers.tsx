@@ -87,6 +87,9 @@ function SettingsTeachers({ data, setData }) {
         });
 
         setIsAddDialogOpen(false);
+        setTimeout(() => {
+            document.querySelector<HTMLElement>("#content-settings-teachers")?.focus();
+        }, 100);
     }
 
     // Handle edit teacher
@@ -117,6 +120,9 @@ function SettingsTeachers({ data, setData }) {
         });
 
         setIsEditDialogOpen(false);
+        setTimeout(() => {
+            document.querySelector<HTMLElement>("#content-settings-teachers")?.focus();
+        }, 100);
     }
 
     // Handle delete teacher
@@ -133,34 +139,42 @@ function SettingsTeachers({ data, setData }) {
             teachers: updatedTeachers
         });
         setIsDeleteDialogOpen(false);
+        setTimeout(() => {
+            document.querySelector<HTMLElement>("#content-settings-teachers")?.focus();
+        }, 100);
     }
 
     // The content of the dialog for add and edit is the same
-    const add_edit_dialog_content = (
+    const addEditDialogContent = (
         <div className="flex flex-col gap-4">
 
             <div className="grid grid-cols-6 gap-4 mt-1">
                 {/* Input: Name */}
                 <div className="col-span-4">
-                    <Label>Name</Label>
+                    <Label aria-hidden={true}>Name</Label>
                     <Input
+                        id="teacher-name-input"
+                        aria-label="Teacher name input"
                         className="mt-2"
                         value={selectedTeacher.name}
                         onChange={(e) => setSelectedTeacher({ ...selectedTeacher, name: e.target.value.trimStart() })}
+                        tabIndex={29}
                     />
                 </div>
                 {/* Input: Hours per week */}
                 <div className="col-span-2">
-                    <Label>Max. hours/week</Label>
+                    <Label aria-hidden={true}>Max. hours/week</Label>
                     <Input
                         type="number"
                         min={1}
                         className="w-full mt-2"
+                        aria-label="Maximum hours per week"
                         value={selectedTeacher.maxHoursPerWeek}
                         onChange={(e) => setSelectedTeacher({
                             ...selectedTeacher,
                             maxHoursPerWeek: isNaN(parseInt(e.target.value)) ? 1 : parseInt(e.target.value)
                         })}
+                        tabIndex={29}
                     />
                 </div>
             </div>
@@ -184,7 +198,7 @@ function SettingsTeachers({ data, setData }) {
                                         });
                                     }}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger aria-label={`Select subject: ${subject}`} tabIndex={29}>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -202,6 +216,7 @@ function SettingsTeachers({ data, setData }) {
                                 <Button
                                     variant="ghost"
                                     size="icon"
+                                    aria-label={`Remove subject: ${subject}`}
                                     onClick={() => {
                                         const updatedSubjects = selectedTeacher.subjects.filter((element, idx) => idx !== index);
                                         setSelectedTeacher({
@@ -209,8 +224,9 @@ function SettingsTeachers({ data, setData }) {
                                             subjects: updatedSubjects,
                                         });
                                     }}
+                                    tabIndex={29}
                                 >
-                                    <Trash2Icon className="h-4 w-4" />
+                                    <Trash2Icon className="h-4 w-4" aria-hidden={true} />
                                 </Button>
                             </div>
                         ),
@@ -221,6 +237,7 @@ function SettingsTeachers({ data, setData }) {
                     variant="outline"
                     size="sm"
                     className="min-h-8"
+                    aria-label="Add subject"
                     onClick={() => {
                         const allUnusedSubject = data.subjects.filter(({ name }) => !selectedTeacher.subjects.some((subjectName) => subjectName === name));
                         const updatedSubjects = [
@@ -232,8 +249,9 @@ function SettingsTeachers({ data, setData }) {
                             subjects: updatedSubjects,
                         });
                     }}
+                    tabIndex={29}
                 >
-                    <PlusCircleIcon className="mr-2 h-4 w-4" />
+                    <PlusCircleIcon className="mr-2 h-4 w-4" aria-hidden={true} />
                     Add Subject
                 </Button>
             </div>
@@ -245,8 +263,8 @@ function SettingsTeachers({ data, setData }) {
             <Card>
                 <CardHeader className="flex flex-col sm:flex-row items-center justify-between">
                     <div className="text-center pb-4 sm:text-left sm:pb-0">
-                        <CardTitle>Teachers</CardTitle>
-                        <CardDescription>
+                        <CardTitle id="teachers-settings-title">Teachers</CardTitle>
+                        <CardDescription id="teachers-settings-description" aria-labelledby="teachers-settings-description">
                             Manage all teachers and their subjects
                         </CardDescription>
                     </div>
@@ -254,19 +272,22 @@ function SettingsTeachers({ data, setData }) {
 
                         {/* Search bar */}
                         <div className="relative">
-                            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden={true} />
                             <Input
+                                id="teachers-settings-search"
                                 type="search"
                                 placeholder="Search"
                                 className="pl-8 w-[250px]"
+                                aria-label="Search teacher"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                tabIndex={29}
                             />
                         </div>
 
                         {/* Add button */}
-                        <Button onClick={handleOpenAddDialog}>
-                            <PlusCircleIcon className="mr-2 h-4 w-4" />
+                        <Button onClick={handleOpenAddDialog} aria-label="Add teacher" tabIndex={29}>
+                            <PlusCircleIcon className="mr-2 h-4 w-4" aria-hidden={true} />
                             Add
                         </Button>
 
@@ -274,20 +295,20 @@ function SettingsTeachers({ data, setData }) {
                 </CardHeader>
 
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
+                    <Table aria-label="Teachers table">
+                        <TableHeader aria-label="Columns">
+                            <TableRow aria-label="Column Names">
                                 <TableHead>Name</TableHead>
                                 <TableHead>Subjects</TableHead>
                                 <TableHead>Max. Hours per Week</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead className="text-right" aria-label="Action Buttons">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
 
                         <TableBody>
                             {
                                 filteredTeachers.map((teacherItem) => (
-                                    <TableRow key={teacherItem.id}>
+                                    <TableRow key={teacherItem.id} aria-label={`Teacher: ${teacherItem.name}`}>
 
                                         {/* Teacher name */}
                                         <TableCell className="font-medium">
@@ -298,7 +319,11 @@ function SettingsTeachers({ data, setData }) {
                                         <TableCell>
                                             <div className="flex flex-wrap gap-1">
                                                 {teacherItem.subjects.map((subject, index) => (
-                                                    <Badge key={index} variant="outline">
+                                                    <Badge
+                                                        key={index}
+                                                        variant="outline"
+                                                        aria-label={`${subject}` + (index < teacherItem.subjects.length - 1 ? ", " : "")}
+                                                    >
                                                         {subject}
                                                     </Badge>
                                                 ))}
@@ -311,23 +336,27 @@ function SettingsTeachers({ data, setData }) {
                                         </TableCell>
 
                                         {/* Action buttons */}
-                                        <TableCell className="text-right">
+                                        <TableCell className="text-right" aria-label="Action Buttons">
                                             <div className="flex justify-end gap-2">
                                                 {/* Edit button */}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
+                                                    aria-label={`Edit teacher: ${teacherItem.name}`}
                                                     onClick={() => handleOpenEditDialog(teacherItem)}
+                                                    tabIndex={29}
                                                 >
-                                                    <EditIcon className="h-4 w-4" />
+                                                    <EditIcon className="h-4 w-4" aria-hidden={true}/>
                                                 </Button>
                                                 {/* Delete button */}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
+                                                    aria-label={`Delete teacher: ${teacherItem.name}`}
                                                     onClick={() => handleOpenDeleteDialog(teacherItem)}
+                                                    tabIndex={29}
                                                 >
-                                                    <Trash2Icon className="h-4 w-4" />
+                                                    <Trash2Icon className="h-4 w-4" aria-hidden={true}/>
                                                 </Button>
                                             </div>
                                         </TableCell>
@@ -342,20 +371,27 @@ function SettingsTeachers({ data, setData }) {
             </Card>
 
             {/* Add dialog */}
-            <Dialog open={isAddDialogOpen}>
+            <Dialog open={isAddDialogOpen} aria-modal={true}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Add Teacher</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle aria-label="Add Teacher">Add Teacher</DialogTitle>
+                        <DialogDescription id="dialog-add-teacher-description" aria-labelledby="dialog-add-teacher-description">
                             Enter the details for the new teacher
                         </DialogDescription>
                     </DialogHeader>
-                    {selectedTeacher && isAddDialogOpen && add_edit_dialog_content}
+                    {selectedTeacher && isAddDialogOpen && addEditDialogContent}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
                         <Button
                             className="col-span-2"
                             variant="outline"
-                            onClick={() => setIsAddDialogOpen(false)}
+                            onClick={() => {
+                                setIsAddDialogOpen(false);
+                                setTimeout(() => {
+                                    document.querySelector<HTMLElement>("#content-settings-teachers")?.focus();
+                                }, 100);
+                            }}
+                            aria-label="Cancel add teacher"
+                            tabIndex={29}
                         >
                             Cancel
                         </Button>
@@ -363,6 +399,8 @@ function SettingsTeachers({ data, setData }) {
                             className="col-span-2"
                             onClick={handleAddConfirm}
                             disabled={selectedTeacher && isAddDialogOpen && !selectedTeacher.name.trim()}
+                            aria-label="Confirm add teacher"
+                            tabIndex={29}
                         >
                             Confirm
                         </Button>
@@ -371,20 +409,27 @@ function SettingsTeachers({ data, setData }) {
             </Dialog>
 
             {/* Edit dialog */}
-            <Dialog open={isEditDialogOpen}>
+            <Dialog open={isEditDialogOpen} aria-modal={true}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit Teacher</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle aria-label="Edit Teacher">Edit Teacher</DialogTitle>
+                        <DialogDescription id="dialog-edit-teacher-description" aria-labelledby="dialog-edit-teacher-description">
                             Edit the details of the teacher
                         </DialogDescription>
                     </DialogHeader>
-                    {selectedTeacher && isEditDialogOpen && add_edit_dialog_content}
+                    {selectedTeacher && isEditDialogOpen && addEditDialogContent}
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
                         <Button
                             className="col-span-2"
                             variant="outline"
-                            onClick={() => setIsEditDialogOpen(false)}
+                            onClick={() => {
+                                setIsEditDialogOpen(false);
+                                setTimeout(() => {
+                                    document.querySelector<HTMLElement>("#content-settings-teachers")?.focus();
+                                }, 100);
+                            }}
+                            aria-label="Cancel edit teacher"
+                            tabIndex={29}
                         >
                             Cancel
                         </Button>
@@ -392,6 +437,8 @@ function SettingsTeachers({ data, setData }) {
                             className="col-span-2"
                             onClick={handleEditConfirm}
                             disabled={selectedTeacher && isEditDialogOpen && !selectedTeacher.name.trim()}
+                            aria-label="Confirm edit teacher"
+                            tabIndex={29}
                         >
                             Confirm
                         </Button>
@@ -400,17 +447,37 @@ function SettingsTeachers({ data, setData }) {
             </Dialog>
 
             {/* Delete dialog */}
-            <Dialog open={isDeleteDialogOpen}>
+            <Dialog open={isDeleteDialogOpen} aria-modal={true}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete Teacher</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle aria-label="Delete Teacher">Delete Teacher</DialogTitle>
+                        <DialogDescription id="dialog-delete-teacher-description" aria-labelledby="dialog-delete-teacher-description">
                             Are you sure you want to delete the teacher: {selectedTeacher.name}?
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
-                        <Button className="col-span-2" variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-                        <Button className="col-span-2" onClick={handleDelete}>Delete</Button>
+                        <Button
+                            className="col-span-2"
+                            variant="outline"
+                            onClick={() => {
+                                setIsDeleteDialogOpen(false);
+                                setTimeout(() => {
+                                    document.querySelector<HTMLElement>("#content-settings-teachers")?.focus();
+                                }, 100);
+                            }}
+                            aria-label="Cancel delete teacher"
+                            tabIndex={29}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="col-span-2"
+                            onClick={handleDelete}
+                            aria-label="Confirm delete teacher"
+                            tabIndex={29}
+                        >
+                            Delete
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
