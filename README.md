@@ -33,6 +33,8 @@
 - Advanced scheduling options (block scheduling, parallel limits, etc.)
 - Dockerized deployment for easy setup
 - User-friendly frontend
+- WCAG accessibility has been considered
+- Page supports keyboard navigation (Tip: Press <kbd>Shift</kbd> + <kbd>Esc</kbd> to jump to top)
 
 
 ## Getting Started

@@ -25,43 +25,50 @@ function DisplayClasses({ data }) {
     const [searchQuery, setSearchQuery] = useState("");
 
     // Filter classes for search
-    const filteredClasses = data.classes.filter((classItem) => classItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredClasses = data.classes.filter((classItem) =>
+        classItem.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
-        <Card>
+        <Card aria-labelledby="display-classes-card-title">
             <CardHeader className="flex flex-col sm:flex-row xl:flex-col items-center justify-between">
                 <div className="text-center pb-4 xl:pb-4 sm:text-left sm:pb-0">
-                    <CardTitle>Classes</CardTitle>
+                    <CardTitle id="display-classes-card-title">Classes</CardTitle>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
                     {/* Search bar */}
                     <div className="relative">
-                        <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <SearchIcon
+                            className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
+                            aria-hidden={true}
+                        />
                         <Input
+                            id="display-classes-search-bar"
                             type="search"
                             placeholder="Search"
                             className="pl-8 w-[250px]"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            aria-label="Search class"
+                            tabIndex={10}
                         />
                     </div>
                 </div>
             </CardHeader>
 
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
+                <Table aria-labelledby="display-classes-card-title">
+                    <TableHeader aria-label="Columns">
+                        <TableRow aria-label="Column Names">
                             <TableHead>Name</TableHead>
                             <TableHead>Subjects</TableHead>
                         </TableRow>
                     </TableHeader>
 
-                    <TableBody>
+                    <TableBody aria-label="Rows">
                         {
                             filteredClasses.map((classItem) => (
-                                <TableRow key={classItem.id}>
-
+                                <TableRow key={classItem.id} aria-label={`Class: ${classItem.name}`}>
                                     {/* Class name */}
                                     <TableCell className="font-medium">
                                         {classItem.name}
@@ -71,10 +78,19 @@ function DisplayClasses({ data }) {
                                     <TableCell>
                                         <div className="flex flex-wrap gap-1">
                                             {classItem.subjects.map((subject, index) => (
-                                                <Badge key={index} variant="outline">
+                                                <Badge
+                                                    key={index}
+                                                    variant="outline"
+                                                    aria-label={
+                                                        `${subject.name} (${subject.hoursPerWeek} hours per week)` +
+                                                        (index < classItem.subjects.length - 1 ? ", " : "")
+                                                    }
+                                                >
                                                     <span className="flex flex-nowrap gap-1">
-                                                        {subject.name} 
-                                                        <p className="font-normal">{subject.hoursPerWeek}h/week</p>
+                                                        {subject.name}
+                                                        <span className="font-normal" aria-hidden={true}>
+                                                            {subject.hoursPerWeek}h/week
+                                                        </span>
                                                     </span>
                                                 </Badge>
                                             ))}
@@ -84,7 +100,6 @@ function DisplayClasses({ data }) {
                             ))
                         }
                     </TableBody>
-
                 </Table>
             </CardContent>
         </Card>

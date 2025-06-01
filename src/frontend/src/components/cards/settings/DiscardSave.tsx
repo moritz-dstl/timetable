@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Components
 import { Button } from "../../ui/button";
@@ -103,6 +103,9 @@ function SettingsDiscardSave({ data, setData }) {
         const storedData = localStorage.getItem("data");
         if (storedData) setData({ ...JSON.parse(storedData), newChangesMade: false });
         setIsDiscardDialogOpen(false);
+        setTimeout(() => {
+            document.querySelector<HTMLElement>("#tab-settings")?.focus();
+        }, 100);
     }
 
     const handleSave = async () => {
@@ -134,30 +137,51 @@ function SettingsDiscardSave({ data, setData }) {
             setError("An error occurred");
         } finally {
             setIsSaving(false);
+            setTimeout(() => {
+                document.querySelector<HTMLElement>("#tab-settings")?.focus();
+            }, 100);
         }
     }
 
     if (data.newChangesMade) {
         return (
-            <>
+            <div>
                 <div className="flex flex-row gap-4 align-center justify-end">
                     {/* Discard button */}
-                    <Button variant="outline" onClick={() => setIsDiscardDialogOpen(true)}>
-                        <EraserIcon className="mr-2 h-4 w-4" />
+                    <Button
+                        id="settings-button-discard"
+                        variant="outline"
+                        onClick={() => setIsDiscardDialogOpen(true)}
+                        aria-label="Discard"
+                        tabIndex={0}
+                    >
+                        <EraserIcon className="mr-2 h-4 w-4" aria-hidden={true} />
                         Discard
                     </Button>
 
                     {/* Save button */}
-                    <Button onClick={handleSave} disabled={isSaving}>
-                        <SaveIcon className="mr-2 h-4 w-4" />
+                    <Button
+                        id="settings-button-save"
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        aria-label="Save"
+                        tabIndex={0}
+                        onKeyDown={(event) => {
+                            if (event.key === "Tab") {
+                                event.preventDefault();
+                                document.querySelector<HTMLElement>("#content-settings-general")?.focus();
+                            }
+                        }}
+                    >
+                        <SaveIcon className="mr-2 h-4 w-4" aria-hidden={true} />
                         {isSaving ? "Saving..." : "Save"}
                     </Button>
                 </div>
 
                 {/* Show alert if error */}
                 {error && (
-                    <Alert variant="destructive" className="flex items-center justify-center p-1">
-                        <div className="flex items-center">
+                    <Alert aria-label={error} variant="destructive" className="flex items-center justify-center p-1">
+                        <div className="flex items-center" aria-hidden={true}>
                             <TriangleAlertIcon className="h-4 w-4 mr-3" />
                             <AlertDescription>{error}</AlertDescription>
                         </div>
@@ -165,21 +189,41 @@ function SettingsDiscardSave({ data, setData }) {
                 )}
 
                 {/* Delete dialog */}
-                <Dialog open={isDiscardDialogOpen}>
-                    <DialogContent>
+                <Dialog open={isDiscardDialogOpen} aria-modal={true}>
+                    <DialogContent aria-describedby="Discard Dialog">
                         <DialogHeader>
-                            <DialogTitle>Discard</DialogTitle>
-                            <DialogDescription>
+                            <DialogTitle aria-label="Discard">Discard</DialogTitle>
+                            <DialogDescription id="dialog-discard-description" aria-labelledby="dialog-discard-description">
                                 Are you sure you want to discard all changes?
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter className="grid grid-cols-4 gap-2 mt-1">
-                            <Button className="col-span-2" variant="outline" onClick={() => setIsDiscardDialogOpen(false)}>Cancel</Button>
-                            <Button className="col-span-2" onClick={handleDiscard}>Discard</Button>
+                            <Button
+                                className="col-span-2"
+                                variant="outline"
+                                onClick={() => {
+                                    setIsDiscardDialogOpen(false);
+                                    setTimeout(() => {
+                                        document.querySelector<HTMLElement>("#tab-settings")?.focus();
+                                    }, 100);
+                                }}
+                                aria-label="Cancel"
+                                tabIndex={0}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                className="col-span-2"
+                                onClick={handleDiscard}
+                                aria-label="Discard"
+                                tabIndex={0}
+                            >
+                                Discard
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-            </>
+            </div>
         );
     }
 }

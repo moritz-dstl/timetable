@@ -20,21 +20,27 @@ function DisplaySubjects({ data }) {
     const filteredSubjects = data.subjects.filter((subjectItem) => subjectItem.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-        <Card>
+        <Card aria-labelledby="display-subjects-card-title">
             <CardHeader className="flex flex-col sm:flex-row xl:flex-col items-center justify-between">
                 <div className="text-center pb-4 xl:pb-4 sm:text-left sm:pb-0">
-                    <CardTitle>Subjects</CardTitle>
+                    <CardTitle id="display-subjects-card-title">Subjects</CardTitle>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
                     {/* Search bar */}
                     <div className="relative">
-                        <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <SearchIcon
+                            className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
+                            aria-hidden={true}
+                        />
                         <Input
+                            id="display-subjects-search-bar"
                             type="search"
                             placeholder="Search"
                             className="pl-8 w-[250px]"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            aria-label="Search subject"
+                            tabIndex={10}
                         />
                     </div>
                 </div>

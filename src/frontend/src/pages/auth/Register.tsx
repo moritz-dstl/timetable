@@ -52,7 +52,7 @@ function validatePassword(password: string) {
     else if (!/[*.!@\$%^&(){}\[\]:;<>,.?/~_+\-=|\\]/.test(password)) {
         isValid = false;
         errorMessage = "Password must include at least one special character";
-    } 
+    }
 
     return [isValid, errorMessage];
 }
@@ -132,69 +132,80 @@ function Register() {
     };
 
     return (
-        <div className="flex bg-gray-50 p-8 flex-nowrap justify-center items-center">
+        <main aria-label="Register" className="flex bg-gray-50 p-8 flex-nowrap justify-center items-center">
             <div className="w-full max-w-md space-y-4">
 
                 <div className="text-center">
                     <h1 className="text-2xl font-bold">Register</h1>
-                    <p className="mt-2 text-gray-600">Create your account</p>
+                    <p
+                        id="register-form-description"
+                        className="mt-2 text-gray-600"
+                        aria-labelledby="register-form-description"
+                    >
+                        Create your account
+                    </p>
                 </div>
 
-                <Card className="bg-white">
+                <Card className="bg-white" role="form" aria-labelledby="register-form-title">
                     <CardContent>
                         <form onSubmit={handleRegister} className="space-y-4 pt-6">
-
                             {/* Input: School name */}
                             <div className="space-y-2">
-                                <Label>School Name</Label>
+                                <Label aria-label="School Name" htmlFor="school-name">School Name</Label>
                                 <Input
+                                    id="school-name"
                                     type="text"
                                     value={schoolname}
                                     onChange={(e) => setSchoolName(e.target.value)}
                                     required
+                                    aria-required={true}
+                                    aria-label="School name"
+                                    tabIndex={0}
                                 />
                             </div>
 
                             {/* Input: Email */}
                             <div className="space-y-2">
-                                <Label>Email</Label>
+                                <Label aria-label="Email" htmlFor="email">Email</Label>
                                 <Input
+                                    id="email"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
+                                    aria-required={true}
+                                    aria-label="Email address"
+                                    tabIndex={0}
                                 />
                             </div>
 
                             {/* Input: Password, with toggle visibility eye icon */}
                             <div className="space-y-2">
-                                <Label>Password</Label>
+                                <Label aria-label="Password" htmlFor="password">Password</Label>
                                 <div className="relative">
                                     <Input
+                                        id="password"
+                                        name="password"
                                         type={showPassword ? "text" : "password"}
                                         value={password}
-                                        // At least 8 characters in length, but no more than 32.
-                                        // At least one digit [0-9] 
-                                        // At least one lowercase character [a-z] 
-                                        // At least one uppercase character [A-Z] 
-                                        // At least one special character [*.!@#$%^&(){}[]:;<>,.?/~_+-=|\] 
-                                        pattern={"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$"}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
+                                        aria-required={true}
+                                        aria-label="Password"
+                                        tabIndex={0}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                        tabIndex={-1}
-                                        aria-label={
-                                            showPassword ? "Hide password" : "Show password"
-                                        }
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        aria-pressed={showPassword}
+                                        tabIndex={0}
                                     >
                                         {showPassword ? (
-                                            <EyeOffIcon className="h-4 w-4" />
+                                            <EyeOffIcon className="h-4 w-4" aria-hidden={true} />
                                         ) : (
-                                            <EyeIcon className="h-4 w-4" />
+                                            <EyeIcon className="h-4 w-4" aria-hidden={true} />
                                         )}
                                     </button>
                                 </div>
@@ -202,27 +213,33 @@ function Register() {
 
                             {/* Input: Confirm password, with toggle visibility eye icon */}
                             <div className="space-y-2">
-                                <Label>Confirm Password</Label>
+                                <Label aria-label="Confirm Password" htmlFor="confirm-password">Confirm Password</Label>
                                 <div className="relative">
                                     <Input
+                                        id="confirm-password"
+                                        name="confirm-password"
                                         type={showConfirmPassword ? "text" : "password"}
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         required
+                                        aria-required={true}
+                                        aria-label="Confirm Password"
+                                        tabIndex={0}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                        tabIndex={-1}
                                         aria-label={
                                             showConfirmPassword ? "Hide password" : "Show password"
                                         }
+                                        aria-pressed={showPassword}
+                                        tabIndex={0}
                                     >
                                         {showConfirmPassword ? (
-                                            <EyeOffIcon className="h-4 w-4" />
+                                            <EyeOffIcon className="h-4 w-4" aria-hidden={true} />
                                         ) : (
-                                            <EyeIcon className="h-4 w-4" />
+                                            <EyeIcon className="h-4 w-4" aria-hidden={true} />
                                         )}
                                     </button>
                                 </div>
@@ -230,31 +247,54 @@ function Register() {
 
                             {/* Show alert if error */}
                             {error && (
-                                <Alert variant="destructive" className="mb-4">
+                                <Alert
+                                    role="alert"
+                                    variant="destructive"
+                                    className="mb-4"
+                                    aria-labelledby="login-error-message"
+                                    aria-live="assertive"
+                                >
                                     <div className="flex items-center">
-                                        <TriangleAlertIcon className="h-4 w-4 mr-3" />
-                                        <AlertDescription>{error}</AlertDescription>
+                                        <TriangleAlertIcon className="h-4 w-4 mr-3" aria-hidden={true} />
+                                        <AlertDescription id="login-error-message">{error}</AlertDescription>
                                     </div>
                                 </Alert>
                             )}
 
                             {/* Button: Register */}
-                            <Button type="submit" className="w-full" disabled={isLoading}>
+                            <Button
+                                id="sign-up-btn"
+                                type="submit"
+                                className="w-full" disabled={isLoading}
+                                tabIndex={0}
+                            >
                                 {isLoading ? "Creating account..." : "Create account"}
                             </Button>
                         </form>
                     </CardContent>
 
                     <CardFooter className="flex justify-center text-sm text-gray-500">
-                        <p className="text-sm pr-1 text-gray-600">Already have an account?</p>
-                        <Button variant="link" type="button" className="text-sm p-0" onClick={() => navigate("/login")}>
+                        <p
+                            id="already-account-paragraph"
+                            className="text-sm pr-1 text-gray-600"
+                            aria-labelledby="already-account-paragraph"
+                        >
+                            Already have an account?</p>
+                        <Button
+                        id="signin-btn"
+                            variant="link"
+                            type="button"
+                            className="text-sm p-0"
+                            onClick={() => navigate("/login")}
+                            aria-labelledby="signin-btn"
+                            tabIndex={0}
+                        >
                             Sign in
                         </Button>
                     </CardFooter>
                 </Card>
-
             </div>
-        </div>
+        </main>
     );
 };
 
