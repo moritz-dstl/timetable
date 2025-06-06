@@ -31,85 +31,81 @@ async function apiGetTimetable(uuid: string) {
         timetable: {}
     };
 
-    try {
-        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/status/${uuid}`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
+    await fetch(`${import.meta.env.VITE_API_ENDPOINT}/status/${uuid}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((res) => {
+            if (!res.ok) {
+                response.status = API_GENERATE_STATUS.ERROR;
+                return;
             }
+            return res.json();
         })
-            .then((res) => {
-                if (!res.ok) {
-                    response.status = API_GENERATE_STATUS.ERROR;
-                    return;
-                }
-                return res.json();
-            })
-            .then((json) => {
-                if (json["status"] !== "finished") {
-                    response.status = API_GENERATE_STATUS.RUNNING;
-                    return;
-                };
+        .then((json) => {
+            if (json["status"] !== "finished") {
+                response.status = API_GENERATE_STATUS.RUNNING;
+                return;
+            };
 
-                if (json["result"]["status"] !== "success") {
-                    response.status = API_GENERATE_STATUS.FAILED;
-                    return;
-                };
+            if (json["result"]["status"] !== "success") {
+                response.status = API_GENERATE_STATUS.FAILED;
+                return;
+            };
 
-                const jsonClasses = json["result"]["classes"];
-                const jsonTeachers = json["result"]["teachers"];
+            const jsonClasses = json["result"]["classes"];
+            const jsonTeachers = json["result"]["teachers"];
 
-                const timetable = {
-                    numPeriods: 0,  // Set in loop
-                    classes: Object.keys(jsonClasses),
-                    teachers: Object.keys(jsonTeachers),
-                    lessons: Array<any>()
-                };
+            const timetable = {
+                numPeriods: 0,  // Set in loop
+                classes: Object.keys(jsonClasses),
+                teachers: Object.keys(jsonTeachers),
+                lessons: Array<any>()
+            };
 
-                var idCounter = 0;
-                const daysOfWeek = {
-                    Mo: "Monday",
-                    Tu: "Tuesday",
-                    We: "Wednesday",
-                    Th: "Thursday",
-                    Fr: "Friday"
-                }
+            var idCounter = 0;
+            const daysOfWeek = {
+                Mo: "Monday",
+                Tu: "Tuesday",
+                We: "Wednesday",
+                Th: "Thursday",
+                Fr: "Friday"
+            }
 
-                for (const [className, timetableDays] of Object.entries(jsonClasses)) {
-                    for (const [day, lessons] of Object.entries(timetableDays as Array<string>)) {
-                        timetable.numPeriods = lessons.length;
-                        for (const lesson of Object.entries(lessons)) {
-                            const period = parseInt(lesson[0]) + 1;
-                            const subject = lesson[1].split(' ')[0];
-                            const teacher = lesson[1].replace(subject, '').replace(' (', '').replace(')', '');
+            for (const [className, timetableDays] of Object.entries(jsonClasses)) {
+                for (const [day, lessons] of Object.entries(timetableDays as Array<string>)) {
+                    timetable.numPeriods = lessons.length;
+                    for (const lesson of Object.entries(lessons)) {
+                        const period = parseInt(lesson[0]) + 1;
+                        const subject = lesson[1].split(' ')[0];
+                        const teacher = lesson[1].replace(subject, '').replace(' (', '').replace(')', '');
 
-                            if (subject !== "free") {
-                                timetable.lessons.push({
-                                    id: ++idCounter,
-                                    day: daysOfWeek[day],
-                                    period: period,
-                                    class: className,
-                                    subject: subject,
-                                    teacher: teacher
-                                });
-                            }
+                        if (subject !== "free") {
+                            timetable.lessons.push({
+                                id: ++idCounter,
+                                day: daysOfWeek[day],
+                                period: period,
+                                class: className,
+                                subject: subject,
+                                teacher: teacher
+                            });
                         }
                     }
                 }
+            }
 
-                response.status = API_GENERATE_STATUS.SUCCESS;
-                response.timetable = timetable;
-            })
-            .catch((error) => {
-                response.status = API_GENERATE_STATUS.ERROR;
-            });
-    } catch (error) {
-        console.error(error);
-        response.status = API_GENERATE_STATUS.ERROR;
-    } finally {
-        return response;
-    }
+            response.status = API_GENERATE_STATUS.SUCCESS;
+            response.timetable = timetable;
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status = API_GENERATE_STATUS.ERROR;
+        });
+
+    return response;
 }
 
 /**
@@ -206,42 +202,36 @@ function GenerateTimetable({ data, setData }) {
         setData(updatedData);
         localStorage.setItem("data", JSON.stringify(updatedData));
 
-        try {
-            // Try to start generating
-            await fetch(`${import.meta.env.VITE_API_ENDPOINT}/start_computing`, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                }
+        // Try to start generating
+        await fetch(`${import.meta.env.VITE_API_ENDPOINT}/start_computing`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((res) => res.json())
+            .then((json) => {
+                // Generating started
+                pollTimetableGenerationStatus(
+                    FUNC_GENERATING_FLAG.START_PROGRESS_BAR,
+                    {
+                        uuid: json["job_id"],
+                        durationToGenerateSeconds: data.timetable.durationToGenerateSeconds,
+                        timestampGeneratingStart: new Date().getTime(),
+                    },
+                    {
+                        setData: setData,
+                        setIsGenerating: setIsGenerating,
+                        setError: setError,
+                    }
+                );
             })
-                .then((res) => res.json())
-                .then((json) => {
-                    // Generating started
-                    pollTimetableGenerationStatus(
-                        FUNC_GENERATING_FLAG.START_PROGRESS_BAR,
-                        {
-                            uuid: json["job_id"],
-                            durationToGenerateSeconds: data.timetable.durationToGenerateSeconds,
-                            timestampGeneratingStart: new Date().getTime(),
-                        },
-                        {
-                            setData: setData,
-                            setIsGenerating: setIsGenerating,
-                            setError: setError,
-                        }
-                    );
-                })
-                .catch((error) => {
-                    setError("An error occured");
-                    setIsGenerating(false);
-                });
-
-        } catch (error) {
-            console.error(error);
-            setError("An error occured");
-            setIsGenerating(false);
-        }
+            .catch((error) => {
+                console.error(error);
+                setError("An error occured");
+                setIsGenerating(false);
+            });
     }
 
     return (

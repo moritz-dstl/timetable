@@ -88,7 +88,10 @@ async function apiSaveData(data) {
         body: JSON.stringify(apiDataBody)
     })
         .then((res) => { responseStatusSuccess = res.ok })
-        .catch((error) => { responseStatusSuccess = false });
+        .catch((error) => { 
+            console.error(error);
+            responseStatusSuccess = false;
+        });
 
     return responseStatusSuccess;
 }

@@ -101,34 +101,32 @@ function Register() {
             return;
         }
 
-        try {
-            // Wait 500ms for loading effect
-            await new Promise((resolve) => setTimeout(resolve, 500));
+        // Wait 500ms for loading effect
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-            fetch(`${import.meta.env.VITE_API_ENDPOINT}/User/register`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "school_name": schoolname,
-                    "email": email,
-                    "password": password
-                }),
-            }).then((res) => {
-                if (res.ok) {
-                    navigate("/login");
-                }
-                else {
-                    setError("Something went wrong");
-                    setIsLoading(false);
-                }
-            });
-        } catch (error) {
+        fetch(`${import.meta.env.VITE_API_ENDPOINT}/User/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "school_name": schoolname,
+                "email": email,
+                "password": password
+            }),
+        }).then((res) => {
+            if (res.ok) {
+                navigate("/login");
+            }
+            else {
+                setError("Something went wrong");
+                setIsLoading(false);
+            }
+        }).catch((error) => {
             console.error(error);
             setError("An error occurred");
             setIsLoading(false);
-        }
+        });
     };
 
     return (
@@ -281,7 +279,7 @@ function Register() {
                         >
                             Already have an account?</p>
                         <Button
-                        id="signin-btn"
+                            id="signin-btn"
                             variant="link"
                             type="button"
                             className="text-sm p-0"
