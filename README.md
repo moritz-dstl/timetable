@@ -72,6 +72,11 @@
     docker compose up -d --build
     ```
 
+    For development, to automatically synchronize changes:
+    ```bash
+    docker compose watch
+    ```
+
 - Access API via [http://localhost:8000](http://localhost:8000)
 - Access frontend via [http://localhost:3000](http://localhost:3000)
 
