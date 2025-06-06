@@ -46,35 +46,35 @@
 
 #### Running Docker Containers
 
-1. **Clone the repository:**
+1. **Clone the repository**
     ```bash
     git clone https://github.com/moritz-dstl/timetable
     cd timetable
     ```
 
-2. **Configure the backend:**
+2. **Configure environment variables**
 
-     Create a file named `config.py` inside the `backend` directory:
-     ```python
-     DB_USER = "root"
-     DB_PASSWORD = "DB_PASSWORD"  # Store securely in production!
-     DB_HOST = "mariadb-container"
-     DB_NAME = "timetable-database"
+    Create a `.env` file:
+    ```ini
+    # Database configuration
+    DB_USER=root
+    DB_PASSWORD=DB_PASSWORD
 
-     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
-     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Secret key used for encrypting session
+    SECRET_KEY=SECRET_KEY
 
-     SECRET_KEY = "extremly_secret_key"
-     ```
+    # API endpoint for the frontend to communicate with the backend
+    VITE_API_ENDPOINT=http://localhost:8000
+    ```
 
-3. **Start all containers:**
+3. **Start all containers**
     ```bash
-    docker compose up -d --build
+    docker compose --env-file .env up -d --build
     ```
 
     For development, to automatically synchronize changes:
     ```bash
-    docker compose watch
+    docker compose --env-file .env watch
     ```
 
 - Access API via [http://localhost:8000](http://localhost:8000)
