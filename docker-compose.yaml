@@ -6,11 +6,11 @@ services:
       MYSQL_ROOT_PASSWORD: DB_PASSWORD
       MYSQL_DATABASE: timetable-database  
     ports:
-      - "3306:3306"  # expose the database on port 3306
+      - "3306:3306"  # Expose the database on port 3306
     networks:
       - timetable-network
     volumes:
-      - "datasave:/var/lib/mysql"  # volume for persistent data storage
+      - "datasave:/var/lib/mysql"  # Volume for persistent data storage
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 10s
@@ -20,17 +20,26 @@ services:
 
   api:
     build:
-      context: ./backend #Path to the Dockerfile of the api-image
+      context: ./src/backend # Path to the Dockerfile of the api-image
       dockerfile: Dockerfile
     container_name: api-container
     ports:
-      - "8000:8000"  # expose the API on port 8000
+      - "8000:8000"  # Expose the API on port 8000
     networks:
       - timetable-network
-    
     depends_on:
       database:
         condition: service_healthy
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+      - 3000:3000
+    networks:
+      - timetable-network
 
 networks:
   timetable-network:

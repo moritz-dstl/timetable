@@ -14,8 +14,9 @@ export default defineConfig((mode) => {
             __APP_ENV__: JSON.stringify(env.APP_ENV),
         },
         server: {
-            // Expose on network
-            // host: "0.0.0.0",
+            host: "0.0.0.0",        // Expose on network
+            port: 3000,
+            strictPort: true,       // Exit if port is already in use, instead of automatically trying the next available port
         }
     };
 })
