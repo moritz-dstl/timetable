@@ -264,6 +264,10 @@ function GenerateTimetable({ data, setData }) {
 
             {/* Generating dialog */}
             <Dialog open={isGenerating} aria-modal={true}>
+                {/* Visually hidden DialogTitle for accessibility */}
+                <DialogTitle asChild>
+                    <span className="sr-only">Generating Timetable</span>
+                </DialogTitle>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle
