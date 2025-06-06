@@ -92,8 +92,8 @@ def start_computing():
             # Apply settings
             classes = ast.literal_eval(school_data[0])    # List of classes e.g. ['C1', 'C2', 'C3'] >> converted from string to list
             subjects = ast.literal_eval(school_data[1])   # List of subjects e.g. ['Math', 'English', 'History']    
-            hours_per_day = school_data[2] - 1  # Number of hours per day e.g. 8
-            days = ['Mo', 'Tu', 'We', 'Th', 'Fr']  # List of days
+            hours_per_day = school_data[2] - 1  # -1 bacause of the additional break period
+            days = ['Mo', 'Tu', 'We', 'Th', 'Fr'] 
 
             school_id = Uid  # Each user manages exactly one school dataset, so Uid == school_id
             subject_indices = {subject: i for i, subject in enumerate(subjects)}
@@ -146,7 +146,6 @@ def start_computing():
 
             model = cp_model.CpModel()  # Create a new CP model
 
-            # Variables
             # schedule: (class, day, hour) -> subject
             # is_occupied: (class, day, hour) -> BoolVar
             schedule = {}
@@ -158,9 +157,9 @@ def start_computing():
             # - a subject variable (var) is created, which is either a subject index (>= 0) or -1 (free period),
             # - a Boolean variable (occupied) indicating if the slot is used,
             # - both variables are logically linked to ensure consistency.
-            for c in classes:  # Iterate over all classes
-                for d in range(len(days)):  # Iterate over all days
-                    for h in range(hours_per_day):  # Iterate over all hours per day
+            for c in classes: 
+                for d in range(len(days)):
+                    for h in range(hours_per_day): 
                         var = model.NewIntVar(-1, len(subjects) - 1, f'{c}_{d}_{h}')  # Subject index or -1 for free period
                         occupied = model.NewBoolVar(f'occupied_{c}_{d}_{h}')  # Occupancy status (True/False)
                         model.Add(var >= 0).OnlyEnforceIf(occupied)  # If occupied, subject index must be valid
@@ -221,7 +220,7 @@ def start_computing():
                     subj_prev = schedule[(c, d, prev_hour)]
                     subj_curr = schedule[(c, d, GLOBAL_BREAK)]
 
-                    # Nur prüfen, wenn beide Stunden überhaupt belegt sind (also keine "free"-Slots)
+                    # Only check if both slots are occupied. In case of a "free" slot, this constraint is not applied.
                     both_occupied = model.NewBoolVar(f'{c}_{d}_both_occupied_{prev_hour}_{GLOBAL_BREAK}')
                     model.AddBoolAnd([
                         is_occupied[(c, d, prev_hour)],
@@ -232,12 +231,11 @@ def start_computing():
                         is_occupied[(c, d, GLOBAL_BREAK)].Not()
                     ]).OnlyEnforceIf(both_occupied.Not())
 
-                    # Bedingung: Wenn beide belegt, dann unterschiedliche Fächer
+                    # if both slots are occupied, then the subjects must be different
                     are_different = model.NewBoolVar(f'{c}_{d}_diff_subj_{prev_hour}_{GLOBAL_BREAK}')
                     model.Add(subj_prev != subj_curr).OnlyEnforceIf(are_different)
                     model.Add(subj_prev == subj_curr).OnlyEnforceIf(are_different.Not())
 
-                    # Erzwinge: Wenn beide belegt sind → Fächer müssen verschieden sein
                     model.AddImplication(both_occupied, are_different)
 
 
@@ -268,7 +266,7 @@ def start_computing():
 
 
 
-            # Constraint: Limit the number of simultaneous lessons for specific subjects.
+            # Hard Constraint: Limit the number of simultaneous lessons for specific subjects.
             # Background: Some subjects – such as Physical Education or Science – require special rooms
             # (e.g. gymnasium, chemistry lab). These resources are limited.
             # Therefore, a subject may only be taught a limited number of times simultaneously across all classes in any time slot.
@@ -281,7 +279,7 @@ def start_computing():
 
                         concurrent_subject_slots = []  # Tracks how many times the subject is taught at the same time
 
-                        for c in classes:  # Across all classes
+                        for c in classes: 
                             is_scheduled = model.NewBoolVar(f'{subject}_{c}_{d}_{h}_concurrent')
                             model.Add(schedule[(c, d, h)] == subject_index).OnlyEnforceIf(is_scheduled)
                             model.Add(schedule[(c, d, h)] != subject_index).OnlyEnforceIf(is_scheduled.Not())
@@ -291,14 +289,14 @@ def start_computing():
                         model.Add(sum(concurrent_subject_slots) <= max_parallel)
 
 
-            # Add constraints to ensure that each subject in each class
+            # Hard Constraints to ensure that each subject in each class
             # appears in the schedule exactly as many times as specified in class_subject_hours.
             # For every time slot, check whether the subject is scheduled.
             # Store this information in a Boolean variable and count them in the end.
 
             for c in classes:
                 for subject, required_count in class_subject_hours[c].items():
-                    subject_index = subject_indices[subject]  # Get the subject index (e.g., 'Math' → 0)
+                    subject_index = subject_indices[subject]
                     occurrences = []
                     for d in range(len(days)):
                         for h in range(hours_per_day):
@@ -311,7 +309,7 @@ def start_computing():
 
 
 
-            # Constraint: A teacher may only teach subjects they are qualified for.
+            # Hard Constraint: A teacher may only teach subjects they are qualified for.
             # For each time slot, check if a teacher is assigned.
             # If so, ensure that the subject assigned in that slot matches the teacher’s allowed subjects.
             # This is enforced using a Boolean variable `b`, which indicates whether the teacher is teaching in that slot.
@@ -344,7 +342,7 @@ def start_computing():
                             model.Add(sum(ok_flags) == 1).OnlyEnforceIf(b)
 
 
-            # Constraints on teacher workload:
+            # Hard Constraints on teacher workload:
             # For each teacher we enforce:
             # - They can teach at most one class in any given time slot,
             # - Their total weekly teaching hours do not exceed their maximum allowed.
@@ -354,9 +352,9 @@ def start_computing():
             for teacher, t_index in teacher_indices.items():
                 assignments = []  # List of all assignments for this teacher across the week
 
-                for d in range(len(days)):  # For each day
-                    for h in range(hours_per_day):  # For each hour
-                        for c in classes:  # For each class
+                for d in range(len(days)):
+                    for h in range(hours_per_day):
+                        for c in classes: 
                             # Boolean variable: Is this teacher assigned to this class at this time?
                             b = model.NewBoolVar(f'{teacher}_assigned_{c}_{d}_{h}')
                             model.Add(teacher_schedule[(c, d, h)] == t_index).OnlyEnforceIf(b)
@@ -370,7 +368,7 @@ def start_computing():
                 model.Add(sum(assignments) <= teachers_info[teacher]['max_hours'])
 
 
-            # Constraint: If a time slot is not occupied, no teacher should be assigned
+            # Hard Constraint: If a time slot is not occupied, no teacher should be assigned
             for c in classes:
                 for d in range(len(days)):
                     for h in range(hours_per_day):
@@ -381,16 +379,16 @@ def start_computing():
 
 
 
-            # Constraint: Limit how often a subject can be taught per day in a single class.
+            # Hard Constraint: Limit how often a subject can be taught per day in a single class.
             # Goal: A subject should appear at most MAX_HOURS_PER_DAY times per day.
             # Example: If MAX_HOURS_PER_DAY = 2, then Math can occur at most twice per day, regardless of continuity.
 
-            for c in classes:  # Iterate over each class
+            for c in classes:
                 for subject, _ in class_subject_hours[c].items():  # Only consider subjects assigned to this class
-                    subject_index = subject_indices[subject]  # Get the subject index (e.g., "Math" → 0)
-                    for d in range(len(days)):  # For each day
+                    subject_index = subject_indices[subject] 
+                    for d in range(len(days)): 
                         occurrences = []  # List of slots where this subject occurs on this day
-                        for h in range(hours_per_day):  # For each hour in the day
+                        for h in range(hours_per_day): 
                             b = model.NewBoolVar(f'{c}_{subject}_{d}_{h}_daylimit')
                             # b = True ⇔ this subject is scheduled in this slot
                             model.Add(schedule[(c, d, h)] == subject_index).OnlyEnforceIf(b)
@@ -400,12 +398,12 @@ def start_computing():
                         model.Add(sum(occurrences) <= MAX_HOURS_PER_DAY)
 
 
-            # a subject may appear in at most one block per day
+            # Hard Constrain: a subject may appear in at most one block per day
             # This means that if a subject is scheduled in a class on a specific day,
             # it should not be taught as two separated blocks.
             # This is enforced by the following constraints:
             for c in classes:
-                for subject, _ in class_subject_hours[c].items():           # only subjects actually taught in this class
+                for subject, _ in class_subject_hours[c].items():  # only subjects actually taught in this class
                     subj_idx = subject_indices[subject]
                     for d in range(len(days)):
                         # 1. Helper variables: is the subject scheduled in period h?
@@ -435,17 +433,24 @@ def start_computing():
 
 
             # All soft contraints follow here:
+            # Soft Constraints are used to guide the solver towards a more desirable solution,
+            # but they do not prevent the solver from finding a solution if they are violated.
 
-            # ---------- soft: prefer EARLY periods ---------------------------
-            if PREFER_EARLY_HOURS:
+            # Soft Constrain: Prefer early hours – a subject should ideally be scheduled in the first hours of the day.
+            # The erlier a subject is scheduled, the higher the reinforcement weight.
+            # The solver trys to maximize the total weight of all scheduled subjects,
+            if PREFER_EARLY_HOURS: # only activated if the user settings allow it
                 for c in classes:
                     for d in range(len(days)):
                         for h in range(hours_per_day):
                             period_weight = (hours_per_day - h) * WEIGHT_TIME_OF_HOURS
                             objective_terms.append(is_occupied[(c, d, h)] * period_weight)
 
-            # Soft constraint: Prefer double periods – a subject should ideally be scheduled in two consecutive hours.
+            # Soft constraint: Prefer double periods – a subject should ideally be scheduled in a choosen amount of consecutive hours.
             # This encourages "block lessons", which are often desirable for subjects like Math or Physical Education.
+            # This is only applied if the user settings allow it.
+            # This is done by checking pairs of consecutive hours for each class and subject.
+            # If a subject is scheduled in both hours, it is considered a "block" and gets a bonus.
 
             if ALLOW_BLOCK_SCHEDULING:
                 for c in classes:
@@ -471,6 +476,8 @@ def start_computing():
 
             #punish "inner gaps" in the schedule
             # An "inner gap" is defined as a free period that is followed by more lessons in the same class.
+            # This is done by checking each class, day, and hour for free periods that are followed by occupied periods.
+            # This helps to concentrate lessons and avoid unnecessary breaks in the schedule.
             for c in classes:
                 for d in range(len(days)):
                     for h in range(hours_per_day - 1):  # No need to check the last period
@@ -500,9 +507,9 @@ def start_computing():
                         objective_terms.append(is_inner_gap * -penalty_weight)
 
 
-
-
-            # Define the objective function
+            # The impact of the soft constraints is defined here.
+            # The objective function is a weighted sum of all terms that were collected during the model building.
+            # by trying to maximize this sum, the solver will try to find a solution that satisfies as many soft constraints as possible.
             model.Maximize(sum(objective_terms))
 
 
@@ -510,11 +517,15 @@ def start_computing():
             # Configure and run the solver
             solver = cp_model.CpSolver()
             solver.parameters.max_time_in_seconds = MAX_TIME_FOR_SOLVING
-            solver.parameters.num_search_workers = 3  # Number of CPU cores to use
+            solver.parameters.num_search_workers = 3  # Number of CPU cores to use 
             # solver.parameters.linearization_level = 0  # Lower complexity (optional)
             # solver.parameters.cp_model_presolve = True  # Use presolve (optional)
 
             status = solver.Solve(model)
+
+            # if solver found a solution that satisfies all constraints as optimal as possible,
+            # then he is done and we can extract the results.
+            # if time runs out, but the solver found a feasible solution, the solver will return it, which is also acceptable.
 
             if status in [cp_model.OPTIMAL, cp_model.FEASIBLE]:
                 result = {
@@ -522,6 +533,9 @@ def start_computing():
                     "classes": {},
                     "teachers": {}
                 }
+
+                # Build the timetable for each class and teacher ready to be returned to the user in a format
+                # that can be easily processed in the frontend.
 
                 # ---------- Timetable per class ---------------------------------
                 for c in classes:
@@ -580,10 +594,12 @@ def start_computing():
                 job_results[job_id] = result
                 job_status[job_id] = 'finished'
 
+            # in case the solver did not find a solution, no timetable has to be returned.
             else:
                 job_results[job_id] = {"status": "no_solution"}
                 job_status[job_id] = 'finished'
 
+        # Handle any exceptions that occur during the computation that wasn't caught by the solver
         except Exception as e:
             job_status[job_id] = 'error'
             job_results[job_id] = {
