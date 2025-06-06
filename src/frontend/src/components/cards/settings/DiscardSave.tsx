@@ -190,7 +190,7 @@ function SettingsDiscardSave({ data, setData }) {
 
                 {/* Delete dialog */}
                 <Dialog open={isDiscardDialogOpen} aria-modal={true}>
-                    <DialogContent aria-describedby="Discard Dialog">
+                    <DialogContent>
                         <DialogHeader>
                             <DialogTitle aria-label="Discard">Discard</DialogTitle>
                             <DialogDescription id="dialog-discard-description" aria-labelledby="dialog-discard-description">
