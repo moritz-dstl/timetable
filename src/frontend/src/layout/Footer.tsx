@@ -11,7 +11,7 @@ function Footer() {
             aria-label="Footer"
             tabIndex={99}
             onKeyDown={(event) => {
-                if (event.key === "Enter") {
+                if (event.key === "Enter" && document.activeElement?.id === "footer") {
                     event.preventDefault();
                     document.querySelector<HTMLElement>("#product-features-link")?.focus();
                 }
