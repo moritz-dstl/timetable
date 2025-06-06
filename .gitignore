@@ -1,6 +1,5 @@
-# Variables
+# Environment Variables
 .env*
-config.py
 
 # Logs
 logs
@@ -11,17 +10,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# Build Output
 dist
 dist-ssr
+
+# Dependency Directories
+node_modules
+
+# Local/Project Files
 *.local
+.DS_Store
+
+# Docker
 .dockerignore
 
-# Editor directories and files
+# Editor Directories and Files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
