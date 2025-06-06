@@ -42,20 +42,18 @@
 
 ### Prerequisites
 
-- **Node.js** (v23+ recommended)
-- **npm** (v10+ recommended)
-- **Docker** (for backend and database)
+- **Docker**
 
 
 ### Installation
 
-#### Backend/API
+#### Running Docker Containers
 
 1. **Clone the repository:**
-     ```bash
-     git clone https://github.com/moritz-dstl/timetable
-     cd timetable
-     ```
+    ```bash
+    git clone https://github.com/moritz-dstl/timetable
+    cd timetable
+    ```
 
 2. **Configure the backend:**
 
@@ -72,46 +70,13 @@
      SECRET_KEY = "extremly_secret_key"
      ```
 
-3. **Start the API and Database:**
+3. **Start all containers:**
+    ```bash
+    docker compose up -d --build
+    ```
 
-     Build and start all containers (API & database).
-     ```bash
-     docker compose up -d --build
-     ```
-
-4. **API Endpoints:**  
-     Access via [http://localhost:8000](http://localhost:8000)
-
-
-#### Frontend
-
-1. **Clone the repository:**
-     ```bash
-     git clone https://github.com/moritz-dstl/timetable
-     cd timetable
-     ```
-
-2. **Navigate to frontend:**
-     ```bash
-     cd src/frontend
-     ```
-
-3. **Install dependencies:**
-     ```bash
-     npm i
-     ```
-
-4. **Configure environment:**
-
-     Create a `.env` file:
-     ```ini
-     VITE_API_ENDPOINT=http://localhost:8000
-     ```
-
-5. **Start the development server:**
-     ```bash
-     npm run dev
-     ```
+- Access API via [http://localhost:8000](http://localhost:8000)
+- Access frontend via [http://localhost:3000](http://localhost:3000)
 
 
 ## Usage Guide
