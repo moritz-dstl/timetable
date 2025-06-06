@@ -16,11 +16,8 @@
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-        - [Backend/API](#backendapi)
-        - [Frontend](#frontend)
 - [Usage Guide](#usage-guide)
     - [API Reference](#api-reference)
-    - [Frontend Usage](#frontend-usage)
 - [Contributing](#contributing)
 - [License](#license)
 
