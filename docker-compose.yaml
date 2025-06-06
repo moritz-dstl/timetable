@@ -3,8 +3,8 @@ services:
     image: mariadb:latest
     container_name: mariadb-container
     environment:
-      MYSQL_ROOT_PASSWORD: DB_PASSWORD
-      MYSQL_DATABASE: timetable-database  
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: timetable-database
     ports:
       - "3306:3306"  # Expose the database on port 3306
     networks:
@@ -23,6 +23,12 @@ services:
       context: ./src/backend # Path to the Dockerfile of the api-image
       dockerfile: Dockerfile
     container_name: api-container
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: mariadb-container
+      DB_NAME: timetable-database
+      SECRET_KEY: ${SECRET_KEY}
     ports:
       - "8000:8000"  # Expose the API on port 8000
     networks:
@@ -42,6 +48,8 @@ services:
       context: ./src/frontend
       dockerfile: Dockerfile
     container_name: frontend-container
+    environment:
+      VITE_API_ENDPOINT: ${VITE_API_ENDPOINT}
     ports:
       - 3000:3000
     networks:

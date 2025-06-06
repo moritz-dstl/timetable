@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Float
 from sqlalchemy.orm import declarative_base
-import config
+import os
 
 # Define base class for ORM models
 Base = declarative_base()
@@ -71,8 +71,8 @@ class PreferBlockSubjects(Base):
     subject_name = Column(String(128), nullable=False)
     weight = Column(Integer, nullable=False)
 
-# Create DB engine using URI from config.py
-engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
+# Create DB engine using URI from environment
+engine = create_engine(f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}")
 
 # Create all tables
 Base.metadata.create_all(engine)

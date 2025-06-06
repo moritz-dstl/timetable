@@ -4,7 +4,7 @@ from api_endpoints.User import User
 from api_endpoints.AsyncCompute import AsyncCompute
 from api_endpoints.Settings import Settings
 import logging
-import config
+import os
 
 app = Flask(__name__)
 
@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 #secret key for sessions >> encrypts cookies
-app.secret_key = config.SECRET_KEY
+app.secret_key = os.environ.get("SECRET_KEY")
 
 logging.basicConfig(level=logging.DEBUG)
 
