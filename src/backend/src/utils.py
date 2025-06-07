@@ -1,15 +1,16 @@
 import mysql.connector
-from . import config
+import os
+import pytz
 import bcrypt
 
 
-# Verbindung zur MariaDB-Datenbank mittels daten aus config.py
+# Verbindung zur MariaDB-Datenbank mittels daten aus environment
 def get_db_connection():
     conn = mysql.connector.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME
+        host=os.environ.get("DB_HOST"),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME")
     )
     return conn
 
