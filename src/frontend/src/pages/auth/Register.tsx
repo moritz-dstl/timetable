@@ -49,7 +49,7 @@ function validatePassword(password: string) {
         isValid = false;
         errorMessage = "Password must include at least one uppercase letter";
     }
-    else if (!/[*.!@\$%^&(){}\[\]:;<>,.?/~_+\-=|\\]/.test(password)) {
+    else if (!/[#*.!@\$%^&(){}\[\]:;<>,.?/~_+\-=|\\]/.test(password)) {
         isValid = false;
         errorMessage = "Password must include at least one special character";
     }
