@@ -1,6 +1,5 @@
-from flask import Flask, request, jsonify, session, Blueprint
-import utils
-import requests
+from flask import request, jsonify, session, Blueprint
+from ..utils import get_db_connection, hash_password, check_password, check_existing_user
 
 # Create a Blueprint for the "User" area
 User = Blueprint('User', __name__)
@@ -11,17 +10,17 @@ def register_user():
     # Get user data from the request
     new_email = request.json.get('email')
     new_password = request.json.get('password')  # unhashed password
-    new_password = utils.hash_password(new_password)  # hash and salt the password
+    new_password = hash_password(new_password)  # hash and salt the password
     new_school_name = request.json.get('school_name') 
     
 
     # Check if all required fields are provided
     if all([new_email, new_password, new_school_name]):
-        conn = utils.get_db_connection()
+        conn = get_db_connection()
         cursor = conn.cursor(buffered=True)  # Use buffered cursor to fetch all results immediately
 
         # Check if the email is already in use
-        email_already_used = utils.check_existing_user(new_email)
+        email_already_used = check_existing_user(new_email)
 
         if not email_already_used:
             # Insert new user into the database
@@ -51,7 +50,7 @@ def login():
     email = request.json.get('email')
     password = request.json.get('password')
 
-    conn = utils.get_db_connection()
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     # Search for user with this email
@@ -59,7 +58,7 @@ def login():
     user = cursor.fetchone()
 
     # Check if user exists and password matches
-    if user and utils.check_password(password, email):  # user[1] = password from DB
+    if user and check_password(password, email):  # user[1] = password from DB
         session["Uid"] = user[0]
         cursor.close()
         conn.close()
@@ -77,7 +76,7 @@ def get_school():
     if Uid is None:
         return jsonify({"error": "No UID found in session"}), 403
 
-    conn = utils.get_db_connection()
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     # Get the school name for the current user

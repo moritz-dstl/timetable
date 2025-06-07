@@ -1,11 +1,9 @@
-from flask import request, jsonify, session, Blueprint
+from flask import jsonify, session, Blueprint
 from ortools.sat.python import cp_model
-import utils
+from ..utils import get_db_connection
 import traceback
 import ast
-import logging
 import threading, uuid
-import time
 
 # Blueprint for the AsyncCompute area
 AsyncCompute = Blueprint("AsyncCompute", __name__)
@@ -23,7 +21,7 @@ def start_computing():
 
     def background_computing(Uid):
         try:
-            conn = utils.get_db_connection()
+            conn = get_db_connection()
             cursor = conn.cursor()
 
             # Fetch scheduling preferences for the current user

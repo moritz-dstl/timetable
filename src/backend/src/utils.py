@@ -1,6 +1,5 @@
 import mysql.connector
-import config
-import pytz
+from . import config
 import bcrypt
 
 

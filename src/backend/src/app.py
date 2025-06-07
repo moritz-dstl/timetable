@@ -1,10 +1,11 @@
-from flask import Flask, session
+from flask import Flask
 from flask_cors import CORS
-from api_endpoints.User import User
-from api_endpoints.AsyncCompute import AsyncCompute
-from api_endpoints.Settings import Settings
+from .api_endpoints.User import User
+from .api_endpoints.AsyncCompute import AsyncCompute
+from .api_endpoints.Settings import Settings
 import logging
-import config
+from . import config
+
 
 app = Flask(__name__)
 
