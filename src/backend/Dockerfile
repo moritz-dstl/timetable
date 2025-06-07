@@ -14,5 +14,7 @@ RUN pip install -r requirements.txt
 # 'sh' starts a shell, '-c' allows executing a command as a string.
 # The command "python create_tables.py && python app.py" runs inside the shell.
 # The second script will only start if the first one completes successfully.
-CMD ["sh", "-c", "python create_tables.py && python app.py"]
+CMD ["sh", "-c", "python -m src.create_tables && python -m src.app"]
+
+
 

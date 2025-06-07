@@ -1,5 +1,6 @@
 from flask import request, jsonify, session, Blueprint
-import utils
+from ..utils import get_db_connection
+
 
 Settings = Blueprint('Settings', __name__)
 
@@ -34,7 +35,7 @@ def set_settings():
     if not all(field is not None for field in required_fields):
         return jsonify({"error": "Missing required fields"}), 400
 
-    conn = utils.get_db_connection()
+    conn = get_db_connection()
     cursor = conn.cursor(buffered=True)
 
     # SETTINGS
@@ -165,7 +166,7 @@ def get_settings():
     if Uid is None:
         return jsonify({"error": "Not logged in"}), 403
 
-    conn = utils.get_db_connection()
+    conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
     # SETTINGS
