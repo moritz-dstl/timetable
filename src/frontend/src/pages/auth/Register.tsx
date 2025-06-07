@@ -15,7 +15,7 @@ import { Label } from "../../components/ui/label";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 
 // Icons
-import { TriangleAlertIcon, EyeIcon, EyeOffIcon } from "lucide-react";
+import { CircleHelpIcon, TriangleAlertIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 
 /**
  * Validates a password according to the following rules:
@@ -49,7 +49,7 @@ function validatePassword(password: string) {
         isValid = false;
         errorMessage = "Password must include at least one uppercase letter";
     }
-    else if (!/[*.!@\$%^&(){}\[\]:;<>,.?/~_+\-=|\\]/.test(password)) {
+    else if (!/[#*.!@\$%^&(){}\[\]:;<>,.?/~_+\-=|\\]/.test(password)) {
         isValid = false;
         errorMessage = "Password must include at least one special character";
     }
@@ -179,7 +179,27 @@ function Register() {
 
                             {/* Input: Password, with toggle visibility eye icon */}
                             <div className="space-y-2">
-                                <Label aria-label="Password" htmlFor="password">Password</Label>
+                                <div className="flex items-center gap-2">
+                                    <Label aria-label="Password" htmlFor="password">Password</Label>
+                                    <button
+                                        type="button"
+                                        className="text-gray-500 hover:text-gray-700"
+                                        aria-label="Show password requirements"
+                                        tabIndex={0}
+                                        onClick={() => {
+                                            alert(
+                                                "Password requirements:\n" +
+                                                "- Must be between 8 and 32 characters in length\n" +
+                                                "- Must contain at least one digit\n" +
+                                                "- Must contain at least one lowercase letter\n" +
+                                                "- Must contain at least one uppercase letter\n" +
+                                                "- Must contain at least one special character"
+                                            );
+                                        }}
+                                    >
+                                        <CircleHelpIcon className="h-4 w-4" aria-hidden={true} />
+                                    </button>
+                                </div>
                                 <div className="relative">
                                     <Input
                                         id="password"
