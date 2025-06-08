@@ -269,12 +269,12 @@ function Register() {
                                     role="alert"
                                     variant="destructive"
                                     className="mb-4"
-                                    aria-labelledby="login-error-message"
+                                    aria-labelledby="register-error-message"
                                     aria-live="assertive"
                                 >
                                     <div className="flex items-center">
                                         <TriangleAlertIcon className="h-4 w-4 mr-3" aria-hidden={true} />
-                                        <AlertDescription id="login-error-message">{error}</AlertDescription>
+                                        <AlertDescription id="register-error-message">{error}</AlertDescription>
                                     </div>
                                 </Alert>
                             )}
