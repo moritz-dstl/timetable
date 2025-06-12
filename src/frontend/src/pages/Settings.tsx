@@ -8,6 +8,26 @@ import SettingsClasses from "../components/cards/settings/Classes"
 import SettingsTeachers from "../components/cards/settings/Teachers"
 import SettingsSubjects from "../components/cards/settings/Subjects"
 
+/**
+ * Allows users to view and modify scheduling configuration.
+ *
+ * This element conditionally renders:
+ * - A loading spinner while data is being fetched.
+ * - A fully interactive settings interface once data is available.
+ *
+ * It includes the following sections:
+ * - Discard/Save: Lets users apply or discard unsaved changes.
+ * - General settings: Toggles and preferences for scheduling behavior (e.g., early periods, double lessons).
+ * - Class settings
+ * - Teacher settings
+ * - Subject settings
+ *
+ * @param isLoading - Indicates whether data is still being loaded.
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element}
+ */
 function Settings({ isLoading, data, setData }) {
     if (isLoading) {
         return (

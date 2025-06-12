@@ -14,6 +14,20 @@ import { Switch } from "../../ui/switch";
 import { Slider } from "../../ui/slider";
 import { Separator } from "../../ui/separator";
 
+/**
+ * Provides a configurable UI for setting global scheduling preferences.
+ *
+ * This component includes:
+ * - Toggles for prioritizing early periods and double lessons.
+ * - A numeric input to define the number of periods per day (minimum: 4).
+ * - Sliders to configure the designated break period and the maximum number of repetitions
+ *   a subject can appear in a single day.
+ *
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element}
+ */
 function SettingsGeneral({ data, setData }) {
     // Ensure dependent settings remain valid when the number of periods per day changes.
     // If related settings exceed the new value, adjust them accordingly.

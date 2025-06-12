@@ -21,6 +21,19 @@ import {
 // Icons
 import { SearchIcon } from "lucide-react";
 
+/**
+ * Renders a searchable list of all classes and their associated subjects.
+ * 
+ * This component includes:
+ * - A card header with a title and search input.
+ * - A searchable table that displays:
+ *   - Class names.
+ *   - Subjects assigned to each class with their respective weekly hours.
+ *
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function DisplayClasses({ data }) {
     const [searchQuery, setSearchQuery] = useState("");
 

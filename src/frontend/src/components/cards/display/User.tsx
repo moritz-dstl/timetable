@@ -9,6 +9,17 @@ import {
 // Icons
 import { MailIcon } from "lucide-react";
 
+/**
+ * Displays basic user information.
+ * 
+ * This component includes:
+ * - A card header showing the name of the school.
+ * - A card content section with the user's email address and an email icon.
+ *
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function DisplayUser({ data }) {
     return (
         <Card className="flex flex-col items-center justify-between">

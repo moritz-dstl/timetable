@@ -57,6 +57,25 @@ function validatePassword(password: string) {
     return [isValid, errorMessage];
 }
 
+/**
+ * Allows users to create a new account.
+ *
+ * This element conditionally handles:
+ * - A redirect to the homepage if the user is already logged in.
+ * - Inline validation for password strength and matching confirmation.
+ * - Error messaging for invalid input or failed requests.
+ *
+ * It includes the following sections:
+ * - School name input: Captures the user's institution.
+ * - Email input: User enters their email address.
+ * - Password input: Includes visibility toggle and in-place requirements helper.
+ * - Confirm password input: Ensures the user confirms their password correctly.
+ * - Error alert: Displays validation or request errors.
+ * - Register button: Submits data to the registration endpoint.
+ * - Sign-in link: Redirects users who already have an account to the login page.
+ *
+ * @returns {JSX.Element}
+ */
 function Register() {
     const navigate = useNavigate();
     const cookies = new Cookies();

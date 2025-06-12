@@ -17,6 +17,23 @@ import { Alert, AlertDescription } from "../../components/ui/alert";
 // Icons
 import { TriangleAlertIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 
+/**
+ * Allows users to sign in to their account.
+ *
+ * This element conditionally handles:
+ * - A redirect to the homepage if the user is already logged in.
+ * - Error messaging for invalid credentials or request issues.
+ *
+ * It includes the following sections:
+ * - Email input: User enters their email address.
+ * - Password input: User enters their password, with optional visibility toggle.
+ * - Error alert: Displays login failure reasons (e.g., invalid credentials).
+ * - Forgot password link (placeholder for future functionality).
+ * - Login button: Submits credentials to the login endpoint.
+ * - Sign-up link: Redirects users without an account to the registration page.
+ *
+ * @returns {JSX.Element}
+ */
 function Login() {
     const navigate = useNavigate();
     const cookies = new Cookies();

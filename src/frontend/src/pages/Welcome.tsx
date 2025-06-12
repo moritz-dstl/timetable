@@ -10,6 +10,20 @@ import { Button } from "../components/ui/button";
 // Icons
 import { ArrowRightIcon, LayoutDashboardIcon, RefreshCwIcon, DownloadIcon } from "lucide-react";
 
+/**
+ * Landing page introducing the timetable generator.
+ *
+ * This element provides an overview of the application's purpose and features
+ * to new or unauthenticated users.
+ *
+ * It includes the following sections:
+ * - Welcome Banner: A hero section with a brief app description and signup button.
+ * - Features: Highlights key capabilities.
+ * - Screenshots: Displays example views of the dashboard and timetable.
+ * - Call to Action: Encourages users to register and start using the platform.
+ *
+ * @returns {JSX.Element}
+ */
 function Welcome() {
     const navigate = useNavigate();
 

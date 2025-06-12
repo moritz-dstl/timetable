@@ -44,6 +44,20 @@ import {
     Trash2Icon
 } from "lucide-react";
 
+/**
+ * Provides a user interface for managing teachers and their subjects.
+ *
+ * This component includes:
+ * - View a sorted, searchable list of all teachers with their subjects and hours per week.
+ * - Adding new teachers with unique names, assigned subjects, and maximum hours per week.
+ * - Editing existing teachers, including updating their subjects and max hours.
+ * - Deleting teachers.
+ *
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element}
+ */
 function SettingsTeachers({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

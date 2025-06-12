@@ -9,6 +9,17 @@ import {
 // Icons
 import { GraduationCapIcon } from "lucide-react";
 
+/**
+ * TotalClasses component – displays the number of classes in the dataset.
+ * 
+ * It includes:
+ * - A card header with a title and icon.
+ * - A card content showing the class icon and numeric count based on the provided data.
+ *
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function TotalClasses({ data }) {
     return (
         <Card>

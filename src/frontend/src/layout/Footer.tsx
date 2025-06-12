@@ -1,8 +1,22 @@
 // Icons
 import { BoxesIcon } from "lucide-react";
 
+/**
+ * Displays site branding, navigation links, and copyright information.
+ *
+ * This element includes:
+ * - Shows the product name and a brief description.
+ * - Provides three navigation sections with links:
+ *   - Product: Features, FAQ.
+ *   - Resources: Documentation, Tutorials, GitHub Repository.
+ *   - Legal: Imprint, Privacy Policy, Terms of Service.
+ * - Displays copyright notice with the current year.
+ *
+ * Note: Most links are placeholders and need implementation (TODO).
+ *
+ * @returns {JSX.Element}
+ */
 function Footer() {
-    // Links except for GitHub are not implemented (TODO)
     return (
         <footer
             id="footer"

@@ -96,6 +96,20 @@ async function apiSaveData(data) {
     return responseStatusSuccess;
 }
 
+/**
+ * Provides UI controls to either discard or save changes to the app settings.
+ *
+ * This component includes:
+ * - A "Discard" button that reverts to the last saved settings from localStorage.
+ * - A "Save" button that formats and sends the updated data to the API.
+ * - Dialog for confirming discard actions.
+ * - Alert feedback when errors occur during the save process.
+ *
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element | undefined}
+ */
 function SettingsDiscardSave({ data, setData }) {
     const [error, setError] = useState("");
     const [isSaving, setIsSaving] = useState(false);

@@ -9,6 +9,17 @@ import {
 // Icons
 import { UsersIcon } from "lucide-react";
 
+/**
+ * TotalTeachers component – displays the number of teachers in the dataset.
+ * 
+ * It includes:
+ * - A card header with a title and icon.
+ * - A card content showing the teacher icon and numeric count based on the provided data.
+ *
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function TotalTeachers({ data }) {
     return (
         <Card>
