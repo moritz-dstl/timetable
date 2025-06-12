@@ -42,9 +42,21 @@ AsyncCompute = Blueprint("AsyncCompute", __name__)
 job_status = {}
 job_results = {}
 
+
 # route to start the computation
 @AsyncCompute.route('/start_computing', methods=['GET'])
+
 def start_computing():
+    """
+    Starts asynchronous school timetable generation in a background thread.
+
+    Returns:
+        JSON containing:
+        - 'job_id': Unique identifier for tracking the computation
+        - 'status': Initial status ("started")
+
+    The job's progress and result can be checked via `/status/<job_id>`.
+    """
     job_id = str(uuid.uuid4())  # unique ID
     job_status[job_id] = 'running'
     job_results[job_id] = None
@@ -652,9 +664,20 @@ def start_computing():
 
     return jsonify({"job_id": job_id, "status": "started"}), 202
 
+
+
 # route to check the status of a job
 @AsyncCompute.route('/status/<job_id>', methods=['GET'])
 def status(job_id):
+    """
+    Args:
+        job_id (str): Unique identifier for the computation job.
+
+    Returns:
+        JSON containing:
+        - 'status': One of 'running', 'finished', 'error', or 'no_solution'
+        - 'result': Computation result if finished, otherwise None
+    """
     if job_id not in job_status:
         return jsonify({"error": "Unbekannte Job-ID"}), 404
 

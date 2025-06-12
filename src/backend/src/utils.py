@@ -27,8 +27,14 @@ Technologies:
 """
 
 
-# Verbindung zur MariaDB-Datenbank mittels daten aus environment
+
 def get_db_connection():
+    """
+    Connects to the MariaDB database using environment variable credentials
+
+    Returns:
+        A MySQL database connection object.
+    """
     conn = mysql.connector.connect(
         host=os.environ.get("DB_HOST"),
         user=os.environ.get("DB_USER"),
@@ -39,6 +45,11 @@ def get_db_connection():
 
 
 def hash_password(password):
+    """
+    Expects a plain-text password
+    Returns:
+        A securely hashed and salted password as bytes.
+    """
     # konverts passwort in bytes
     password_bytes = password.encode('utf-8')
     # generat Salt
@@ -49,6 +60,12 @@ def hash_password(password):
 
 
 def check_password(password, email):
+    """
+    Expects a plain-text password and email address.
+    Returns:
+        True if the password matches the stored hash for the given email,
+        False otherwise.
+    """
     password_to_verify = password.encode('utf-8')
 
     # get the hashed password from the database
@@ -71,6 +88,11 @@ def check_password(password, email):
 
 
 def check_existing_user(email):
+    """
+    Returns:
+        True if a user with the given email exists in the database,
+        False otherwise.
+    """
 
     conn = get_db_connection()
     cursor = conn.cursor()

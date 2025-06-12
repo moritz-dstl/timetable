@@ -36,6 +36,16 @@ Settings = Blueprint('Settings', __name__)
 
 @Settings.route('/Settings/set', methods=['POST'])
 def set_settings():
+    """
+    Stores user-specific scheduling settings and school structure in the database.
+
+    Expects:
+        JSON payload with settings, school data, teachers, and subject allocations.
+
+    Returns:
+        200 on success, 400 or 403 on error.
+    """
+
     Uid = session.get('Uid')
     if Uid is None:
         return jsonify({"error": "No UID found in session"}), 403
@@ -192,6 +202,13 @@ def set_settings():
 
 @Settings.route('/Settings/get', methods=['GET'])
 def get_settings():
+    """
+    Retrieves all stored scheduling settings and school data for the current user.
+
+    Returns:
+        JSON with settings, school info, teachers, classes and subject allocations.
+    """
+
     Uid = session.get('Uid')
     if Uid is None:
         return jsonify({"error": "Not logged in"}), 403
