@@ -2,6 +2,37 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean
 from sqlalchemy.orm import declarative_base
 import os
 
+
+"""
+This module defines the SQLAlchemy ORM models used to represent the database schema
+for the school timetable scheduling system. It also initializes the database
+connection and creates the necessary tables if they do not exist.
+
+Functionality:
+- Defines database tables as Python classes using SQLAlchemy's declarative base.
+- Creates tables for:
+  - Users
+  - Settings
+  - School
+  - Teachers
+  - Classes
+  - SubjectParallelLimit
+  - PreferBlockSubjects
+
+- At the end of the file, the engine is created using environment variables,
+  and all defined tables are created in the target database.
+
+Technologies:
+- SQLAlchemy ORM for database modeling and schema generation
+- MySQL connection via `mysql+pymysql` dialect
+- Environment-based configuration for secure and flexible database access
+
+Execution:
+- When this module is imported or executed, it ensures the required tables exist.
+- Prints confirmation upon successful creation of all tables.
+"""
+
+
 # Define base class for ORM models
 Base = declarative_base()
 

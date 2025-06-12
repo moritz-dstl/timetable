@@ -4,8 +4,37 @@ import pytz
 import bcrypt
 
 
-# Verbindung zur MariaDB-Datenbank mittels daten aus environment
+"""
+This module provides utility functions for database access and user authentication.
+
+Functionality:
+- `get_db_connection()`:
+  Establishes a connection to the MySQL/MariaDB database using environment variables.
+
+- `hash_password()`:
+  Hashes and salts a plain-text password using bcrypt.
+
+- `check_password()`:
+  Verifies a password against the stored hash for a given email.
+
+- `check_existing_user()`:
+  Checks whether a user with the given email already exists in the database.
+
+Technologies:
+- mysql-connector for database connection
+- bcrypt for secure password hashing
+- Environment variables for configuration
+"""
+
+
+
 def get_db_connection():
+    """
+    Connects to the MariaDB database using environment variable credentials
+
+    Returns:
+        A MySQL database connection object.
+    """
     conn = mysql.connector.connect(
         host=os.environ.get("DB_HOST"),
         user=os.environ.get("DB_USER"),
@@ -16,6 +45,11 @@ def get_db_connection():
 
 
 def hash_password(password):
+    """
+    Expects a plain-text password
+    Returns:
+        A securely hashed and salted password as bytes.
+    """
     # konverts passwort in bytes
     password_bytes = password.encode('utf-8')
     # generat Salt
@@ -26,6 +60,12 @@ def hash_password(password):
 
 
 def check_password(password, email):
+    """
+    Expects a plain-text password and email address.
+    Returns:
+        True if the password matches the stored hash for the given email,
+        False otherwise.
+    """
     password_to_verify = password.encode('utf-8')
 
     # get the hashed password from the database
@@ -48,6 +88,11 @@ def check_password(password, email):
 
 
 def check_existing_user(email):
+    """
+    Returns:
+        True if a user with the given email exists in the database,
+        False otherwise.
+    """
 
     conn = get_db_connection()
     cursor = conn.cursor()
