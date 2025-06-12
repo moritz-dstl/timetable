@@ -7,6 +7,17 @@ import { Button } from "../components/ui/button";
 // Icons
 import { BoxesIcon, LogOutIcon } from "lucide-react";
 
+/**
+ * Provides top navigation and user session controls.
+ *
+ * This element includes:
+ * - Conditional rendering of authentication buttons based on login state:
+ *    - If the user is not logged in: "Sign in" and "Sign up" buttons are displayed.
+ *    - If the user is logged in: a "Logout" button is displayed.
+ * - Logout functionality, including clearing cookies and local storage, and reloading the page.
+ *
+ * @returns {JSX.Element}
+ */
 function Header() {
     const navigate = useNavigate();
     const cookies = new Cookies();

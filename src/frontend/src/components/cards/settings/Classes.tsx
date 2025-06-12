@@ -45,6 +45,21 @@ import {
     Trash2Icon
 } from "lucide-react";
 
+/**
+ * Provides a user interface for managing classes and their associated subjects.
+ *
+ * This component includes:
+ * - View a sorted, searchable list of classes with their subjects.
+ * - Add new classes with unique names and assign subjects with specified hours per week.
+ * - Duplicate existing classes.
+ * - Edit existing classes.
+ * - Delete classes.
+ *
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element}
+ */
 function SettingsClasses({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

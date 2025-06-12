@@ -14,6 +14,20 @@ import Overview from "./Overview";
 import Settings from "./Settings";
 import Timetable from "./Timetable";
 
+/**
+ * Fetches and prepares data from the API.
+ *
+ * This asynchronous function performs the following tasks:
+ * - Delays execution for 500ms to show a loading effect.
+ * - Fetches the user's school name and scheduling settings and processes that data.
+ * - Updates the application state using provided setter functions and caches the result in localStorage.
+ *
+ * @async
+ * @function apiFetchData
+ * @param {Object} cookies - A cookie management object with a `.get` method to retrieve stored cookies.
+ * @param {Function} setData - React state setter function to update the scheduling data in the application.
+ * @param {Function} setIsLoading - React state setter function to update the loading status.
+ */
 async function apiFetchData(cookies, setData, setIsLoading) {
     // Wait 500ms for loading effect
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -173,6 +187,18 @@ async function apiFetchData(cookies, setData, setIsLoading) {
         });
 }
 
+/**
+ * The main entry point for users.
+ *
+ * This element:
+ * - Checks for user authentication via cookies.
+ * - If the user is not authenticated, renders the Welcome screen.
+ * - On initial render, attempts to load cached data from localStorage.
+ * - If no cached data is found, fetches user and scheduling data from the backend.
+ * - Renders tab-based navigation (Overview, Settings, Timetable) once data is loaded.
+ *
+ * @returns {JSX.Element}
+ */
 function Home() {
     const cookies = new Cookies();
 

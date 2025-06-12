@@ -181,6 +181,24 @@ async function pollTimetableGenerationStatus(flag, timetable, setters) {
     }, 1000);
 }
 
+/**
+ * Initiates and manages timetable generation process.
+ *
+ * This component handles:
+ * - Live polling of the backend to track job status.
+ * - Dynamic UI updates including error handling, progress bar animation, and countdown timer.
+ *
+ * It includes the following elements:
+ * - Error alert: Displays error messages returned from the API.
+ * - Info message: Informs users about unsaved changes that block generation.
+ * - Generate button: Starts the generation process.
+ * - Progress dialog: Shows generation status with a live countdown and animated progress bar.
+ *
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element}
+ */
 function GenerateTimetable({ data, setData }) {
     const [error, setError] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);

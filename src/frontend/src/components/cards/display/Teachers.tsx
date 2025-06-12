@@ -21,6 +21,19 @@ import {
 // Icons
 import { SearchIcon } from "lucide-react";
 
+/**
+ * Renders a searchable list of all teachers and the subjects they teach.
+ * 
+ * This component includes:
+ * - A card header with a title and search input.
+ * - A searchable table displaying:
+ *   - Teacher names.
+ *   - Subjects each teacher is assigned to.
+ * 
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function DisplayTeachers({ data }) {
     const [searchQuery, setSearchQuery] = useState("");
 

@@ -13,6 +13,18 @@ import { Badge } from "../../ui/badge";
 // Icons
 import { SearchIcon } from "lucide-react";
 
+/**
+ * Renders a searchable list of all subjects.
+ * 
+ * This component includes:
+ * - A card header with a title and search input.
+ * - A responsive badge list displaying:
+ *   - Subject names that match the search query.
+ *
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function DisplaySubjects({ data }) {
     const [searchQuery, setSearchQuery] = useState("");
 

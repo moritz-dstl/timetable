@@ -37,6 +37,21 @@ import {
     Trash2Icon
 } from "lucide-react";
 
+/**
+ * Provides a user interface for managing subjects.
+ *
+ * This component includes:
+ * - View a sorted, searchable list of all subjects.
+ * - Add new subjects with unique names, maximum parallel number, and force double lesson option.
+ * - Edit existing subjects.
+ * - Delete subjects that are not currently used in classes or teachers.
+ * - Prevent deletion of subjects currently in use.
+ *
+ * @param data - The data object.
+ * @param setData - React setter for updating the data state.
+ *
+ * @returns {JSX.Element}
+ */
 function SettingsSubjects({ data, setData }) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

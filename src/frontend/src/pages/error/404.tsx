@@ -2,6 +2,12 @@
 // Icons
 import { SnailIcon } from "lucide-react";
 
+/**
+ * Displays a "Page not found" message for invalid routes, rendering a 
+ * user-friendly 404 error page with a humorous snail icon.
+ * 
+ * @returns {JSX.Element}
+ */
 function Error404() {
     return (
         <div className="min-h-[calc(100vh-347px)] flex bg-gray-50 p-8 flex-nowrap justify-center items-center">

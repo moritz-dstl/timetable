@@ -11,6 +11,23 @@ import DisplayClasses from "../components/cards/display/Classes"
 import DisplayTeachers from "../components/cards/display/Teachers"
 import DisplaySubjects from "../components/cards/display/Subjects"
 
+/**
+ * Displays a summary of scheduling data.
+ *
+ * This element conditionally renders:
+ * - A loading spinner while data is being fetched.
+ * - A set of structured sections showing user details, total counts, and detailed lists once data is available.
+ *
+ * Sections include:
+ * - User Details: Renders user-specific data such as school name and email.
+ * - Totals: Cards showing total number of classes, teachers, and subjects.
+ * - Summaries: Lists displaying individual classes, teachers, and subjects.
+ *
+ * @param isLoading - Indicates whether data is still being loaded.
+ * @param data - The data object.
+ *
+ * @returns {JSX.Element}
+ */
 function Overview({ isLoading, data }) {
     if (isLoading) {
         return (

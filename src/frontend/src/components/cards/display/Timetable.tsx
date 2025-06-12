@@ -131,6 +131,18 @@ function getHTMLTimetable(data, selectedViewClassTeacher, selectedClassTeacher, 
     );
 }
 
+/**
+ * Renders and manages a visual timetable for either classes or teachers.
+ *
+ * This component includes:
+ * - Allows selecting between class and teacher schedules.
+ * - Dynamically updates available options and the displayed timetable.
+ * - Includes a switch to toggle display with colors.
+ * - Provides an export button to generate a PDF of all class and teacher timetables.
+ *
+ * @param data - The data object.
+ * @returns {JSX.Element}
+ */
 function DisplayTimetable({ data }) {
     const [selectedViewClassTeacher, setSelectedViewClassTeacher] = useState("class");
     const [allClassesTeachers, setAllClassesTeacheres] = useState(data.timetable.classes);
