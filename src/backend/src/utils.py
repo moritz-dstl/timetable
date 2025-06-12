@@ -4,6 +4,29 @@ import pytz
 import bcrypt
 
 
+"""
+This module provides utility functions for database access and user authentication.
+
+Functionality:
+- `get_db_connection()`:
+  Establishes a connection to the MySQL/MariaDB database using environment variables.
+
+- `hash_password()`:
+  Hashes and salts a plain-text password using bcrypt.
+
+- `check_password()`:
+  Verifies a password against the stored hash for a given email.
+
+- `check_existing_user()`:
+  Checks whether a user with the given email already exists in the database.
+
+Technologies:
+- mysql-connector for database connection
+- bcrypt for secure password hashing
+- Environment variables for configuration
+"""
+
+
 # Verbindung zur MariaDB-Datenbank mittels daten aus environment
 def get_db_connection():
     conn = mysql.connector.connect(

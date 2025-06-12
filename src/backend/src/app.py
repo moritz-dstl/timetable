@@ -6,6 +6,12 @@ from .api_endpoints.Settings import Settings
 import logging
 import os
 
+"""
+This is the main entry point of the Flask backend application. It initializes
+the Flask app, configures CORS, logging, session handling, and registers
+all route blueprints.
+"""
+
 app = Flask(__name__)
 
 # activate CORS for all routes (for development purposes)

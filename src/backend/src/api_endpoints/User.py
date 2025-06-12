@@ -1,6 +1,34 @@
 from flask import request, jsonify, session, Blueprint
 from ..utils import get_db_connection, hash_password, check_password, check_existing_user
 
+
+"""
+This module manages user-related functionality, including registration, login,
+session handling, and basic user data retrieval in a Flask-based backend system.
+
+Available Routes:
+- POST /User/register:
+  Registers a new user with email, password, and school name. Ensures unique email
+  and hashes the password before storing it in the database.
+
+- POST /User/login:
+  Authenticates a user by checking the provided email and password.
+  On success, stores the user's UID in the session.
+
+- GET /User/get_school:
+  Retrieves the school name for the currently logged-in user.
+
+- POST /User/logout:
+  Clears the current user session, logging the user out.
+
+Technologies:
+- Flask Blueprint for organizing user-related routes
+- Session for user authentication state
+- Utility functions for password hashing and verification
+- MariaDB
+"""
+
+
 # Create a Blueprint for the "User" area
 User = Blueprint('User', __name__)
 
