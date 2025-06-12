@@ -5,6 +5,36 @@ import traceback
 import ast
 import threading, uuid
 
+"""
+This module implements asynchronous school timetable generation using the CP-SAT
+solver from Google OR-Tools within a Flask backend.
+
+Available Routes:
+- GET /start_computing:
+  Starts the background timetable computation and returns a unique job ID.
+- GET /status/<job_id>:
+  Returns the current status and (if finished) the result of a specific computation job.
+
+Functionality:
+- When the `/start_computing` route is called, a separate background thread is launched.
+- This thread loads all user-specific data (e.g., classes, teachers, subjects, settings)
+  from the database and constructs a constraint optimization model.
+- The model considers hard constraints (e.g., subject hours, teacher availability, room
+  restrictions) and soft preferences (e.g., block scheduling, early hours).
+- Upon successful solving, an optimized timetable is generated for each class and
+  teacher and stored in memory.
+- The progress and result of the computation can be queried via the `/status/<job_id>`
+  endpoint.
+
+Technologies:
+- Flask Blueprint for route definition
+- MariaDB
+- OR-Tools (cp_model) for constraint solving
+- Multithreading for concurrent computation
+- In-memory storage (dicts) for job tracking
+"""
+
+
 # Blueprint for the AsyncCompute area
 AsyncCompute = Blueprint("AsyncCompute", __name__)
 
@@ -12,9 +42,21 @@ AsyncCompute = Blueprint("AsyncCompute", __name__)
 job_status = {}
 job_results = {}
 
+
 # route to start the computation
 @AsyncCompute.route('/start_computing', methods=['GET'])
+
 def start_computing():
+    """
+    Starts asynchronous school timetable generation in a background thread.
+
+    Returns:
+        JSON containing:
+        - 'job_id': Unique identifier for tracking the computation
+        - 'status': Initial status ("started")
+
+    The job's progress and result can be checked via `/status/<job_id>`.
+    """
     job_id = str(uuid.uuid4())  # unique ID
     job_status[job_id] = 'running'
     job_results[job_id] = None
@@ -622,9 +664,20 @@ def start_computing():
 
     return jsonify({"job_id": job_id, "status": "started"}), 202
 
+
+
 # route to check the status of a job
 @AsyncCompute.route('/status/<job_id>', methods=['GET'])
 def status(job_id):
+    """
+    Args:
+        job_id (str): Unique identifier for the computation job.
+
+    Returns:
+        JSON containing:
+        - 'status': One of 'running', 'finished', 'error', or 'no_solution'
+        - 'result': Computation result if finished, otherwise None
+    """
     if job_id not in job_status:
         return jsonify({"error": "Unbekannte Job-ID"}), 404
 

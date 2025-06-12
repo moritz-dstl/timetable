@@ -2,10 +2,50 @@ from flask import request, jsonify, session, Blueprint
 from ..utils import get_db_connection
 
 
+"""
+This module handles the reading and writing of user-specific school configuration data
+used for timetable generation. It provides endpoints to store and retrieve settings,
+teachers, subjects, and structural school data in a structured format.
+
+Available Routes:
+- POST /Settings/set:
+  Receives and stores all user-defined settings and school structure data.
+  Overwrites existing entries for the given user (UID) in the database.
+
+- GET /Settings/get:
+  Returns the currently stored settings, school structure, teachers, and subject
+  configuration for the logged-in user.
+
+Functionality:
+- On POST, the module receives a JSON payload.
+- The data is validated, then persisted to the corresponding relational tables
+  (Settings, School, Teachers, TeacherSubjects, Classes, etc.).
+
+- On GET, all relevant data for the current user (identified by session UID)
+  is fetched from the database and returned as a single structured JSON object.
+
+Technologies:
+- Flask Blueprint for endpoint organization
+- MariaDB
+- Session-based user identification (UID)
+- JSON-based request and response format
+"""
+
+
 Settings = Blueprint('Settings', __name__)
 
 @Settings.route('/Settings/set', methods=['POST'])
 def set_settings():
+    """
+    Stores user-specific scheduling settings and school structure in the database.
+
+    Expects:
+        JSON payload with settings, school data, teachers, and subject allocations.
+
+    Returns:
+        200 on success, 400 or 403 on error.
+    """
+
     Uid = session.get('Uid')
     if Uid is None:
         return jsonify({"error": "No UID found in session"}), 403
@@ -162,6 +202,13 @@ def set_settings():
 
 @Settings.route('/Settings/get', methods=['GET'])
 def get_settings():
+    """
+    Retrieves all stored scheduling settings and school data for the current user.
+
+    Returns:
+        JSON with settings, school info, teachers, classes and subject allocations.
+    """
+
     Uid = session.get('Uid')
     if Uid is None:
         return jsonify({"error": "Not logged in"}), 403

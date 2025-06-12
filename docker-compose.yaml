@@ -3,8 +3,8 @@ services:
     image: mariadb:latest
     container_name: mariadb-container
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: timetable-database
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: timetable-database
     ports:
       - "3306:3306"  # Expose the database on port 3306
     networks:
