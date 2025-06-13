@@ -1,0 +1,68 @@
+services:
+  database:
+    image: mariadb:latest
+    container_name: mariadb-container
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: timetable-database
+    ports:
+      - "3306:3306"  # Expose the database on port 3306
+    networks:
+      - timetable-network
+    volumes:
+      - "datasave:/var/lib/mysql"  # Volume for persistent data storage
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  api:
+    build:
+      context: ./src/backend # Path to the Dockerfile of the api-image
+      dockerfile: Dockerfile
+    container_name: api-container
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: mariadb-container
+      DB_NAME: timetable-database
+      SECRET_KEY: ${SECRET_KEY}
+    ports:
+      - "8000:8000"  # Expose the API on port 8000
+    networks:
+      - timetable-network
+    depends_on:
+      database:
+        condition: service_healthy
+    develop:
+      # Enables live updates of services as code is edited
+      watch:
+        - action: sync
+          path: ./src/backend
+          target: /app
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    environment:
+      VITE_API_ENDPOINT: ${VITE_API_ENDPOINT}
+    ports:
+      - 3000:3000
+    networks:
+      - timetable-network
+    develop:
+      # Enables live updates of services as code is edited
+      watch:
+        - action: sync
+          path: ./src/frontend
+          target: /app
+
+networks:
+  timetable-network:
+
+volumes:
+  datasave: 
