@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 // Components
-import { Button } from "../components/ui/button";
+import { Button } from "../ui/button";
 
 // Icons
 import { BoxesIcon, LogOutIcon } from "lucide-react";
