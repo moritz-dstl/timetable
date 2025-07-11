@@ -13,6 +13,7 @@
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
+- [Project Tree](#project-tree)
 - [Features](#features)
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
@@ -40,6 +41,39 @@
 ![image](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![image](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![image](https://img.shields.io/badge/Vitest-%236E9F18?style=for-the-badge&logo=Vitest&logoColor=%23fcd703)
+
+
+## Project Tree
+```
+.
+├── images
+├── src
+│   ├── backend
+│   │   └── src
+│   │   │   └── api_endpoints
+│   │   ├── requirements.txt
+│   │   ├── .dockerignore
+│   │   └── Dockerfile
+│   └── frontend
+│       ├── public                  # Static files
+│       │   └── img
+│       ├── src
+│       │   ├── components          # React components / UI
+│       │   ├── pages               # React pages
+│       │   ├── App.tsx
+│       │   ├── index.css
+│       │   └── main.tsx
+│       ├── tests                   # Test files
+│       ├── index.html
+│       ├── package.json
+│       ├── .dockerignore
+│       └── Dockerfile
+├── .gitignore
+├── .env
+├── docker-compose.yaml
+├── LICENSE
+└── README.md
+```
 
 
 ## Features
