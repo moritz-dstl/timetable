@@ -1,5 +1,5 @@
 from flask import request, jsonify, session, Blueprint
-from ..utils import get_db_connection
+from ..utils.utils import get_db_connection
 
 
 """
