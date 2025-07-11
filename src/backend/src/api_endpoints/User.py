@@ -1,5 +1,5 @@
 from flask import request, jsonify, session, Blueprint
-from ..utils import get_db_connection, hash_password, check_password, check_existing_user
+from ..utils.utils import get_db_connection, hash_password, check_password, check_existing_user
 
 
 """
