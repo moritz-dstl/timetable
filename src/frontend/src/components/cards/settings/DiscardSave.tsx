@@ -23,7 +23,7 @@ import { TriangleAlertIcon, EraserIcon, SaveIcon } from "lucide-react";
  * @returns The estimated duration in seconds.
  */
 function getDurationToGenerateSeconds(numOfClasses: number) {
-    return Math.floor((3 * numOfClasses ** 2 + 2 * numOfClasses + 30) * 1.2);
+    return Math.floor((4 * numOfClasses ** 2 + 2 * numOfClasses + 30) * 1.2);
 }
 
 /**
@@ -39,7 +39,7 @@ async function apiSaveData(data) {
             allow_block_scheduling: data.settings.preferDoubleLessons,
             max_hours_per_day: data.settings.maxRepetitionsSubjectPerDay,
             global_break: data.settings.breakAtPeriod,
-            weight_block_scheduling: 10,
+            weight_block_scheduling: 3,
             weight_time_of_hours: 10,
             max_time_for_solving: getDurationToGenerateSeconds(data.classes.length),
         },

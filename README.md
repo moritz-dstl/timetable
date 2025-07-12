@@ -48,9 +48,10 @@
 .
 ├── images
 ├── src
-│   ├── backend
+│   ├── backend         
 │   │   └── src
-│   │   │   └── api_endpoints
+│   │   │   └── api_endpoints       # All api endpoints 
+│   │   │   └── utils               # Utility functions
 │   │   ├── requirements.txt
 │   │   ├── .dockerignore
 │   │   └── Dockerfile

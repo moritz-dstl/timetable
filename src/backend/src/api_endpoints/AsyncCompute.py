@@ -1,6 +1,6 @@
 from flask import jsonify, session, Blueprint
 from ortools.sat.python import cp_model
-from ..utils import get_db_connection
+from ..utils.utils import get_db_connection
 import traceback
 import ast
 import threading, uuid
