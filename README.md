@@ -50,7 +50,7 @@
 ├── src
 │   ├── backend         
 │   │   └── src
-│   │   │   └── api_endpoints       # All api endpoints 
+│   │   │   ├── api_endpoints       # All api endpoints 
 │   │   │   └── utils               # Utility functions
 │   │   ├── requirements.txt
 │   │   ├── .dockerignore
