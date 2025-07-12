@@ -36,8 +36,18 @@ function SettingsGeneral({ data, setData }) {
             ...data,
             settings: {
                 ...data.settings,
-                breakAtPeriod: data.settings.numPeriods - 1 < data.settings.breakAtPeriod ? data.settings.numPeriods - 1 : data.settings.breakAtPeriod,
-                maxRepetitionsSubjectPerDay: data.settings.numPeriods < data.settings.maxRepetitionsSubjectPerDay ? data.settings.numPeriods : data.settings.maxRepetitionsSubjectPerDay,
+                breakAtPeriod: 
+                    data.settings.numPeriods - 1 < data.settings.breakAtPeriod 
+                    ? data.settings.numPeriods - 1 
+                    : data.settings.breakAtPeriod,
+                maxRepetitionsSubjectPerDay: 
+                    data.settings.numPeriods < data.settings.maxRepetitionsSubjectPerDay 
+                    ? (
+                        data.settings.preferDoubleLessons && data.settings.numPeriods % 2 !== 0
+                        ? data.settings.numPeriods - 1
+                        : data.settings.numPeriods
+                    )
+                    : data.settings.maxRepetitionsSubjectPerDay,
             }
         })
     }, [data.settings.numPeriods]);
@@ -81,7 +91,19 @@ function SettingsGeneral({ data, setData }) {
                             onCheckedChange={(checked) => setData({
                                 ...data,
                                 newChangesMade: true,
-                                settings: { ...data.settings, preferDoubleLessons: checked }
+                                settings: { 
+                                    ...data.settings, 
+                                    preferDoubleLessons: checked,
+                                    // If prefer double lessons is on, only allow even number of periods
+                                    maxRepetitionsSubjectPerDay: 
+                                        checked && data.settings.maxRepetitionsSubjectPerDay % 2 !== 0 
+                                        ? (
+                                            data.settings.maxRepetitionsSubjectPerDay === data.settings.numPeriods 
+                                            ? data.settings.maxRepetitionsSubjectPerDay - 1 
+                                            : data.settings.maxRepetitionsSubjectPerDay + 1
+                                        ) 
+                                        : data.settings.maxRepetitionsSubjectPerDay
+                                }
                             })}
                             tabIndex={9}
                         />
@@ -104,7 +126,13 @@ function SettingsGeneral({ data, setData }) {
                             onChange={(e) => setData({
                                 ...data,
                                 newChangesMade: true,
-                                settings: { ...data.settings, numPeriods: isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 4 ? 4 : parseInt(e.target.value) }
+                                settings: { 
+                                    ...data.settings, 
+                                    numPeriods: 
+                                        isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 4 
+                                        ? 4 
+                                        : parseInt(e.target.value) 
+                                }
                             })}
                             tabIndex={9}
                         />
@@ -125,7 +153,10 @@ function SettingsGeneral({ data, setData }) {
                             onValueChange={([value]) => setData({
                                 ...data,
                                 newChangesMade: true,
-                                settings: { ...data.settings, breakAtPeriod: value }
+                                settings: { 
+                                    ...data.settings, 
+                                    breakAtPeriod: value 
+                                }
                             })}
                             tabIndex={9}
                         />
@@ -133,20 +164,32 @@ function SettingsGeneral({ data, setData }) {
                     {/* Slider: Max number of periods a subject can appear per day */}
                     <div className="flex flex-col gap-2">
                         <Label id="label-max-repetitions" aria-hidden={true}>Maximum periods per subject per day</Label>
+                        {/* If prefer double lessons is on, only allow even number of periods */}
                         <Slider
                             id="slider-max-repetitions"
                             className="lg:min-h-[36px]"
-                            min={1}
-                            max={data.settings.numPeriods}
-                            step={1}
+                            min={data.settings.preferDoubleLessons ? 2 : 1}
+                            max={
+                                data.settings.preferDoubleLessons && data.settings.numPeriods % 2 !== 0 
+                                ? data.settings.numPeriods - 1 
+                                : data.settings.numPeriods
+                            }
+                            step={data.settings.preferDoubleLessons ? 2 : 1}
                             value={[data.settings.maxRepetitionsSubjectPerDay]}
-                            aria-valuemin={1}
-                            aria-valuemax={data.settings.numPeriods}
+                            aria-valuemin={data.settings.preferDoubleLessons ? 2 : 1}
+                            aria-valuemax={
+                                data.settings.preferDoubleLessons && data.settings.numPeriods % 2 !== 0 
+                                ? data.settings.numPeriods - 1 
+                                : data.settings.numPeriods
+                            }
                             aria-labelledby="label-max-repetitions"
                             onValueChange={([value]) => setData({
                                 ...data,
                                 newChangesMade: true,
-                                settings: { ...data.settings, maxRepetitionsSubjectPerDay: value }
+                                settings: { 
+                                    ...data.settings, 
+                                    maxRepetitionsSubjectPerDay: value 
+                                }
                             })}
                             tabIndex={9}
                         />
